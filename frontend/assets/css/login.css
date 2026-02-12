@@ -1,0 +1,130 @@
+html {
+  background-color: var(--background-color);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container-judul-aplikasi {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.container-judul-aplikasi .icon-mikrolit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.container-judul-aplikasi h1 {
+  color: var(--primary-color);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.container-judul-aplikasi p {
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.container-judul-aplikasi .icon-mikrolit .material-symbols-outlined {
+  font-size: 2em;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  width: 380px;
+}
+
+.login-container h2 {
+  color: var(--primary-color);
+  align-self: flex-start; 
+  margin-bottom: 1.5rem;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+form input {
+  padding: 0.7rem;
+  border: 1px solid var(--text-color);
+  border-radius: 5px;
+  background-color: var(--background-color);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+form label {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+form input:focus {
+  outline: none;
+  transition: all 0.3s ease;
+  border: 1px solid var(--primary-color);
+}
+
+form button {
+  font-size: 1rem;
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: #fff;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.pesan-daftar {
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.link-daftar {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
