@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Dosen</title>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+
+<div class="navbar">
+    <h2>Dashboard Dosen</h2>
+</div>
+
+<div class="content">
+    <h3>Selamat Datang, Dosen</h3>
+    <p>Ini adalah dashboard awal yang akan dikembangkan nanti.</p>
+</div>
+
+<script>
+    // validasi sederhana
+    if(localStorage.getItem("userRole") !== "dosen"){
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>
