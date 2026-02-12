@@ -1,16 +1,19 @@
-document.getElementById("loginForm").addEventListener("submit", function(e){
+import { loginRequest } from "./api.js";
+
+document.getElementById("loginForm").addEventListener("submit", async function(e){
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
-    const pass = document.getElementById("password").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-    // LOGIN SEMENTARA (tanpa backend)
-    if(email === "dosen@example.com" && pass === "admin123"){
+    const result = await loginRequest(email, password);
 
-        localStorage.setItem("userRole", "dosen");
+    if(result.token){
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("role", result.role);
 
         window.location.href = "dashboard.html";
     } else {
-        document.getElementById("loginMessage").innerText = "Email atau password salah.";
+        document.getElementById("loginMessage").innerText = result.message;
     }
 });
