@@ -9,3 +9,10 @@ export async function loginRequest(email, password){
 
     return response.json();
 }
+
+export async function logoutRequest(){
+    await fetch(API_BASE + "/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+    });
+}

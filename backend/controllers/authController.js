@@ -30,7 +30,8 @@ exports.login = (req, res) => {
                 message: "Login berhasil",
                 token,
                 role: user.role,
-                name: user.name
+                name: user.name,
+                nidn: user.nidn
             });
         });
     });

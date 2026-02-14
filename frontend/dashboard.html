@@ -62,7 +62,7 @@
                             <button id="collapseBtn"><p><span class="material-symbols-outlined">chevron_left</span></p>Collapse</button>
                         </li>
                         <li>
-                            <a href="" class="logout-sidebar"><p><span class="material-symbols-outlined icon">logout</span></p><span class="text">Logout</span></a>
+                            <a href="#" id="btn-logout" class="logout-sidebar"><p><span class="material-symbols-outlined icon">logout</span></p><span class="text">Logout</span></a>
                         </li>
                     </ul>
                 </div>
@@ -78,8 +78,8 @@
                 <div class="navbar-kanan">
                     <p class="foto-profil"><span class="material-symbols-outlined">person</span></p>
                     <div class="info-user">
-                        <h3>Cuppa</h3>
-                        <p>07352211097</p>
+                        <h3 id="showName"></h3>
+                        <p id="showNidn"></p>
                     </div>
                 </div>
             </div>
@@ -153,8 +153,15 @@ if(localStorage.getItem("role") !== "dosen"){
         // load default page saat pertama kali masuk
         loadPage("beranda");
     </script>
+    <script>
+if(!localStorage.getItem("token") || localStorage.getItem("role") !== "dosen"){
+    window.location.href = "index.html";
+}
 
-
+document.getElementById("showName").innerText = localStorage.getItem("name");
+document.getElementById("showNidn").innerText = localStorage.getItem("nidn");
+</script>
+<script type="module" src="assets/js/auth.js"></script>
 
 </body>
 </html>
