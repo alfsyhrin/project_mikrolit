@@ -4,24 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Dosen</title>
-    <link rel="stylesheet" href="assets/css/dashboard.css">
+
+    <!-- Link ke CSS Halaman ini (dashboard.css) -->
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+
+    <!-- Link ke CSS global -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+
+    <!-- Link untuk mengakses icon material symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Link untuk mengakses font google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Link untuk mengakses font 'ASAP' dari google -->
+    <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Sarina&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="navbar">
-    <h2>Dashboard Dosen</h2>
-</div>
+    
 
-<div class="content">
-    <h3>Selamat Datang, Dosen</h3>
-    <p>Ini adalah dashboard awal yang akan dikembangkan nanti.</p>
-</div>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="judul-aplikasi">
+                <p class="logo"><span class="material-symbols-outlined">school</span></p>
+                <div class="nama-logo text">
+                    <h1>MikroLit</h1>
+                    <p>Panel Dosen</p>
+                </div>
+            </div>
 
-<script>
+            <div class="sidebar-wrapper">
+
+                <div class="sidebar-list">
+                    <ul type="none">
+                        <li>
+                            <a href="#" data-page="beranda"><p><span class="material-symbols-outlined icon">dashboard</span></p><span class="text">Beranda</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-page="manajemen-pengguna"><p><span class="material-symbols-outlined icon">group</span></p><span class="text">Manajemen Pengguna</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-page="monitoring"><p><span class="material-symbols-outlined icon">monitoring</span></p><span class="text">Monitoring</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-page="micro-learning"><p><span class="material-symbols-outlined icon">auto_stories</span></p><span class="text">Micro-Learning</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-page="pengaturan"><p><span class="material-symbols-outlined icon">settings</span></p><span class="text">Pengaturan</span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-tool">
+                    <ul type="none">
+                        <li>
+                            <button id="collapseBtn"><p><span class="material-symbols-outlined">chevron_left</span></p>Collapse</button>
+                        </li>
+                        <li>
+                            <a href="" class="logout-sidebar"><p><span class="material-symbols-outlined icon">logout</span></p><span class="text">Logout</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <main>
+            <div class="navbar">
+                <div class="navbar-kiri">
+                    <!-- <p><span class="material-symbols-outlined">menu</span></p> -->
+                    <h2>Beranda</h2>
+                </div>
+                <div class="navbar-kanan">
+                    <p class="foto-profil"><span class="material-symbols-outlined">person</span></p>
+                    <div class="info-user">
+                        <h3>Cuppa</h3>
+                        <p>07352211097</p>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                
+            </div>
+        </main>
+    </div>
+
+
+<!-- <script>
 if(localStorage.getItem("role") !== "dosen"){
     window.location.href = "index.html";
 }
-</script>
+</script> -->
+
+
+    <script>
+        const collapseBtn = document.getElementById("collapseBtn");
+        const sidebar = document.getElementById("sidebar");
+
+        collapseBtn.addEventListener("click", function () {
+            sidebar.classList.toggle("collapsed");
+
+            // Ubah teks tombol
+            if (sidebar.classList.contains("collapsed")) {
+            collapseBtn.innerHTML = `
+                <span class="material-symbols-outlined">
+                chevron_right
+                </span>
+            `;
+            } else {
+            collapseBtn.innerHTML = `
+                <span class="material-symbols-outlined">
+                chevron_left
+                </span>
+                <span class="text">Collapse</span>
+            `;
+            }
+
+        });
+    </script>
+    <script>
+        const content = document.querySelector(".content");
+        const links = document.querySelectorAll("[data-page]");
+
+        // fungsi load halaman
+        function loadPage(page) {
+        fetch(`pages/${page}.html`)
+            .then(response => {
+            if (!response.ok) throw new Error("Halaman tidak ditemukan");
+            return response.text();
+            })
+            .then(data => {
+            content.innerHTML = data;
+            })
+            .catch(error => {
+            content.innerHTML = "<h2>Halaman tidak ditemukan</h2>";
+            });
+        }
+
+        // event klik sidebar
+        links.forEach(link => {
+        link.addEventListener("click", function(e) {
+            e.preventDefault();
+            const page = this.getAttribute("data-page");
+            loadPage(page);
+        });
+        });
+
+        // load default page saat pertama kali masuk
+        loadPage("beranda");
+    </script>
 
 
 </body>
