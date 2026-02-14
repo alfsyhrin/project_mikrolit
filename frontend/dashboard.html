@@ -23,14 +23,12 @@
 </head>
 <body>
 
-    
-
     <div class="container">
         <div class="sidebar" id="sidebar">
             <div class="judul-aplikasi">
                 <p class="logo"><span class="material-symbols-outlined">school</span></p>
                 <div class="nama-logo text">
-                    <h1>MikroLit</h1>
+                    <h1>MikroLit LMS</h1>
                     <p>Panel Dosen</p>
                 </div>
             </div>
@@ -153,6 +151,58 @@ if(localStorage.getItem("role") !== "dosen"){
         // load default page saat pertama kali masuk
         loadPage("beranda");
     </script>
+    <script>
+        const sidebarLinks = document.querySelectorAll(".sidebar-list a");
+
+        // Fungsi load halaman
+        function loadPage(page) {
+        fetch(`/pages/${page}.html`)
+            .then(res => {
+            if (!res.ok) throw new Error("404");
+            return res.text();
+            })
+            .then(html => {
+            document.querySelector(".content").innerHTML = html;
+            })
+            .catch(() => {
+            document.querySelector(".content").innerHTML =
+                "<h2>Halaman tidak ditemukan</h2>";
+            });
+        }
+
+        // Event klik sidebar
+        sidebarLinks.forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const page = this.getAttribute("data-page");
+
+            // Load halaman
+            loadPage(page);
+
+            // Set active
+            sidebarLinks.forEach(item => item.classList.remove("active"));
+            this.classList.add("active");
+        });
+        });
+
+        // ✅ AUTO LOAD BERANDA SAAT PERTAMA MASUK
+        window.addEventListener("DOMContentLoaded", () => {
+        const defaultPage = "beranda";
+
+        loadPage(defaultPage);
+
+        // Set active otomatis
+        const defaultLink = document.querySelector(
+            `.sidebar-list a[data-page="${defaultPage}"]`
+        );
+
+        if (defaultLink) {
+            defaultLink.classList.add("active");
+        }
+        });
+    </script>
+
     <script>
 if(!localStorage.getItem("token") || localStorage.getItem("role") !== "dosen"){
     window.location.href = "index.html";

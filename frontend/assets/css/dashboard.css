@@ -89,10 +89,28 @@ main {
   justify-content: flex-start;
   align-items: center;
   gap: 7px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-list ul li a:hover, .sidebar-tool ul li a:hover {
+  background-color: #37b7c327;
+}
+
+.sidebar-list ul li a.active {
+  background-color: #37b7c327;
+  color: var(--third-color);
 }
 
 .sidebar-tool ul li a.logout-sidebar {
   color: var(--merah);
+}
+
+.sidebar-tool ul li a.logout-sidebar:hover {
+  background-color: #d713132e;
+}
+
+.sidebar-tool ul li button:hover {
+  background-color: #37b7c327;
 }
 
 .sidebar-list ul li a p, .sidebar-tool ul li a p {
@@ -126,6 +144,7 @@ main {
   align-items: center;
   gap: 6px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .sidebar-tool ul li button .material-symbols-outlined {
@@ -227,3 +246,4 @@ main {
   font-size: 0.9rem;
 }
 /* Awal Navbar */
+
