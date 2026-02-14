@@ -13,15 +13,18 @@
 </div>
 
 <div class="content">
-    <h3>Selamat Datang, Dosen</h3>
+    <h3>Selamat Datang, <span id="showName"></span></h3>
     <p>Ini adalah dashboard awal yang akan dikembangkan nanti.</p>
 </div>
 
 <script>
-if(localStorage.getItem("role") !== "dosen"){
+if(!localStorage.getItem("token") || localStorage.getItem("role") !== "dosen"){
     window.location.href = "index.html";
 }
+
+document.getElementById("showName").innerText = localStorage.getItem("name");
 </script>
+
 
 
 </body>

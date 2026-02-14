@@ -1,31 +1,43 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const users = require("../models/User");
+const UserModel = require("../models/UserModel");
+
 
 exports.login = (req, res) => {
     const { email, password } = req.body;
 
-    const user = users.find(u => u.email === email);
+    UserModel.findByEmail(email, (err, results) => {
+        if (err) return res.status(500).json({ message: "Server error" });
 
-    if (!user) {
-        return res.status(401).json({ message: "User tidak ditemukan" });
-    }
-
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (!isMatch) {
-            return res.status(401).json({ message: "Password salah" });
+        if (results.length === 0) {
+            return res.status(401).json({ message: "User tidak ditemukan" });
         }
 
-        const token = jwt.sign(
-            { id: user.id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        );
+        const user = results[0];
 
-        res.json({
-            message: "Login berhasil",
-            token,
-            role: user.role
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (!isMatch) {
+                return res.status(401).json({ message: "Password salah" });
+            }
+
+            const token = jwt.sign(
+                { id: user.id, role: user.role },
+                process.env.JWT_SECRET,
+                { expiresIn: "1h" }
+            );
+
+            res.json({
+                message: "Login berhasil",
+                token,
+                role: user.role,
+                name: user.name
+            });
         });
     });
 };
+
+exports.logout = (req, res) => {
+    // Untuk logout, cukup hapus token di sisi klien
+    res.json({ message: "Logout berhasil" });
+
+}

@@ -11,9 +11,11 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     if(result.token){
         localStorage.setItem("token", result.token);
         localStorage.setItem("role", result.role);
+        localStorage.setItem("name", result.name);
 
         window.location.href = "dashboard.html";
-    } else {
+    }
+    else {
         document.getElementById("loginMessage").innerText = result.message;
     }
 });

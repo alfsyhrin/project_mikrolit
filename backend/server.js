@@ -10,8 +10,13 @@ app.use(express.json());
 
 // ROUTES
 app.use("/api", authRoute);
+app.get("/", (req, res) => {
+    res.send("Server berjalan dengan baik!");
+});
 
 const PORT = 4000;
 app.listen(PORT, () => {
     console.log("Backend berjalan di http://localhost:" + PORT);
 });
+
+
