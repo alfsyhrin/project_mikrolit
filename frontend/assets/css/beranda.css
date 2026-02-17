@@ -6,8 +6,6 @@
   grid-template-columns: 1fr; /* default mobile */
 }
 
-
-
 .card-beranda {
   width: 100%;
   background-color: #fff;
@@ -83,7 +81,332 @@
     grid-column: span 1;
   }
 }
-
-
-
 /* Akhir Card Beranda */
+
+/* Awal card chart */
+.container-chart {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* desktop layout */
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+
+.card-progres-modul {
+  flex: 2;
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.card-progres-modul h4 {
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+#progressChart {
+  margin-top: 20px;
+  width: 100%;
+}
+
+#progressChart .apexcharts-canvas {
+  margin: 0 auto;
+}
+
+#mahasiswaChart {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.card-mahasiswa-terdaftar {
+  flex: 1;
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.card-mahasiswa-terdaftar h4 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 1rem;
+}
+
+.card-mahasiswa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 0.5rem;
+}
+
+.card-mahasiswa .info-mahasiswa {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-mahasiswa h5 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.info-mahaisiswa p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+
+
+.card-mahasiswa .icon-aktif {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3rem;
+  border-radius: 6px;
+  color: var(--hijau);
+  background-color: #37b73727;
+  font-size: 0.75rem;
+}
+
+.card-mahasiswa .icon-pasif {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3rem;
+  border-radius: 6px;
+  color: var(--text-color);
+  background-color: #ddd;
+  font-size: 0.75rem;
+}
+
+.info-mahasiswa p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-color-light);
+}
+
+.card-progres-modul,
+.card-mahasiswa-terdaftar {
+  min-width: 0; /* cegah overflow aneh */
+}
+
+
+/* Responsivitas */
+@media (max-width: 768px) {
+  .container-chart {
+    grid-template-columns: 1fr; /* 🔥 1 kolom */
+  }
+}
+
+/* Akhir card chart */
+
+/* Awal card list data */
+.container-list-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  /* width: 100%; */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-pembelajaran-terakhir {
+  /* flex: 1; */
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+  height: 400px;
+  width: 100%;
+}
+
+.card-pembelajaran-terakhir-wrapper {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.card-modul-terakhir {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* gap: 1rem; */
+  border-radius: 10px;
+  padding: 0.9rem;
+  margin-bottom: 0.35rem;
+  transition: background-color 0.3s ease;
+}
+
+.icon-info-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-modul-terakhir:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
+.card-modul-terakhir .icon-modul{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: linear-gradient(
+    135deg,
+    var(--secondary-color),
+    var(--third-color)
+  );
+  color: var(--background-color);
+  font-size: 1.5rem;
+}
+
+.card-modul-terakhir .info-modul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0; /* cegah overflow aneh */
+}
+
+.info-modul h5 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  overflow-x: hidden;
+  width: 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info-modul p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+
+.icon-selesai {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3rem;
+  border-radius: 7px;
+  color: var(--hijau);
+  background-color: #37b73727;
+  font-size: 0.75rem;
+  align-self: center;
+}
+
+.card-pembelajaran-terakhir h4,
+.card-notifikasi h4 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 0.5rem;
+}
+
+.card-notifikasi {
+  /* flex: 1; */
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+  height: 400px;
+  /* margin-bottom: 1rem; */
+}
+
+.card-notifikasi-wrapper {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.card-notifikasi-terbaru {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* gap: 1rem; */
+  border-radius: 10px;
+  padding: 0.9rem;
+  margin-bottom: 0.35rem;
+  transition: background-color 0.3s ease;
+}
+
+.card-notifikasi-terbaru:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
+.card-notifikasi-terbaru .icon-notifikasi{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 1.5rem;
+}
+
+.card-notifikasi-terbaru .icon-notifikasi.tugas {
+  background-color: #37b7c327;
+  color: var(--secondary-color);
+}
+
+.card-notifikasi-terbaru .icon-notifikasi.revisi {
+  background-color: #f0c03727;
+  color: #f0c037;
+}
+
+.card-notifikasi-terbaru .icon-notifikasi.selesai {
+  background-color: #37b73727;
+  color: var(--hijau);
+}
+
+.card-notifikasi-terbaru .icon-notifikasi.diskusi {
+  background-color: #7843db2b;
+  color: #7743DB;
+}
+
+.card-notifikasi-terbaru .info-notifikasi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.info-notifikasi h5 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info-notifikasi p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+
+.icon-selesai {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3rem;
+  border-radius: 7px;
+  color: var(--hijau);
+  background-color: #37b73727;
+  font-size: 0.75rem;
+  align-self: center;
+}
+/* Responsivitas */
+@media (max-width: 768px) {
+  .container-list-data {
+    grid-template-columns: 1fr; /* 🔥 1 kolom */
+  }
+}
+/* Akhir card list data */
