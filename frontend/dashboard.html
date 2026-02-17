@@ -88,6 +88,12 @@
         </main>
     </div>
 
+    <!-- Link untuk mengakses Apex chart lokal -->
+    <script src="../assets/js/apexcharts.min.js"></script>
+
+    <!-- Link untuk mengakses kodingan Apex chart lokal -->
+    <script src="../assets/js/chart.js"></script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
@@ -148,17 +154,26 @@
         // ==============================
         function loadPage(page) {
             fetch(`/pages/${page}.html`)
-            .then(res => {
-                if (!res.ok) throw new Error("404");
-                return res.text();
-            })
-            .then(html => {
-                content.innerHTML = html;
-            })
-            .catch(() => {
-                content.innerHTML = "<h2>Halaman tidak ditemukan</h2>";
-            });
+                .then(response => {
+                    if (!response.ok) throw new Error("404");
+                    return response.text();
+                })
+                .then(data => {
+                    content.innerHTML = data;
+
+                    // 🔥 Render chart jika halaman beranda
+                    if (page === "beranda") {
+                        setTimeout(() => {
+                            renderChart();
+                            renderMahasiswaChart();
+                        }, 50);
+                    }
+                })
+                .catch(() => {
+                    content.innerHTML = "<h2>Halaman tidak ditemukan</h2>";
+                });
         }
+
 
         // ==============================
         // SIDEBAR LINK CLICK
