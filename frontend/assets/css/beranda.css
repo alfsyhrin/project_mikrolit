@@ -227,7 +227,7 @@
 }
 
 .card-pembelajaran-terakhir-wrapper {
-  height: 100%;
+  height: 350px;
   overflow-y: auto;
 }
 
@@ -322,7 +322,7 @@
 }
 
 .card-notifikasi-wrapper {
-  height: 100%;
+  height: 350px;
   overflow-y: auto;
 }
 
