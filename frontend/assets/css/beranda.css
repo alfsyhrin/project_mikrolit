@@ -1,0 +1,89 @@
+
+/* Awal Card Beranda */
+.card-beranda-wrapper {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr; /* default mobile */
+}
+
+
+
+.card-beranda {
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.card-beranda h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-beranda p {
+  color: var(--hijau);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.icon-judul-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.icon-judul-wrapper h4 {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-weight: 500;
+  width: 80%;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.icon-judul-wrapper p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 7px;
+  background-color: #37b7c327;
+}
+
+.icon-judul-wrapper .material-symbols-outlined {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+}
+
+/* Responsive */
+@media (min-width: 600px) {
+  .card-beranda-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .card-beranda-wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .card-beranda:nth-child(4) {
+    grid-column: span 3;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card-beranda-wrapper {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .card-beranda:nth-child(4) {
+    grid-column: span 1;
+  }
+}
+
+
+
+/* Akhir Card Beranda */

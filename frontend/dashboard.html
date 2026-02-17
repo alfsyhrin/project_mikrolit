@@ -66,11 +66,12 @@
                 </div>
             </div>
         </div>
+        <div class="overlay" id="overlay"></div>
 
         <main>
             <div class="navbar">
                 <div class="navbar-kiri">
-                    <!-- <p><span class="material-symbols-outlined">menu</span></p> -->
+                     <button id="mobile-toggle" ><span class="material-symbols-outlined">menu</span></button>
                     <h2>Beranda</h2>
                 </div>
                 <div class="navbar-kanan">
@@ -87,40 +88,16 @@
         </main>
     </div>
 
-
-<!-- <script>
-if(localStorage.getItem("role") !== "dosen"){
-    window.location.href = "index.html";
-}
-</script> -->
-
-
     <script>
-        const collapseBtn = document.getElementById("collapseBtn");
+        document.addEventListener("DOMContentLoaded", () => {
+
+        // ==============================
+        // ELEMENT
+        // ==============================
         const sidebar = document.getElementById("sidebar");
-
-        collapseBtn.addEventListener("click", function () {
-            sidebar.classList.toggle("collapsed");
-
-            // Ubah teks tombol
-            if (sidebar.classList.contains("collapsed")) {
-            collapseBtn.innerHTML = `
-                <span class="material-symbols-outlined">
-                chevron_right
-                </span>
-            `;
-            } else {
-            collapseBtn.innerHTML = `
-                <span class="material-symbols-outlined">
-                chevron_left
-                </span>
-                <span class="text">Collapse</span>
-            `;
-            }
-
-        });
-    </script>
-    <script>
+        const overlay = document.getElementById("overlay");
+        const toggleBtn = document.getElementById("mobile-toggle");
+        const collapseBtn = document.getElementById("collapseBtn");
         const content = document.querySelector(".content");
         const links = document.querySelectorAll("[data-page]");
 
@@ -152,47 +129,111 @@ if(localStorage.getItem("role") !== "dosen"){
         loadPage("beranda");
     </script>
     <script>
+<<<<<<<<< Temporary merge branch 1
         const sidebarLinks = document.querySelectorAll(".sidebar-list a");
 
-        // Fungsi load halaman
+        // ==============================
+        // AUTH CHECK
+        // ==============================
+        if (!localStorage.getItem("token") || localStorage.getItem("role") !== "dosen") {
+            window.location.href = "index.html";
+            return;
+        }
+
+        document.getElementById("showName").innerText = localStorage.getItem("name");
+        document.getElementById("showNidn").innerText = localStorage.getItem("nidn");
+
+        // ==============================
+        // LOAD PAGE FUNCTION
+        // ==============================
         function loadPage(page) {
-        fetch(`/pages/${page}.html`)
+            fetch(`/pages/${page}.html`)
             .then(res => {
-            if (!res.ok) throw new Error("404");
-            return res.text();
+                if (!res.ok) throw new Error("404");
+                return res.text();
             })
             .then(html => {
-            document.querySelector(".content").innerHTML = html;
+                content.innerHTML = html;
             })
             .catch(() => {
-            document.querySelector(".content").innerHTML =
-                "<h2>Halaman tidak ditemukan</h2>";
+                content.innerHTML = "<h2>Halaman tidak ditemukan</h2>";
             });
         }
 
-        // Event klik sidebar
+        // ==============================
+        // SIDEBAR LINK CLICK
+        // ==============================
         sidebarLinks.forEach(link => {
-        link.addEventListener("click", function (e) {
+            link.addEventListener("click", function (e) {
             e.preventDefault();
 
             const page = this.getAttribute("data-page");
 
-            // Load halaman
+            // Load page
             loadPage(page);
 
             // Set active
             sidebarLinks.forEach(item => item.classList.remove("active"));
             this.classList.add("active");
-        });
+
+            // Tutup sidebar jika mobile
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove("active");
+                overlay.classList.remove("active");
+            }
+            });
         });
 
-        // ✅ AUTO LOAD BERANDA SAAT PERTAMA MASUK
-        window.addEventListener("DOMContentLoaded", () => {
+        // ==============================
+        // MOBILE TOGGLE
+        // ==============================
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.add("active");
+            overlay.classList.add("active");
+        });
+
+        // ==============================
+        // CLICK OUTSIDE (OVERLAY)
+        // ==============================
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+        });
+
+        // ==============================
+        // COLLAPSE DESKTOP
+        // ==============================
+        collapseBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("collapsed");
+
+            if (sidebar.classList.contains("collapsed")) {
+            collapseBtn.innerHTML = `
+                <span class="material-symbols-outlined">chevron_right</span>
+            `;
+            } else {
+            collapseBtn.innerHTML = `
+                <span class="material-symbols-outlined">chevron_left</span>
+                <span class="text">Collapse</span>
+            `;
+            }
+        });
+
+        // ==============================
+        // HANDLE RESIZE
+        // ==============================
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 768) {
+            overlay.classList.remove("active");
+            sidebar.classList.remove("active");
+            }
+        });
+
+        // ==============================
+        // LOAD DEFAULT PAGE
+        // ==============================
         const defaultPage = "beranda";
-
         loadPage(defaultPage);
 
-        // Set active otomatis
         const defaultLink = document.querySelector(
             `.sidebar-list a[data-page="${defaultPage}"]`
         );
@@ -200,6 +241,7 @@ if(localStorage.getItem("role") !== "dosen"){
         if (defaultLink) {
             defaultLink.classList.add("active");
         }
+
         });
     </script>
 
