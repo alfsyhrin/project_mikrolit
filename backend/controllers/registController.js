@@ -5,34 +5,45 @@ exports.register = (req, res) => {
     console.log("Data yang diterima:", req.body); // Debugging: cek data yang diterima
     const {name, email, password, role, nidn} = req.body;
 
-    userModel.findByEmail(email, (err, results) => {
+    userModel.findByEmail(email, (err, emailResults) => {
         if (err) {
             console.log("Error saat mencari email:", err);
             return res.status(500).json({ message: "Server error" });
         }
 
-        if (results.length > 0) {
+        if (emailResults.length > 0) {
             return res.status(400).json({message: "Email sudah terdaftar"});
         }
 
-        const hashPassword = bcrypt.hashSync(password, 10);
-
-        const newUser = {
-            name,
-            email,
-            password: hashPassword,
-            role : "mahasiswa",
-            status : "pending",
-            nidn
-        };
-
-        userModel.createUser(newUser, (err, result) => {
+        userModel.findByNidn(nidn, (err, nidnResults) => {
             if (err) {
-                console.log("Error saat membuat user:", err);
+                console.log("Error saat mencari NIDN:", err);
                 return res.status(500).json({ message: "Server error" });
             }
+            if (nidnResults.length > 0) {
+                return res.status(400).json({message: "NPM sudah terdaftar"});
+            }
 
-            res.json({ message: "Registrasi berhasil" });
+
+            const hashPassword = bcrypt.hashSync(password, 10);
+
+            const newUser = {
+                name,
+                email,
+                password: hashPassword,
+                role : "mahasiswa",
+                status : "pending",
+                nidn
+            };
+
+            userModel.createUser(newUser, (err, result) => {
+                if (err) {
+                    console.log("Error saat membuat user:", err);
+                    return res.status(500).json({ message: "Server error" });
+                }
+
+                res.json({ message: "Registrasi berhasil" });
+            });
         });
     });
 }
