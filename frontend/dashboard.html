@@ -105,37 +105,6 @@
         const toggleBtn = document.getElementById("mobile-toggle");
         const collapseBtn = document.getElementById("collapseBtn");
         const content = document.querySelector(".content");
-        const links = document.querySelectorAll("[data-page]");
-
-        // fungsi load halaman
-        function loadPage(page) {
-        fetch(`pages/${page}.html`)
-            .then(response => {
-            if (!response.ok) throw new Error("Halaman tidak ditemukan");
-            return response.text();
-            })
-            .then(data => {
-            content.innerHTML = data;
-            })
-            .catch(error => {
-            content.innerHTML = "<h2>Halaman tidak ditemukan</h2>";
-            });
-        }
-
-        // event klik sidebar
-        links.forEach(link => {
-        link.addEventListener("click", function(e) {
-            e.preventDefault();
-            const page = this.getAttribute("data-page");
-            loadPage(page);
-        });
-        });
-
-        // load default page saat pertama kali masuk
-        loadPage("beranda");
-    </script>
-    <script>
-<<<<<<<<< Temporary merge branch 1
         const sidebarLinks = document.querySelectorAll(".sidebar-list a");
 
         // ==============================
@@ -260,14 +229,8 @@
         });
     </script>
 
-    <script>
-if(!localStorage.getItem("token") || localStorage.getItem("role") !== "dosen"){
-    window.location.href = "index.html";
-}
 
-document.getElementById("showName").innerText = localStorage.getItem("name");
-document.getElementById("showNidn").innerText = localStorage.getItem("nidn");
-</script>
+    
 <script type="module" src="assets/js/auth.js"></script>
 
 </body>
