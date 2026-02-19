@@ -3,9 +3,214 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Monitoring - Mikrolit LMS</title>
+
+  <!-- Link ke Global CSS -->
+   <link rel="stylesheet" href="../assets/css/main.css">
+
+  <!-- Link ke CSS halaman ini (beranda.css) -->
+   <link rel="stylesheet" href="../assets/css/monitoring.css">
+
+   <!-- Link untuk mengakses icon material symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Link untuk mengakses font google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Link untuk mengakses font 'ASAP' dari google -->
+    <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Sarina&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Ini monitoring</h1>
+  <div class="container-monitoring">
+
+    <div class="card-monitoring-wrapper">
+      <div class="card-monitoring">
+        <div class="icon-judul-wrapper">
+          <h4>Rata-rata Penyelesaian</h4>
+          <p><span class="material-symbols-outlined">analytics</span></p>
+        </div>
+        <h2>68%</h2>
+        <p>+5%</p>
+      </div>
+
+      <div class="card-monitoring">
+        <div class="icon-judul-wrapper">
+          <h4>Durasi Belajar</h4>
+          <p><span class="material-symbols-outlined">avg_time</span></p>
+        </div>
+        <h2>3.9 Jam</h2>
+        <p>Per mahasiswa</p>
+      </div>
+
+      <div class="card-monitoring">
+        <div class="icon-judul-wrapper">
+          <h4>Modul Aktiv</h4>
+          <p><span class="material-symbols-outlined">auto_stories</span></p>
+        </div>
+        <h2>8</h2>
+        <p>4 Selesai</p>
+      </div>
+
+      <div class="card-monitoring">
+        <div class="icon-judul-wrapper">
+          <h4>Bagian Sulit</h4>
+          <p><span class="material-symbols-outlined">warning</span></p>
+        </div>
+        <h2>3</h2>
+        <p class="alert-card">Perlu Perhatian</p>
+      </div>
+    </div>
+    
+    <div class="container-chart">
+      <div class="card-progres-mingguan">
+        <h4>Penyelesaian Mingguan</h4>
+        <div id="progressmingguanChart"></div>
+      </div>
+      <div class="card-kemampuan-literasi">
+        <h4>Kemampuan Literasi</h4>
+        <div id="kemampuanliterasiChart"></div>
+      </div>
+    </div>
+
+    <div class="card-tabel-mahasiswa">
+      <h4>Progress Mahasiswa</h4>
+      <div class="wrapper-tabel">
+        <table>
+          <thead>
+              <tr>
+                  <th>Nama</th>
+                  <th>Modul Terakhir</th>
+                  <th>Akses Terakhir</th>
+                  <th>Total Durasi</th>
+                  <th>Penyelesaian</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td class="nama">Andi Pratama</td>
+                  <td class="muted">Micro-Reader</td>
+                  <td class="muted">2 jam lalu</td>
+                  <td class="muted">4.5 jam</td>
+                  <td>
+                      <div class="progress-wrapper">
+                          <div class="progress">
+                              <div class="progress-bar" style="width: 85%;"></div>
+                          </div>
+                          <span class="percentage">85%</span>
+                      </div>
+                  </td>
+              </tr>
+  
+              <tr>
+                  <td class="nama">Budi Santoso</td>
+                  <td class="muted">Reflect-Sync</td>
+                  <td class="muted">5 jam lalu</td>
+                  <td class="muted">3.2 jam</td>
+                  <td>
+                      <div class="progress-wrapper">
+                          <div class="progress">
+                              <div class="progress-bar" style="width: 72%;"></div>
+                          </div>
+                          <span class="percentage">72%</span>
+                      </div>
+                  </td>
+              </tr>
+  
+              <tr>
+                  <td class="nama">Dina Putri</td>
+                  <td class="muted">Peer Review</td>
+                  <td class="muted">1 jam lalu</td>
+                  <td class="muted">5.1 jam</td>
+                  <td>
+                      <div class="progress-wrapper">
+                          <div class="progress">
+                              <div class="progress-bar" style="width: 90%;"></div>
+                          </div>
+                          <span class="percentage">90%</span>
+                      </div>
+                  </td>
+              </tr>
+  
+              <tr>
+                  <td class="nama">Eko Prasetyo</td>
+                  <td class="muted">Micro-Writing</td>
+                  <td class="muted">1 hari lalu</td>
+                  <td class="muted">2.8 jam</td>
+                  <td>
+                      <div class="progress-wrapper">
+                          <div class="progress">
+                              <div class="progress-bar" style="width: 65%;"></div>
+                          </div>
+                          <span class="percentage">65%</span>
+                      </div>
+                  </td>
+              </tr>
+  
+              <tr>
+                  <td class="nama">Hana Permata</td>
+                  <td class="muted">Lit-Starter</td>
+                  <td class="muted">3 jam lalu</td>
+                  <td class="muted">3.9 jam</td>
+                  <td>
+                      <div class="progress-wrapper">
+                          <div class="progress">
+                              <div class="progress-bar" style="width: 78%;"></div>
+                          </div>
+                          <span class="percentage">78%</span>
+                      </div>
+                  </td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card-tracking-kesulitan">
+      <h4>Tracking Kesulitan Mahasiswa</h4>
+      <div class="tracking-wrapper">
+
+        <div class="card-kesulitan-modul">
+          <div class="wrapper-tracking">
+            <p class="icon-kesulitan"><span class="material-symbols-outlined">warning</span></p>
+            <div class="info-kesulitan">
+              <h5 class="nama-modul">Micro-Writing: Paragraf Argumentasi</h5>
+              <p class="jumlah-mahasiswa">Gagal: 45% - Belum dibuka: 12 mahasiswa</p>
+            </div>
+          </div>
+          <div class="progress">
+              <div class="progress-bar-kesulitan" style="width: 45%;"></div>
+          </div>
+        </div>
+  
+        <div class="card-kesulitan-modul">
+          <div class="wrapper-tracking">
+            <p class="icon-kesulitan"><span class="material-symbols-outlined">warning</span></p>
+            <div class="info-kesulitan">
+              <h5 class="nama-modul">Reflect-Sync: Analisis Kritis</h5>
+              <p class="jumlah-mahasiswa">Gagal: 38% - Belum dibuka: 8 mahasiswa</p>
+            </div>
+          </div>
+          <div class="progress">
+              <div class="progress-bar-kesulitan" style="width: 38%;"></div>
+          </div>
+        </div>
+  
+        <div class="card-kesulitan-modul">
+          <div class="wrapper-tracking">
+            <p class="icon-kesulitan"><span class="material-symbols-outlined">warning</span></p>
+            <div class="info-kesulitan">
+              <h5 class="nama-modul">Peer Review: Rubrik Penilaian</h5>
+              <p class="jumlah-mahasiswa">Gagal: 30% - Belum dibuka: 5 mahasiswa</p>
+            </div>
+          </div>
+          <div class="progress">
+              <div class="progress-bar-kesulitan" style="width: 30%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
 </body>
 </html>

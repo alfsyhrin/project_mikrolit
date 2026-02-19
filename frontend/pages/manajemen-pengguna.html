@@ -3,9 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Manajemen Pengguna - Mikrolit LMS</title>
+
+  <!-- Link ke Global CSS -->
+   <link rel="stylesheet" href="../assets/css/main.css">
+
+  <!-- Link ke CSS halaman ini (beranda.css) -->
+   <link rel="stylesheet" href="../assets/css/manajemen-pengguna.css">
+
+   <!-- Link untuk mengakses icon material symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Link untuk mengakses font google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Link untuk mengakses font 'ASAP' dari google -->
+    <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Sarina&display=swap" rel="stylesheet">
+
 </head>
 <body>
-  <h1>Ini manajemen pengguna</h1>
+  <div class="container-manajemen-pengguna">
+    
+    <div class="wrapper-search-export">
+      <div class="search-bar">
+        <p><span class="material-symbols-outlined">search</span></p>
+        <input type="text" placeholder="Cari nama atau NPM...">
+      </div>
+      <button class="export-csv"><span class="material-symbols-outlined">download</span>Export CSV</button>
+    </div>
+
+    <div class="filter-manajemen-wrapper">
+      <p><span class="material-symbols-outlined">filter_alt</span></p>
+      <button class="active-filter">Semua</button>
+      <button>Disetujui</button>
+      <button>Pending</button>
+      <button>Ditolak</button>
+    </div>
+
+    <div class="daftar-mahasiswa">
+      <article class="card-mahasiswa status-diterima">
+        <div class="card-mahasiswa-header">
+          <div class="card-mahasiswa-profil">
+            <div class="avatar-mahasiswa">
+              <span class="avatar-inisial material-symbols-outlined">person</span>
+            </div>
+            <div class="info-mahasiswa">
+              <h3 class="nama-mahasiswa">Cuppa</h3>
+              <p class="meta-mahasiswa">
+                <span class="npm-mahasiswa">07352211097</span>
+                <span class="separator-meta">-</span>
+                <span class="email-mahasiswa">cuppa@example.com</span>
+                
+              </p>
+              <p class="waktu-meta"><span class="material-symbols-outlined">calendar_month</span>18-02-2026</p>
+            </div>
+          </div>
+          <span class="badge-status">Diterima</span>
+        </div>
+
+        <div class="card-mahasiswa-body">
+          <!-- <div class="aksi-mahasiswa">
+            <button class="btn-aksi btn-terima">
+              <span class="material-symbols-outlined">check_circle</span>
+              Terima
+            </button>
+            <button class="btn-aksi btn-tolak">
+              <span class="material-symbols-outlined">cancel</span>
+              Tolak
+            </button>
+          </div> -->
+        </div>
+      </article>
+      <article class="card-mahasiswa status-ditolak">
+        <div class="card-mahasiswa-header">
+          <div class="card-mahasiswa-profil">
+            <div class="avatar-mahasiswa">
+              <span class="avatar-inisial material-symbols-outlined">person</span>
+            </div>
+            <div class="info-mahasiswa">
+              <h3 class="nama-mahasiswa">Manray</h3>
+              <p class="meta-mahasiswa">
+                <span class="npm-mahasiswa">07352211093</span>
+                <span class="separator-meta">-</span>
+                <span class="email-mahasiswa">manray@example.com</span>
+              </p>
+              <p class="waktu-meta"><span class="material-symbols-outlined">calendar_month</span>18-02-2026</p>
+            </div>
+          </div>
+          <span class="badge-status">Ditolak</span>
+        </div>
+
+        <div class="card-mahasiswa-body">
+          <!-- <div class="aksi-mahasiswa">
+            <button class="btn-aksi btn-terima">
+              <span class="material-symbols-outlined">check_circle</span>
+              Terima
+            </button>
+            <button class="btn-aksi btn-tolak">
+              <span class="material-symbols-outlined">cancel</span>
+              Tolak
+            </button>
+          </div> -->
+        </div>
+      </article>
+      <article class="card-mahasiswa status-pending">
+        <div class="card-mahasiswa-header">
+          <div class="card-mahasiswa-profil">
+            <div class="avatar-mahasiswa">
+              <span class="avatar-inisial material-symbols-outlined">person</span>
+            </div>
+            <div class="info-mahasiswa">
+              <h3 class="nama-mahasiswa">Aming Lang</h3>
+              <p class="meta-mahasiswa">
+                <span class="npm-mahasiswa">07352211064</span>
+                <span class="separator-meta">-</span>
+                <span class="email-mahasiswa">aminglang@example.com</span>
+              </p>
+              <p class="waktu-meta"><span class="material-symbols-outlined">calendar_month</span>18-02-2026</p>
+            </div>
+          </div>
+          <span class="badge-status">Pending</span>
+        </div>
+
+        <div class="card-mahasiswa-body">
+          <div class="aksi-mahasiswa">
+            <button class="btn-aksi btn-terima">
+              <span class="material-symbols-outlined">check_circle</span>
+              Terima
+            </button>
+            <button class="btn-aksi btn-tolak">
+              <span class="material-symbols-outlined">cancel</span>
+              Tolak
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+  
+  </div>
+
+
 </body>
 </html>

@@ -137,6 +137,12 @@
                             renderMahasiswaChart();
                         }, 50);
                     }
+                    else if (page === "monitoring") {
+                        setTimeout(() => {
+                            renderProgressMingguanChart();
+                            renderKemampuanLiterasiChart();
+                        }, 50);
+                    }
                 })
                 .catch(() => {
                     content.innerHTML = "<h2>Halaman tidak ditemukan</h2>";

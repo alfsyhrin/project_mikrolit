@@ -1,0 +1,329 @@
+/* Awal Card Monitoring */
+.card-monitoring-wrapper {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr; /* default mobile */
+}
+
+.card-monitoring {
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.card-monitoring h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-monitoring p {
+  color: var(--hijau);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.icon-judul-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.icon-judul-wrapper h4 {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-weight: 500;
+  width: 80%;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.icon-judul-wrapper p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 7px;
+  background-color: #37b7c327;
+}
+
+.icon-judul-wrapper .material-symbols-outlined {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+}
+
+/* Responsive */
+@media (min-width: 600px) {
+  .card-monitoring-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .card-monitoring-wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .card-monitoring:nth-child(4) {
+    grid-column: span 3;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card-monitoring-wrapper {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .card-monitoring:nth-child(4) {
+    grid-column: span 1;
+  }
+}
+/* Akhir Card Monitoring */
+
+/* Awal card chart */
+.container-chart {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-progres-mingguan {
+  flex: 2;
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.card-progres-mingguan h4 {
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+
+
+
+#progressmingguanChart {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#progressmingguanChart .apexcharts-canvas {
+  margin: 0 auto;
+}
+
+#kemampuanliterasiChart {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-kemampuan-literasi {
+  flex: 1;
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+  /* ✅ pastikan card cukup tinggi menampung radar chart */
+  /* min-height: 500px; */
+}
+
+.card-kemampuan-literasi h4 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 1rem;
+}
+
+.card-progres-mingguan,
+.card-kemampuan-literasi {
+  min-width: 0;
+}
+
+p.alert-card {
+  color: #b91c1c;
+}
+
+/* Responsivitas */
+@media (max-width: 768px) {
+  .container-chart {
+    grid-template-columns: 1fr;
+  }
+
+  #progressmingguanChart {
+    /* padding: 0.5rem; */
+  }
+
+  #kemampuanliterasiChart {
+    /* height: 350px; */
+  }
+}
+
+/* Akhir card chart */
+
+/* Awal Container Tabel */
+.card-tabel-mahasiswa h4 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 1rem;
+}
+
+.card-tabel-mahasiswa {
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.wrapper-tabel {
+  height: 310px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+thead th {
+  text-align: left;
+  padding: 15px 10px;
+  color: var(--primary-color);
+  font-weight: 500;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+tbody td {
+  padding: 18px 10px;
+  border-bottom: 1px solid #ddd;
+  color: var(--text-color);
+  font-size: 0.85rem;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nama {
+  font-weight: 550;
+  color: var(--primary-color);
+}
+
+.muted {
+  color: #6b7a90;
+}
+
+/* Progress Bar */
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress {
+  width: 120px;
+  height: 10px;
+  background-color: #e5e9f2;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #2ca6a4, #4cc3c1);
+  border-radius: 10px;
+}
+
+.percentage {
+  font-weight: 500;
+  color: #1e2a44;
+}
+/* Akhir Container Tabel */
+
+/* Awal Container Tracking Kesulitan */
+.card-tracking-kesulitan h4 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 1rem;
+}
+
+.card-tracking-kesulitan {
+  background-color: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-kesulitan-modul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem;
+  gap: 1rem;
+  border: 1px solid #ddd;
+  background-color: #eeeeee80;
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+}
+
+.tracking-wrapper {
+  height: 240px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.card-kesulitan-modul:last-child {
+  margin-bottom: 0;
+}
+
+.card-kesulitan-modul .wrapper-tracking {
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-kesulitan-modul .icon-kesulitan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #f0c03727;
+  color: #f0c037;
+  padding: 0.5rem;
+}
+
+.card-kesulitan-modul .info-kesulitan {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-kesulitan-modul .info-kesulitan .nama-modul {
+  font-weight: 550;
+  color: var(--primary-color);
+}
+
+.card-kesulitan-modul .info-kesulitan .jumlah-mahasiswa {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.progress-bar-kesulitan {
+  height: 100%;
+  background: linear-gradient(90deg, #f0c037, #f0bf37e2);
+  border-radius: 10px;
+}
+/* Akhir Container Tracking Kesulitan */
