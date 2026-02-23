@@ -325,3 +325,7 @@ button.active-filter {
   }
 }
 /* Akhir card mahasiswa */
+
+.hidden {
+  display: none !important;
+}

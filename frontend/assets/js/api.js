@@ -1,4 +1,4 @@
-const API_BASE = "https://12e5-180-243-36-192.ngrok-free.app/api";
+const API_BASE = "https://5c16-2001-448a-7100-2c47-345c-87d0-6c98-a6fc.ngrok-free.app/api";
 
 export async function loginRequest(email, password){
     const response = await fetch(API_BASE + "/login", {
