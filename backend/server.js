@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const authRoute = require("./routes/authRoute");
 const registRoute = require("./routes/registRoute");
+const userRoute = require("./routes/userRoute");
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 // ROUTES
 app.use("/api", authRoute);
 app.use("/api", registRoute);
+app.use("/api", userRoute);
 app.get("/", (req, res) => {
     res.send("Server berjalan dengan baik!");
 });

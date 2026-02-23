@@ -1,4 +1,4 @@
-const API_BASE = "https://12e5-180-243-36-192.ngrok-free.app/api";
+const API_BASE = "http://localhost:4000/api";
 
 export async function loginRequest(email, password){
     const response = await fetch(API_BASE + "/login", {
@@ -23,4 +23,16 @@ export async function registerRequest(name, email, password, nidn){
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, nidn })
     });
+}
+
+export async function getUsersRequest(token){
+    const response = await fetch(API_BASE + "/users", {
+        method: "GET",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
 }

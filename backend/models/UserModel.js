@@ -19,6 +19,11 @@ const UserModel = {
     findByNidn: (nidn, callback) => {
         const sql = "SELECT * FROM users WHERE nidn = ?";
         db.query(sql, [nidn], callback);
+    },
+
+    findByRole: (role, callback) => {
+        const sql = "SELECT * FROM users WHERE role = ?";
+        db.query(sql, [role], callback);
     }
 };
 
