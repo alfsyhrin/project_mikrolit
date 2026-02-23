@@ -49,8 +49,8 @@
 
 /* Akhir search bar */
 
-/* Awal export csv */
-.export-csv {
+/* Awal export excel */
+.export-excel {
   background: linear-gradient(
     135deg,
     var(--secondary-color),
@@ -69,10 +69,10 @@
   gap: 0.35rem;
   width: 100%;
 }
-.export-csv .material-symbols-outlined {
+.export-excel .material-symbols-outlined {
   font-size: 1.3rem;
 }
-/* Akhir export csv */
+/* Akhir export excel */
 
 /* Awal filter manajemen pengguna */
 .filter-manajemen-wrapper {
@@ -328,4 +328,28 @@ button.active-filter {
 
 .hidden {
   display: none !important;
+}
+
+/* Animasi card */
+.card-mahasiswa {
+  transition: 
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    max-height 0.3s ease,
+    margin 0.3s ease,
+    padding 0.3s ease;
+  overflow: hidden;
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-mahasiswa.hide {
+  opacity: 0;
+  transform: translateY(-5px) scale(0.98);
+  max-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  pointer-events: none;
 }
