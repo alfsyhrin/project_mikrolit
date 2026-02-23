@@ -49,8 +49,8 @@
 
 /* Akhir search bar */
 
-/* Awal export csv */
-.export-csv {
+/* Awal export excel */
+.export-excel {
   background: linear-gradient(
     135deg,
     var(--secondary-color),
@@ -69,10 +69,10 @@
   gap: 0.35rem;
   width: 100%;
 }
-.export-csv .material-symbols-outlined {
+.export-excel .material-symbols-outlined {
   font-size: 1.3rem;
 }
-/* Akhir export csv */
+/* Akhir export excel */
 
 /* Awal filter manajemen pengguna */
 .filter-manajemen-wrapper {
