@@ -89,10 +89,13 @@
                 
             </div>
         </main>
-    </div>
-
-    <!-- Link untuk manajemen-pengguna.js -->
-    <script src="../assets/js/manajemen-pengguna.js"></script>
+    <script type="module">
+        import { fetchAndRenderUsers, initManajemenPengguna } from "./assets/js/manajemen-pengguna.js";
+        
+        // Expose ke global scope agar bisa dipanggil dari inline script lain
+        window.fetchAndRenderUsers = fetchAndRenderUsers;
+        window.initManajemenPengguna = initManajemenPengguna;
+    </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
     <script src="../assets/js/apexcharts.min.js"></script>
@@ -139,7 +142,8 @@
                     // 🔥 INIT FILTER jika halaman manajemen pengguna
                     if (page === "manajemen-pengguna") {
                         setTimeout(() => {
-                            initManajemenPengguna();
+                            window.initManajemenPengguna();
+                            window.fetchAndRenderUsers();
                         }, 50);
                     }
                     

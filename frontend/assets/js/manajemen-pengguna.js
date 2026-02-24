@@ -1,81 +1,140 @@
-// assets/js/manajemen-pengguna.js
+import { getUsersRequest, updateUserStatusRequest} from "./api.js";
+
+let allUsers = []; // Simpan semua data user di sini
+
+async function fetchAndRenderUsers() {
+  const container = document.querySelector(".daftar-mahasiswa");
+  const token = localStorage.getItem("token");
+  if (!container) return;
+
+  try {
+    allUsers = await getUsersRequest(token);
+
+    if (!Array.isArray(allUsers) || allUsers.length === 0) {
+      container.innerHTML = "<p>Tidak ada data mahasiswa.</p>";
+      return;
+    }
+
+    renderUsers(allUsers);
+    initManajemenPengguna(); // Inisialisasi filter & search setelah render
+  } catch (err) {
+    container.innerHTML = "<p>Gagal mengambil data pengguna.</p>";
+  }
+}
+
+function renderUsers(users) {
+  const container = document.querySelector(".daftar-mahasiswa");
+  container.innerHTML = users.map(user => {
+    let statusClass = "";
+    let statusLabel = "";
+    if (user.status === "pending") {
+      statusClass = "status-pending";
+      statusLabel = "Pending";
+    } else if (user.status === "diterima" || user.status === "approved") {
+      statusClass = "status-diterima";
+      statusLabel = "Diterima";
+    } else if (user.status === "ditolak" || user.status === "rejected") {
+      statusClass = "status-ditolak";
+      statusLabel = "Ditolak";
+    } else {
+      statusClass = "status-pending";
+      statusLabel = user.status;
+    }
+
+    const tanggal = user.created_at ? new Date(user.created_at).toLocaleDateString("id-ID") : "-";
+
+    return `
+      <article class="card-mahasiswa ${statusClass}" data-user-id="${user.id}">
+        <div class="card-mahasiswa-header">
+          <div class="card-mahasiswa-profil">
+            <div class="avatar-mahasiswa">
+              <span class="avatar-inisial material-symbols-outlined">person</span>
+            </div>
+            <div class="info-mahasiswa">
+              <h3 class="nama-mahasiswa">${user.name}</h3>
+              <p class="meta-mahasiswa">
+                <span class="npm-mahasiswa">${user.nidn}</span>
+                <span class="separator-meta">-</span>
+                <span class="email-mahasiswa">${user.email}</span>
+              </p>
+              <p class="waktu-meta"><span class="material-symbols-outlined">calendar_month</span>${tanggal}</p>
+            </div>
+          </div>
+          <span class="badge-status">${statusLabel}</span>
+        </div>
+        <div class="card-mahasiswa-body">
+          ${
+            user.status === "pending"
+            ? `<div class="aksi-mahasiswa">
+                <button class="btn-aksi btn-terima" data-action="terima">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  Terima
+                </button>
+                <button class="btn-aksi btn-tolak" data-action="tolak">
+                  <span class="material-symbols-outlined">cancel</span>
+                  Tolak
+                </button>
+              </div>`
+            : ""
+          }
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+async function attachUpdateStatusListeners() {
+  const token = localStorage.getItem("token");
+  const buttons = document.querySelectorAll(".btn-aksi");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", async function () {
+      const card = this.closest(".card-mahasiswa");
+      const userId = card.dataset.userId;
+      const action = this.dataset.action;
+      const status = action === "terima" ? "diterima" : "ditolak";
+
+      console.log("Updating user:", userId, "to status:", status); 
+      try {
+        const response = await updateUserStatusRequest(userId, status, token);
+        if (response.message) {
+          alert(response.message);
+          fetchAndRenderUsers(); // Refresh data setelah update status
+        } else {
+          alert("Gagal memperbarui status pengguna.");
+        }
+      } catch (err) {
+        alert("Terjadi kesalahan saat memperbarui status pengguna.");
+      }
+    });
+  });
+}
 
 function initManajemenPengguna() {
   const filterButtons = document.querySelectorAll(".filter-manajemen-wrapper button");
-  const cards = document.querySelectorAll(".card-mahasiswa");
   const searchInput = document.getElementById("searchMahasiswa");
-  const exportBtn = document.querySelector(".export-excel");
-
-  if (exportBtn) {
-    exportBtn.addEventListener("click", function () {
-
-      const visibleCards = document.querySelectorAll(".card-mahasiswa:not(.hide)");
-
-      if (!visibleCards.length) {
-        alert("Tidak ada data untuk diexport.");
-        return;
-      }
-
-      const data = [];
-
-      // Header
-      data.push(["Nama", "NPM", "Email", "Status", "Tanggal"]);
-
-      // Ambil data dari card yang terlihat
-      visibleCards.forEach(card => {
-        const nama = card.querySelector(".nama-mahasiswa")?.innerText.trim();
-        const npm = card.querySelector(".npm-mahasiswa")?.innerText.trim();
-        const email = card.querySelector(".email-mahasiswa")?.innerText.trim();
-        const status = card.querySelector(".badge-status")?.innerText.trim();
-        const tanggal = card.querySelector(".waktu-meta")?.innerText.trim();
-
-        data.push([nama, npm, email, status, tanggal]);
-      });
-
-      // Buat worksheet
-      const worksheet = XLSX.utils.aoa_to_sheet(data);
-
-      // Buat workbook
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Data Mahasiswa");
-
-      // Auto width kolom
-      const colWidths = data[0].map((_, colIndex) => ({
-        wch: Math.max(...data.map(row => row[colIndex]?.length || 10)) + 2
-      }));
-      worksheet["!cols"] = colWidths;
-
-      // Nama file dengan tanggal
-      const today = new Date().toISOString().split("T")[0];
-      XLSX.writeFile(workbook, `Data_Mahasiswa_${today}.xlsx`);
-    });
-  }
-
-  if (!filterButtons.length) return;
-
   let currentFilter = "semua";
   let currentSearch = "";
 
   function applyFilter() {
-    cards.forEach(card => {
-      const nama = card.querySelector(".nama-mahasiswa").innerText.toLowerCase();
-      const npm = card.querySelector(".npm-mahasiswa").innerText.toLowerCase();
-
-      const cocokSearch =
-        nama.includes(currentSearch) || npm.includes(currentSearch);
-
-      const cocokStatus =
+    let filtered = allUsers.filter(user => {
+      // Filter status
+      let cocokStatus =
         currentFilter === "semua" ||
-        (currentFilter === "diterima" && card.classList.contains("status-diterima")) ||
-        (currentFilter === "pending" && card.classList.contains("status-pending")) ||
-        (currentFilter === "ditolak" && card.classList.contains("status-ditolak"));
+        (currentFilter === "diterima" && (user.status === "diterima" || user.status === "approved")) ||
+        (currentFilter === "pending" && user.status === "pending") ||
+        (currentFilter === "ditolak" && (user.status === "ditolak" || user.status === "rejected"));
 
-      if (cocokSearch && cocokStatus) {
-        card.classList.remove("hide");
-      } else {
-        card.classList.add("hide");
-      }
+      // Filter search
+      let nama = user.name?.toLowerCase() || "";
+      let npm = user.nidn?.toLowerCase() || "";
+      let cocokSearch = nama.includes(currentSearch) || npm.includes(currentSearch);
+
+      return cocokStatus && cocokSearch;
     });
+
+    renderUsers(filtered);
+    attachUpdateStatusListeners(); // Re-attach listeners setelah render ulang
   }
 
   // FILTER CLICK
@@ -97,3 +156,14 @@ function initManajemenPengguna() {
     });
   }
 }
+
+// Jalankan saat halaman dimuat
+document.addEventListener("DOMContentLoaded", () => {
+  // Cek apakah halaman manajemen pengguna sedang aktif
+  if (window.location.pathname.endsWith("dashboard.html") &&
+      document.querySelector(".daftar-mahasiswa")) {
+    fetchAndRenderUsers();
+  }
+});
+
+export { fetchAndRenderUsers, initManajemenPengguna };

@@ -1,10 +1,20 @@
-const API_BASE = "https://5c16-2001-448a-7100-2c47-345c-87d0-6c98-a6fc.ngrok-free.app/api";
+const API_BASE = "http://localhost:4000/api";
 
-export async function loginRequest(email, password){
+export async function loginRequest(emailOrNidn, password){
+    const body = {};
+
+    if (emailOrNidn.includes("@")) { 
+        body.email = emailOrNidn;
+    } else{
+        body.nidn = emailOrNidn;
+    }
+
+    body.password = password;
+
     const response = await fetch(API_BASE + "/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify(body)
     });
 
     return response.json();
@@ -32,6 +42,24 @@ export async function getUsersRequest(token){
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         }
+    });
+
+    return response.json();
+}
+
+export async function updateUserStatusRequest(userId, status, token){
+    const statusMap = {
+        "diterima": "approved",
+        "ditolak": "rejected"
+    };
+
+    const response = await fetch(API_BASE + `/users/${userId}/status`, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ status })
     });
 
     return response.json();

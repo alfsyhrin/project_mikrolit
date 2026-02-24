@@ -24,7 +24,13 @@ const UserModel = {
     findByRole: (role, callback) => {
         const sql = "SELECT * FROM users WHERE role = ?";
         db.query(sql, [role], callback);
-    }
+    },
+    
+    updateStatus: (id, status, callback) => {
+        const sql = "UPDATE users SET status = ? WHERE id = ?";
+        db.query(sql, [status, id], callback);
+    }  
+    
 };
 
 module.exports = UserModel;
