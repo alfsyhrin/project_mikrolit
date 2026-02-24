@@ -23,6 +23,11 @@ exports.login = (req, res) => {
                 return res.status(401).json({ message: "Email tidak ditemukan" });
             }
 
+            const user = results[0];
+            if (user.status !== "diterima"){
+                return res.status(403).json({message:"Akun anda belum diterima, silahkan hubungi dosen"});
+            }
+
             authenticateUser(results[0], password, res);
         });
     }
@@ -33,6 +38,11 @@ exports.login = (req, res) => {
 
             if (results.length === 0) {
                 return res.status(401).json({ message: "NIDN tidak ditemukan" });
+            }
+
+            const user = results[0];
+            if (user.status !== "diterima"){
+                return res.status(403).json({message:"Akun anda belum diterima, silahkan hubungi dosen"});
             }
 
             authenticateUser(results[0], password, res);
