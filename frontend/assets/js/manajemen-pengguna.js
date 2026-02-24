@@ -58,7 +58,7 @@ function renderUsers(users) {
                 <span class="separator-meta">-</span>
                 <span class="email-mahasiswa">${user.email}</span>
               </p>
-              <p class="waktu-meta"><span class="material-symbols-outlined">calendar_month</span>${tanggal}</p>
+              <p class="waktu-meta"><span class="material-symbols-outlined"></span>${tanggal}</p>
             </div>
           </div>
           <span class="badge-status">${statusLabel}</span>
@@ -94,6 +94,53 @@ function initManajemenPengguna() {
   const searchInput = document.getElementById("searchMahasiswa");
   let currentFilter = "semua";
   let currentSearch = "";
+
+  const exportBtn = document.querySelector(".export-excel");
+
+  if (exportBtn) {
+    exportBtn.addEventListener("click", function () {
+
+      const visibleCards = document.querySelectorAll(".card-mahasiswa:not(.hide)");
+
+      if (!visibleCards.length) {
+        alert("Tidak ada data untuk diexport.");
+        return;
+      }
+
+      const data = [];
+
+      // Header
+      data.push(["Nama", "NPM", "Email", "Status", "Tanggal"]);
+
+      // Ambil data dari card yang terlihat
+      visibleCards.forEach(card => {
+        const nama = card.querySelector(".nama-mahasiswa")?.innerText.trim();
+        const npm = card.querySelector(".npm-mahasiswa")?.innerText.trim();
+        const email = card.querySelector(".email-mahasiswa")?.innerText.trim();
+        const status = card.querySelector(".badge-status")?.innerText.trim();
+        const tanggal = card.querySelector(".waktu-meta")?.innerText.trim();
+
+        data.push([nama, npm, email, status, tanggal]);
+      });
+
+      // Buat worksheet
+      const worksheet = XLSX.utils.aoa_to_sheet(data);
+
+      // Buat workbook
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Data Mahasiswa");
+
+      // Auto width kolom
+      const colWidths = data[0].map((_, colIndex) => ({
+        wch: Math.max(...data.map(row => row[colIndex]?.length || 10)) + 2
+      }));
+      worksheet["!cols"] = colWidths;
+
+      // Nama file dengan tanggal
+      const today = new Date().toISOString().split("T")[0];
+      XLSX.writeFile(workbook, `Data_Mahasiswa_${today}.xlsx`);
+    });
+  }
 
   function applyFilter() {
     let filtered = allUsers.filter(user => {
