@@ -1,4 +1,4 @@
-const API_BASE = "https://a862-2001-448a-7100-24e7-797f-4410-9ccb-7236.ngrok-free.app/api";
+const API_BASE = "https://f8ce-2001-448a-7100-24e7-c37-a238-cd2b-c5f7.ngrok-free.app/api";
 
 export async function loginRequest(emailOrNidn, password){
     const body = {};
