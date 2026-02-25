@@ -1,0 +1,140 @@
+/* Awal header */
+header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.buat-modul {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+}
+
+.buat-modul .material-symbols-outlined {
+  font-size: 1.2rem;
+}
+
+/* Awal search bar */
+.search-bar {
+  flex: 4;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+}
+
+.search-bar:focus-within {
+  border-color: var(--secondary-color);
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.search-bar p {
+  color: var(--primary-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-bar .material-symbols-outlined {
+  font-size: 1.3rem;
+}
+/* Akhir header */
+
+/* Awal card template modul */
+.card-template-modul {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.card-modul {
+  width: 100%;
+  height: 130px;
+  border-radius: 10px;
+  color: #fff;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+}
+
+.card-modul .material-symbols-outlined {
+  font-size: 1.8rem;
+  color: #fff;
+  padding: 0.4rem;
+  border-radius: 10px;
+}
+
+.card-modul .judul-modul {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #111;
+}
+
+.card-modul .material-symbols-outlined.pertama {
+  background: linear-gradient(
+    135deg,
+    #0B192C,
+    #1E2A47
+  );
+}
+
+.card-modul .material-symbols-outlined.kedua {
+  background-color: var(--secondary-color);
+}
+
+.card-modul .material-symbols-outlined.ketiga {
+  background-color: var(--third-color);
+}
+
+.card-modul .material-symbols-outlined.keempat {
+  background-color: var(--third-color);
+}
+
+.card-modul .material-symbols-outlined.kelima {
+  background-color: var(--hijau-terang);
+}
+
+.card-modul .material-symbols-outlined.keenam {
+  background-color: #F0C037;
+}
+
+.card-modul.pertama {
+  background: linear-gradient(
+    135deg,
+    #0B192C,
+    #1E2A47
+  );
+}
+/* Akhir card template modul */
