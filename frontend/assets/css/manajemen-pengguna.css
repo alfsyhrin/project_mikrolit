@@ -332,28 +332,16 @@ button.active-filter {
 
 /* Animasi card */
 .card-mahasiswa {
-  transition: 
-    opacity 0.3s ease,
-    transform 0.3s ease,
-    max-height 0.3s ease,
-    margin 0.3s ease,
-    padding 0.3s ease;
-  overflow: hidden;
-  max-height: 500px;
+  transition: opacity 0.25s ease, transform 0.25s ease;
   opacity: 1;
   transform: translateY(0);
 }
 
-.card-mahasiswa.hide {
+.card-mahasiswa.fade-out {
   opacity: 0;
-  transform: translateY(-5px) scale(0.98);
-  max-height: 0;
-  margin: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  pointer-events: none;
+  transform: translateY(-6px);
 }
 
-.card-mahasiswa.hidden {
+.card-mahasiswa.hide {
   display: none !important;
 }
