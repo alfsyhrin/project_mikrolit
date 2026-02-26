@@ -353,3 +353,7 @@ button.active-filter {
   padding-bottom: 0;
   pointer-events: none;
 }
+
+.card-mahasiswa.hidden {
+  display: none !important;
+}

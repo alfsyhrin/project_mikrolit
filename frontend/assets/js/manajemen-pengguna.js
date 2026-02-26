@@ -143,34 +143,40 @@ function initManajemenPengguna() {
   }
 
   function applyFilter() {
-    let filtered = allUsers.filter(user => {
-      let cocokStatus =
-        currentFilter === "semua" ||
-        (currentFilter === "diterima" && (user.status === "diterima" || user.status === "approved")) ||
-        (currentFilter === "pending" && user.status === "pending") ||
-        (currentFilter === "ditolak" && (user.status === "ditolak" || user.status === "rejected"));
+  let filtered = allUsers.filter(user => {
+    let cocokStatus =
+      currentFilter === "semua" ||
+      (currentFilter === "diterima" && (user.status === "diterima" || user.status === "approved")) ||
+      (currentFilter === "pending" && user.status === "pending") ||
+      (currentFilter === "ditolak" && (user.status === "ditolak" || user.status === "rejected"));
 
-      let nama = user.name?.toLowerCase() || "";
-      let npm = user.nidn?.toLowerCase() || "";
-      let cocokSearch = nama.includes(currentSearch) || npm.includes(currentSearch);
+    let nama = user.name?.toLowerCase() || "";
+    let npm = user.nidn?.toLowerCase() || "";
+    let cocokSearch = nama.includes(currentSearch) || npm.includes(currentSearch);
 
-      return cocokStatus && cocokSearch;
-    });
+    return cocokStatus && cocokSearch;
+  });
 
-    const allCards = document.querySelectorAll(".card-mahasiswa");
-    const filteredIds = filtered.map(u => u.id);
+  const allCards = document.querySelectorAll(".card-mahasiswa");
+  const filteredIds = filtered.map(u => u.id);
 
-    allCards.forEach(card => {
-      const userId = parseInt(card.dataset.userId);
-      const shouldShow = filteredIds.includes(userId);
+  allCards.forEach(card => {
+    const userId = parseInt(card.dataset.userId);
+    const shouldShow = filteredIds.includes(userId);
 
-      if (shouldShow) {
-        card.classList.remove("hide");
-      } else {
+    if (shouldShow) {
+      // Tampilkan: lepas .hide dan .hidden
+      card.classList.remove("hide");
+      setTimeout(() => card.classList.remove("hidden"), 10); // biar transisi masuk juga smooth
+    } else {
+      // Sembunyikan: tambah .hide, lalu setelah transisi selesai, tambah .hidden
+      if (!card.classList.contains("hide")) {
         card.classList.add("hide");
+        setTimeout(() => card.classList.add("hidden"), 300); // 300ms = waktu transisi CSS
       }
-    });
-  }
+    }
+  });
+}
 
   // FILTER CLICK
   filterButtons.forEach(button => {
