@@ -1,4 +1,4 @@
-const API_BASE = "https://a862-2001-448a-7100-24e7-797f-4410-9ccb-7236.ngrok-free.app/api";
+const API_BASE = "https://erica-slatier-neoma.ngrok-free.dev/api";
 
 export async function loginRequest(emailOrNidn, password){
     const body = {};
@@ -14,6 +14,7 @@ export async function loginRequest(emailOrNidn, password){
     const response = await fetch(API_BASE + "/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        "ngrok-skip-browser-warning": "true",
         body: JSON.stringify(body)
     });
 
@@ -31,6 +32,7 @@ export async function registerRequest(name, email, password, nidn){
     const response = await fetch(API_BASE + "/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        "ngrok-skip-browser-warning": "true",
         body: JSON.stringify({ name, email, password, nidn })
     });
 }
@@ -40,6 +42,7 @@ export async function getUsersRequest(token){
         method: "GET",
         headers: { 
             "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -57,6 +60,7 @@ export async function updateUserStatusRequest(userId, status, token){
         method: "POST",
         headers: { 
             "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ status })
