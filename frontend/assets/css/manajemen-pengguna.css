@@ -123,6 +123,7 @@ button.active-filter {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .card-mahasiswa {
@@ -215,7 +216,7 @@ button.active-filter {
   color: var(--text-color);
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  /* gap: 0.35rem; */
   align-items: center;
   justify-content: flex-start;
   font-weight: 500;

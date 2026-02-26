@@ -68,11 +68,14 @@ header {
 /* Awal card template modul */
 .card-template-modul {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   margin-bottom: 1rem;
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center; */
+  /* grid-template-columns: 1fr; */
 }
 
 .card-modul {
@@ -138,6 +141,33 @@ header {
     #1E2A47
   );
 }
+
+/* Responsive */
+@media (min-width: 600px) {
+  .card-template-modul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .card-template-modul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* .card-modul:nth-child(4) {
+    grid-column: span 3;
+  } */
+}
+
+@media (min-width: 1200px) {
+  .card-template-modul {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .card-modul:nth-child(4) {
+    grid-column: span 1;
+  }
+}
 /* Akhir card template modul */
 
 /* Awal List Modul */
@@ -176,23 +206,36 @@ header {
   display: flex;
   gap: 0.7rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
 }
 
 .tema-modul .judul-modul {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  /* width: 100%; */
+  /* border: 1px solid red; */
+  min-width: 0;
 }
 
 .tema-modul .judul-modul h5  {
   font-size: 1rem;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .tema-modul .judul-modul p  {
   font-size: 0.9rem;
   color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .header-modul .tema-modul .icon-modul {
@@ -204,6 +247,7 @@ header {
   justify-content: center;
   align-items: center;
   color: #fff;
+  flex-shrink: 0;
 }
 
 .tema-modul .icon-modul .material-symbols-outlined {
