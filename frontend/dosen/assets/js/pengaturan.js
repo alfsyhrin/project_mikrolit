@@ -16,12 +16,12 @@ function initPengaturan() {
 
             // Hide semua dulu
             containers.forEach(c => {
-                c.classList.add("hidden");
+                c.classList.add("sembunyi");
             });
 
             // Delay kecil agar transisi rapi
             setTimeout(() => {
-                document.getElementById(target).classList.remove("hidden");
+                document.getElementById(target).classList.remove("sembunyi");
             }, 50);
         });
     });

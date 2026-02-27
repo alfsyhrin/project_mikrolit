@@ -1,0 +1,338 @@
+/* Awal header */
+header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.buat-modul {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+}
+
+.buat-modul .material-symbols-outlined {
+  font-size: 1.2rem;
+}
+
+/* Awal search bar */
+.search-bar {
+  flex: 4;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+}
+
+.search-bar:focus-within {
+  border-color: var(--secondary-color);
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.search-bar p {
+  color: var(--primary-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-bar .material-symbols-outlined {
+  font-size: 1.3rem;
+}
+/* Akhir header */
+
+/* Awal card template modul */
+.card-template-modul {
+  width: 100%;
+  gap: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 1rem;
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center; */
+  /* grid-template-columns: 1fr; */
+}
+
+.card-modul {
+  width: 100%;
+  height: 130px;
+  border-radius: 10px;
+  color: #fff;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+}
+
+.card-modul .material-symbols-outlined {
+  font-size: 1.8rem;
+  color: #fff;
+  padding: 0.4rem;
+  border-radius: 10px;
+}
+
+.card-modul .judul-modul {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #111;
+}
+
+.card-modul .material-symbols-outlined.pertama {
+  background: linear-gradient(
+    135deg,
+    #0B192C,
+    #1E2A47
+  );
+}
+
+.card-modul .material-symbols-outlined.kedua {
+  background-color: var(--secondary-color);
+}
+
+.card-modul .material-symbols-outlined.ketiga {
+  background-color: var(--third-color);
+}
+
+.card-modul .material-symbols-outlined.keempat {
+  background-color: var(--secondary-color);
+}
+
+.card-modul .material-symbols-outlined.kelima {
+  background-color: var(--hijau-terang);
+}
+
+.card-modul .material-symbols-outlined.keenam {
+  background-color: #F0C037;
+}
+
+.card-modul.pertama {
+  background: linear-gradient(
+    135deg,
+    #0B192C,
+    #1E2A47
+  );
+}
+
+/* Responsive */
+@media (min-width: 600px) {
+  .card-template-modul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .card-template-modul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* .card-modul:nth-child(4) {
+    grid-column: span 3;
+  } */
+}
+
+@media (min-width: 1200px) {
+  .card-template-modul {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .card-modul:nth-child(4) {
+    grid-column: span 1;
+  }
+}
+/* Akhir card template modul */
+
+/* Awal List Modul */
+.list-modul {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid red; */
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-list-modul {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ddd;
+}
+
+.card-list-modul .header-modul {
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 1rem;
+  border-bottom: 1.2px solid #ddd;
+}
+
+.header-modul .tema-modul {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.tema-modul .judul-modul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  /* width: 100%; */
+  /* border: 1px solid red; */
+  min-width: 0;
+}
+
+.tema-modul .judul-modul h5  {
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.tema-modul .judul-modul p  {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.header-modul .tema-modul .icon-modul {
+  height: 45px;
+  width: 45px;
+  background: linear-gradient(135deg, var(--secondary-color), var(--third-color));
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.tema-modul .icon-modul .material-symbols-outlined {
+  font-size: 1.8rem;
+}
+
+.header-modul .action-modul {
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-modul .action-modul .status-modul {
+  padding: 0.3rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+.status-modul.aktif {
+  background-color: var(--hijau-background);
+  color: var(--hijau);
+}
+
+.status-modul.nonaktif {
+  background-color: var(--merah-background);
+  color: var(--merah);
+}
+
+.header-modul .action-modul p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-modul .action-modul .material-symbols-outlined {
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+}
+
+.card-list-modul .footer-modul {
+  /* border: 1px solid red; */
+  padding-top: 1rem;
+  width: 100%;
+}
+
+.footer-modul .info-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.info-progress-bar h5 {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.info-progress-bar p {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Progress Bar */
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.progress-micro {
+  width: 100%;
+  height: 10px;
+  background-color: #e5e9f2;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #2ca6a4, #4cc3c1);
+  border-radius: 10px;
+}
+/* Akhir List Modul */

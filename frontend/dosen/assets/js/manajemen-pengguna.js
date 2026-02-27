@@ -1,4 +1,4 @@
-import { getUsersRequest, updateUserStatusRequest } from "./api.js";
+import { getUsersRequest, updateUserStatusRequest } from "../../../assets/api.js";
 
 let allUsers = [];
 

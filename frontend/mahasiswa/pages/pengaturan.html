@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan - Mikrolit LMS</title>
+</head>
+<body>
+  <div class="container-pengaturan">
+    <div class="container-filter-pengaturan">
+
+      <div class="filter-pengaturan active" data-target="editProfile">
+        <p>
+          <span class="material-symbols-outlined">person</span>
+        </p>
+        <h3>Edit Profile</h3>
+      </div>
+
+      <div class="filter-pengaturan" data-target="ubahPassword">
+        <p>
+          <span class="material-symbols-outlined">vpn_key</span>
+        </p>
+        <h3>Password</h3>
+      </div>
+      
+    </div>
+
+    <div class="pengaturan-wrapper">
+
+      <div class="profile-container" id="editProfile">
+        <h2>Edit Profile</h2>
+        <div class="icon-profile">
+          <p>
+            <span class="material-symbols-outlined">person</span>
+          </p>
+          <button>Ubah Foto</button>
+        </div>
+  
+        <div class="profile-info">
+          <label for="namaLengkap">Nama Lengkap</label>
+          <input type="text">
+        </div>
+  
+        <div class="profile-info">
+          <label for="email">Email</label>
+          <input type="email">
+        </div>
+  
+        <div class="profile-info last">
+          <label for="NIDN">NIDN</label>
+          <input type="nidn">
+        </div>
+  
+        <button class="simpan-perubahan">
+          <p>
+            <span class="material-symbols-outlined">save</span>
+          </p>
+          Simpan Perubahan
+        </button>
+        
+      </div>
+  
+      <div class="password-container sembunyi" id="ubahPassword">
+        <h2>Ubah Password</h2>
+  
+        <div class="password-info">
+          <label for="passwordLama">Password Lama</label>
+          <input type="password">
+        </div>
+  
+        <div class="password-info">
+          <label for="passwordBaru">Password Baru</label>
+          <input type="password">
+        </div>
+  
+        <div class="password-info last">
+          <label for="konfirmasiPassword">Konfirmasi Password</label>
+          <input type="password">
+        </div>
+  
+        <button class="simpan-perubahan">
+          <p>
+            <span class="material-symbols-outlined">save</span>
+          </p>
+          Ubah Password
+        </button>
+        
+      </div>
+      
+    </div>
+
+  </div>
+</body>
+</html>

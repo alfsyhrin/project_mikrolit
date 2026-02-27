@@ -26,9 +26,9 @@ if (loginForm) {
                 localStorage.setItem("email", result.email);
 
                 if (result.role === "dosen") {
-                    window.location.href = "dashboard.html";
+                    window.location.href = "./dosen/dashboard.html";
                 } else if (result.role === "mahasiswa"){
-                    window.location.href = "dashboard-mhs.html";
+                    window.location.href = "./mahasiswa/dashboard.html";
                 }
             }
             else {
@@ -50,7 +50,7 @@ if (logoutBtn) {
         try {
             await logoutRequest();
             localStorage.clear();
-            window.location.href = "index.html";
+            window.location.href = "../../index.html";
         } catch (err) {
             console.error("Logout error:", err);
             localStorage.clear();
