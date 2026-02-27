@@ -102,6 +102,9 @@
 
     <!-- Link untuk mengakses kodingan Apex chart lokal -->
     <script src="../assets/js/chart.js"></script>
+
+    <!-- Link untuk pengaturan.js -->
+    <script src="../assets/js/pengaturan.js"></script>
     
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -144,6 +147,12 @@
                         setTimeout(() => {
                             window.initManajemenPengguna();
                             window.fetchAndRenderUsers();
+                        }, 50);
+                    }
+
+                    if (page === "pengaturan") {
+                        setTimeout(() => {
+                            initPengaturan();
                         }, 50);
                     }
                     
@@ -254,7 +263,7 @@
 
 
     
-<script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
 
 </body>
 </html>

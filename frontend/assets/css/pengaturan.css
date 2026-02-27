@@ -1,0 +1,250 @@
+/* Awal Filter Pengaturan */
+.container-filter-pengaturan {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter-pengaturan {
+    width: 137px;
+    height: 42px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-pengaturan:hover {
+    background-color: #ffffffc4
+}
+
+/* Awal Active Class */
+.filter-pengaturan.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.filter-pengaturan.active h3 {
+    color: #fff;
+}
+
+.filter-pengaturan.active .material-symbols-outlined {
+    color: #fff;
+}
+/* Akhir Active Class */
+
+.filter-pengaturan h3 {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.filter-pengaturan p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter-pengaturan .material-symbols-outlined {
+    font-size: 1.4rem;
+    font-weight: 100;
+    color: #777;
+}
+/* Akhir Filter Pengaturan */
+
+/* Awal Profile Container */
+.profile-container {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.profile-container h2 {
+    margin-bottom: 1rem;
+    font-weight: 590;
+    font-size: 1.3rem;
+}
+
+.icon-profile {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+}
+
+.icon-profile p {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.icon-profile .material-symbols-outlined {
+    font-size: 2.3rem;
+    color: #fff;
+}
+
+.icon-profile button {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    /* font-weight: 500; */
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.profile-info label {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.profile-info input {
+    width: 50%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background-color: #eee;
+    padding: 0.6rem;
+}
+
+.profile-info input:focus {
+    border: 1px solid var(--primary-color);
+    outline: none;
+}
+
+.profile-info.last {
+    margin-bottom: 1.5rem;
+}
+
+button.simpan-perubahan {
+    border: none;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 0.5rem;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
+    font-weight: 550;
+    cursor: pointer;
+}
+
+button.simpan-perubahan p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+button.simpan-perubahan .material-symbols-outlined {
+    font-size: 1.5rem;
+}
+/* Akhir Profile Container */
+
+/* Awal Password Container */
+.password-container {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.password-container h2 {
+    margin-bottom: 1rem;
+    font-weight: 590;
+    font-size: 1.3rem;
+}
+
+.password-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.password-info label {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.password-info input {
+    width: 50%;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background-color: #eee;
+    padding: 0.6rem;
+}
+
+.password-info input:focus {
+    border: 1px solid var(--primary-color);
+    outline: none;
+}
+
+.password-info.last {
+    margin-bottom: 1.5rem;
+}
+
+/* Akhir Password Container */
+
+.pengaturan-wrapper {
+    position: relative;
+}
+
+.profile-container,
+.password-container {
+    width: 100%;
+    transition: 
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+/* State tersembunyi */
+.hidden {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+@media (max-width: 992px) {
+    .profile-info input,
+    .password-info input {
+        width: 75%;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-info input,
+    .password-info input {
+        width: 100%;
+    }
+}
