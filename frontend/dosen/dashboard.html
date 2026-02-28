@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Dosen</title>
+
+    <!-- Link ke CSS Halaman ini (dashboard.css) -->
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    
+    <!-- Link ke CSS beranda.css -->
+    <link rel="stylesheet" href="./assets/css/beranda.css">
+
+    <!-- Link ke CSS manajemen-pengguna.css -->
+    <link rel="stylesheet" href="./assets/css/manajemen-pengguna.css">
+
+    <!-- Link ke CSS micro-learning.css -->
+    <link rel="stylesheet" href="./assets/css/micro-learning.css">
+
+    <!-- Link ke CSS monitoring.css -->
+    <link rel="stylesheet" href="./assets/css/monitoring.css">
+
+    <!-- Link ke CSS pengaturan.css -->
+    <link rel="stylesheet" href="./assets/css/pengaturan.css">
+
+    <!-- Link ke CSS global -->
+    <link rel="stylesheet" href="../assets/main.css">
+
+
+    <!-- Link untuk mengakses icon material symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Link untuk mengakses font google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Link untuk mengakses font 'ASAP' dari google -->
+    <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Sarina&display=swap" rel="stylesheet">
+
+    <!-- Link untuk mengakses fungsi export .xlsx -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="judul-aplikasi">
+                <p class="logo"><span class="material-symbols-outlined">school</span></p>
+                <div class="nama-logo text">
+                    <h1>MikroLit LMS</h1>
+                    <p>Panel Dosen</p>
+                </div>
+            </div>
+
+            <div class="sidebar-wrapper">
+
+                <div class="sidebar-list">
+                    <ul type="none">
+                        <li>
+                            <a href="#" data-page="beranda"><p><span class="material-symbols-outlined icon">dashboard</span></p><span class="text">Beranda</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-page="manajemen-pengguna"><p><span class="material-symbols-outlined icon">group</span></p><span class="text">Manajemen Pengguna</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-page="monitoring"><p><span class="material-symbols-outlined icon">monitoring</span></p><span class="text">Monitoring</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-page="micro-learning"><p><span class="material-symbols-outlined icon">auto_stories</span></p><span class="text">Micro-Learning</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-page="pengaturan"><p><span class="material-symbols-outlined icon">settings</span></p><span class="text">Pengaturan</span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-tool">
+                    <ul type="none">
+                        <li>
+                            <button id="collapseBtn"><p><span class="material-symbols-outlined">chevron_left</span></p>Collapse</button>
+                        </li>
+                        <li>
+                            <a href="#" id="btn-logout" class="logout-sidebar"><p><span class="material-symbols-outlined icon">logout</span></p><span class="text">Logout</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="overlay" id="overlay"></div>
+
+        <main>
+            <div class="navbar">
+                <div class="navbar-kiri">
+                     <button id="mobile-toggle" ><span class="material-symbols-outlined">menu</span></button>
+                    <h2>Beranda</h2>
+                </div>
+                <div class="navbar-kanan">
+                    <p class="foto-profil"><span class="material-symbols-outlined">person</span></p>
+                    <div class="info-user">
+                        <h3 id="showName"></h3>
+                        <p id="showNidn"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                
+            </div>
+        </main>
+    <script type="module">
+        import { fetchAndRenderUsers, initManajemenPengguna } from "./assets/js/manajemen-pengguna.js";
+        
+        // Expose ke global scope agar bisa dipanggil dari inline script lain
+        window.fetchAndRenderUsers = fetchAndRenderUsers;
+        window.initManajemenPengguna = initManajemenPengguna;
+    </script>
+    
+    <!-- Link untuk mengakses Apex chart lokal -->
+    <script src="../assets/apexcharts.min.js"></script>
+
+    <!-- Link untuk mengakses kodingan Apex chart lokal -->
+    <script src="../dosen/assets/js/chart.js"></script>
+
+    <!-- Link untuk pengaturan.js -->
+    <script type="module">
+        import { initPengaturan } from "./assets/js/pengaturan.js";
+
+        window.initPengaturan = initPengaturan;
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+
+        // ==============================
+        // ELEMENT
+        // ==============================
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const toggleBtn = document.getElementById("mobile-toggle");
+        const collapseBtn = document.getElementById("collapseBtn");
+        const content = document.querySelector(".content");
+        const sidebarLinks = document.querySelectorAll(".sidebar-list a");
+
+        // ==============================
+        // AUTH CHECK
+        // ==============================
+        if (!localStorage.getItem("token") || localStorage.getItem("role") !== "dosen") {
+            window.location.href = "index.html";
+            return;
+        }
+
+        // Ambil profile langsung dari backend supaya realtime setelah update
+        const token = localStorage.getItem("token");
+
+        // helper: update navbar dari data profile
+        function updateNavbarFromProfile(data) {
+            document.getElementById("showName").innerText = data.name || localStorage.getItem("name") || "";
+            document.getElementById("showNidn").innerText = data.nidn || localStorage.getItem("nidn") || "";
+
+            const fotoEl = document.querySelector('.foto-profil');
+            let src = null;
+            if (data.photoData) src = data.photoData;
+            else if (data.photo) src = data.photo + '?v=' + Date.now();
+
+            if (src) {
+                fotoEl.innerHTML = `<img id="navProfileImg" src="${src}" alt="Foto Profil" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`;
+                const img = document.getElementById('navProfileImg');
+                img.onerror = function() {
+                    this.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.name || localStorage.getItem('name') || 'User');
+                };
+            } else {
+                fotoEl.innerHTML = '<span class="material-symbols-outlined">person</span>';
+            }
+        }
+
+        try {
+            const api = await import('./assets/js/api.js');
+            const data = await api.getProfileRequest(token);
+
+            // initial render
+            updateNavbarFromProfile(data);
+
+            // listen for updates emitted by pengaturan.js
+            window.addEventListener('profileUpdated', (e) => {
+                if (e && e.detail) updateNavbarFromProfile(e.detail);
+            });
+        } catch (err) {
+            // Jika fetch gagal, gunakan localStorage sebagai cadangan
+            console.error('Gagal fetch profile:', err);
+            document.getElementById("showName").innerText = localStorage.getItem("name") || "";
+            document.getElementById("showNidn").innerText = localStorage.getItem("nidn") || "";
+        }
+
+        // ==============================
+        // LOAD PAGE FUNCTION
+        // ==============================
+        function loadPage(page) {
+            fetch(`./pages/${page}.html`)
+                .then(response => {
+                    if (!response.ok) throw new Error("404");
+                    return response.text();
+                })
+                .then(data => {
+                    content.innerHTML = data;
+
+                    // 🔥 INIT FILTER jika halaman manajemen pengguna
+                    if (page === "manajemen-pengguna") {
+                        setTimeout(() => {
+                            window.initManajemenPengguna();
+                            window.fetchAndRenderUsers();
+                        }, 50);
+                    }
+
+                    if (page === "pengaturan") {
+                        setTimeout(() => {
+                            window.initPengaturan();
+                        }, 50);
+                    }
+                    
+                    // 🔥 Render chart jika halaman beranda
+                    if (page === "beranda") {
+                        setTimeout(() => {
+                            renderChart();
+                            renderMahasiswaChart();
+                        }, 50);
+                    }
+                    else if (page === "monitoring") {
+                        setTimeout(() => {
+                            renderProgressMingguanChart();
+                            renderKemampuanLiterasiChart();
+                        }, 50);
+                    }
+                })
+                .catch(() => {
+                    content.innerHTML = "<h2>Halaman tidak ditemukan</h2>";
+                });
+        }
+
+
+        // ==============================
+        // SIDEBAR LINK CLICK
+        // ==============================
+        sidebarLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const page = this.getAttribute("data-page");
+
+            // Load page
+            loadPage(page);
+
+            // Set active
+            sidebarLinks.forEach(item => item.classList.remove("active"));
+            this.classList.add("active");
+
+            // Tutup sidebar jika mobile
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove("active");
+                overlay.classList.remove("active");
+            }
+            });
+        });
+
+        // ==============================
+        // MOBILE TOGGLE
+        // ==============================
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.add("active");
+            overlay.classList.add("active");
+        });
+
+        // ==============================
+        // CLICK OUTSIDE (OVERLAY)
+        // ==============================
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+        });
+
+        // ==============================
+        // COLLAPSE DESKTOP
+        // ==============================
+        collapseBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("collapsed");
+
+            if (sidebar.classList.contains("collapsed")) {
+            collapseBtn.innerHTML = `
+                <span class="material-symbols-outlined">chevron_right</span>
+            `;
+            } else {
+            collapseBtn.innerHTML = `
+                <span class="material-symbols-outlined">chevron_left</span>
+                <span class="text">Collapse</span>
+            `;
+            }
+        });
+
+        // ==============================
+        // HANDLE RESIZE
+        // ==============================
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 768) {
+            overlay.classList.remove("active");
+            sidebar.classList.remove("active");
+            }
+        });
+
+        // ==============================
+        // LOAD DEFAULT PAGE
+        // ==============================
+        const defaultPage = "beranda";
+        loadPage(defaultPage);
+
+        const defaultLink = document.querySelector(
+            `.sidebar-list a[data-page="${defaultPage}"]`
+        );
+
+        if (defaultLink) {
+            defaultLink.classList.add("active");
+        }
+
+        });
+    </script>
+
+
+    
+    <script type="module" src="../assets/auth.js"></script>
+
+</body>
+</html>

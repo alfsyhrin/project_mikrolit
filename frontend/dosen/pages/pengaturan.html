@@ -4,23 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pengaturan - Mikrolit LMS</title>
-
-  <!-- Link ke Global CSS -->
-  <link rel="stylesheet" href="../assets/css/main.css">
-
-  <!-- Link ke CSS halaman ini (pengaturan.css) -->
-  <link rel="stylesheet" href="../assets/css/pengaturan.css">
-
-  <!-- Link untuk mengakses icon material symbols -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-
-  <!-- Link untuk mengakses font google -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <!-- Link untuk mengakses font 'ASAP' dari google -->
-  <link href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Sarina&display=swap" rel="stylesheet">
-  
 </head>
 <body>
   <div class="container-pengaturan">
@@ -47,28 +30,28 @@
       <div class="profile-container" id="editProfile">
         <h2>Edit Profile</h2>
         <div class="icon-profile">
-          <img id="profilePhotoPreview" src="" alt="Foto Profil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;">
-    <input type="file" id="photoInput" accept="image/*" style="display:none;">
-          <button type="button" id="ubahFotoBtn">Ubah Foto</button>
-          <button type="button" id="hapusFotoBtn">Hapus Foto</button>
+          <p>
+            <span class="material-symbols-outlined">person</span>
+          </p>
+          <button>Ubah Foto</button>
         </div>
   
         <div class="profile-info">
           <label for="namaLengkap">Nama Lengkap</label>
-          <input type="text" id="namaLengkap">
+          <input type="text">
         </div>
   
         <div class="profile-info">
           <label for="email">Email</label>
-          <input type="email" id="email">
+          <input type="email">
         </div>
   
         <div class="profile-info last">
           <label for="NIDN">NIDN</label>
-          <input type="nidn" id="nidn">
+          <input type="nidn">
         </div>
   
-        <button class="simpan-perubahan" id="simpanPerubahanBtn">
+        <button class="simpan-perubahan">
           <p>
             <span class="material-symbols-outlined">save</span>
           </p>
@@ -77,25 +60,25 @@
         
       </div>
   
-      <div class="password-container hidden" id="ubahPassword">
+      <div class="password-container sembunyi" id="ubahPassword">
         <h2>Ubah Password</h2>
   
         <div class="password-info">
           <label for="passwordLama">Password Lama</label>
-          <input type="password" id="passwordLama">
+          <input type="password">
         </div>
   
         <div class="password-info">
           <label for="passwordBaru">Password Baru</label>
-          <input type="password" id="passwordBaru">
+          <input type="password">
         </div>
   
         <div class="password-info last">
           <label for="konfirmasiPassword">Konfirmasi Password</label>
-          <input type="password" id="konfirmasiPassword">
+          <input type="password">
         </div>
   
-        <button class="simpan-perubahan" id="ubahPasswordBtn">
+        <button class="simpan-perubahan">
           <p>
             <span class="material-symbols-outlined">save</span>
           </p>

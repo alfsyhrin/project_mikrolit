@@ -13,11 +13,11 @@ function initPengaturan() {
             this.classList.add("active");
 
             containers.forEach(c => {
-                c.classList.add("hidden");
+                c.classList.add("sembunyi");
             });
 
             setTimeout(() => {
-                document.getElementById(target).classList.remove("hidden");
+                document.getElementById(target).classList.remove("sembunyi");
             }, 50);
         });
     });

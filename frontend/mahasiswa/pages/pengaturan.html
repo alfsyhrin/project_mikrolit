@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan - Mikrolit LMS</title>
+</head>
+<body>
+  <div class="container-pengaturan">
+    <div class="container-filter-pengaturan">
+
+      <div class="filter-pengaturan active" data-target="editProfile">
+        <p>
+          <span class="material-symbols-outlined">person</span>
+        </p>
+        <h3>Edit Profile</h3>
+      </div>
+
+      <div class="filter-pengaturan" data-target="ubahPassword">
+        <p>
+          <span class="material-symbols-outlined">vpn_key</span>
+        </p>
+        <h3>Password</h3>
+      </div>
+      
+    </div>
+
+    <div class="pengaturan-wrapper">
+
+      <div class="profile-container" id="editProfile">
+        <h2>Edit Profile</h2>
+        <div class="icon-profile">
+          <img id="profilePhotoPreview" src="" alt="Foto Profil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;">
+    <input type="file" id="photoInput" accept="image/*" style="display:none;">
+          <button type="button" id="ubahFotoBtn">Ubah Foto</button>
+          <button type="button" id="hapusFotoBtn">Hapus Foto</button>
+        </div>
+  
+        <div class="profile-info">
+          <label for="namaLengkap">Nama Lengkap</label>
+          <input type="text" id="namaLengkap">
+        </div>
+  
+        <div class="profile-info">
+          <label for="email">Email</label>
+          <input type="email" id="email">
+        </div>
+  
+        <div class="profile-info last">
+          <label for="NIDN">NIDN</label>
+          <input type="nidn" id="nidn">
+        </div>
+  
+        <button class="simpan-perubahan" id="simpanPerubahanBtn">
+          <p>
+            <span class="material-symbols-outlined">save</span>
+          </p>
+          Simpan Perubahan
+        </button>
+        
+      </div>
+  
+      <div class="password-container sembunyi" id="ubahPassword">
+        <h2>Ubah Password</h2>
+  
+        <div class="password-info">
+          <label for="passwordLama">Password Lama</label>
+          <input type="password" id="passwordLama">
+        </div>
+  
+        <div class="password-info">
+          <label for="passwordBaru">Password Baru</label>
+          <input type="password" id="passwordBaru">
+        </div>
+  
+        <div class="password-info last">
+          <label for="konfirmasiPassword">Konfirmasi Password</label>
+          <input type="password" id="konfirmasiPassword">
+        </div>
+  
+        <button class="simpan-perubahan" id="ubahPasswordBtn">
+          <p>
+            <span class="material-symbols-outlined">save</span>
+          </p>
+          Ubah Password
+        </button>
+        
+      </div>
+      
+    </div>
+
+  </div>
+</body>
+</html>

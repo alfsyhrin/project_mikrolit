@@ -6,10 +6,29 @@
     <title>Dashboard Dosen</title>
 
     <!-- Link ke CSS Halaman ini (dashboard.css) -->
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    
+    <!-- Link ke CSS beranda.css -->
+    <link rel="stylesheet" href="./assets/css/beranda.css">
+
+    <!-- Link ke CSS registrasi.css -->
+    <link rel="stylesheet" href="./assets/css/beranda.css">
+
+    <!-- Link ke CSS manajemen-pengguna.css -->
+    <link rel="stylesheet" href="./assets/css/manajemen-pengguna.css">
+
+    <!-- Link ke CSS micro-learning.css -->
+    <link rel="stylesheet" href="./assets/css/micro-learning.css">
+
+    <!-- Link ke CSS monitoring.css -->
+    <link rel="stylesheet" href="./assets/css/monitoring.css">
+
+    <!-- Link ke CSS pengaturan.css -->
+    <link rel="stylesheet" href="./assets/css/pengaturan.css">
 
     <!-- Link ke CSS global -->
-    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/main.css">
+
 
     <!-- Link untuk mengakses icon material symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
@@ -98,20 +117,16 @@
     </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
-    <script src="../assets/js/apexcharts.min.js"></script>
+    <script src="../assets/apexcharts.min.js"></script>
 
     <!-- Link untuk mengakses kodingan Apex chart lokal -->
-    <script src="../assets/js/chart.js"></script>
+    <script src="../dosen/assets/js/chart.js"></script>
 
     <!-- Link untuk pengaturan.js -->
-    <script type="module">
-        import { initPengaturan } from "./assets/js/pengaturan.js";
-
-        window.initPengaturan = initPengaturan;
-    </script>
+    <script src="./assets/js/pengaturan.js"></script>
     
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
+        document.addEventListener("DOMContentLoaded", () => {
 
         // ==============================
         // ELEMENT
@@ -126,58 +141,19 @@
         // ==============================
         // AUTH CHECK
         // ==============================
-        if (!localStorage.getItem("token") || localStorage.getItem("role") !== "dosen") {
+        if (!localStorage.getItem("token") || localStorage.getItem("role") !== "mahasiswa") {
             window.location.href = "index.html";
             return;
         }
 
-        // Ambil profile langsung dari backend supaya realtime setelah update
-        const token = localStorage.getItem("token");
-
-        // helper: update navbar dari data profile
-        function updateNavbarFromProfile(data) {
-            document.getElementById("showName").innerText = data.name || localStorage.getItem("name") || "";
-            document.getElementById("showNidn").innerText = data.nidn || localStorage.getItem("nidn") || "";
-
-            const fotoEl = document.querySelector('.foto-profil');
-            let src = null;
-            if (data.photoData) src = data.photoData;
-            else if (data.photo) src = data.photo + '?v=' + Date.now();
-
-            if (src) {
-                fotoEl.innerHTML = `<img id="navProfileImg" src="${src}" alt="Foto Profil" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`;
-                const img = document.getElementById('navProfileImg');
-                img.onerror = function() {
-                    this.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.name || localStorage.getItem('name') || 'User');
-                };
-            } else {
-                fotoEl.innerHTML = '<span class="material-symbols-outlined">person</span>';
-            }
-        }
-
-        try {
-            const api = await import('./assets/js/api.js');
-            const data = await api.getProfileRequest(token);
-
-            // initial render
-            updateNavbarFromProfile(data);
-
-            // listen for updates emitted by pengaturan.js
-            window.addEventListener('profileUpdated', (e) => {
-                if (e && e.detail) updateNavbarFromProfile(e.detail);
-            });
-        } catch (err) {
-            // Jika fetch gagal, gunakan localStorage sebagai cadangan
-            console.error('Gagal fetch profile:', err);
-            document.getElementById("showName").innerText = localStorage.getItem("name") || "";
-            document.getElementById("showNidn").innerText = localStorage.getItem("nidn") || "";
-        }
+        document.getElementById("showName").innerText = localStorage.getItem("name");
+        document.getElementById("showNidn").innerText = localStorage.getItem("nidn");
 
         // ==============================
         // LOAD PAGE FUNCTION
         // ==============================
         function loadPage(page) {
-            fetch(`/pages/${page}.html`)
+            fetch(`./pages/${page}.html`)
                 .then(response => {
                     if (!response.ok) throw new Error("404");
                     return response.text();
@@ -195,7 +171,7 @@
 
                     if (page === "pengaturan") {
                         setTimeout(() => {
-                            window.initPengaturan();
+                            initPengaturan();
                         }, 50);
                     }
                     
@@ -306,7 +282,7 @@
 
 
     
-    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="../assets/auth.js"></script>
 
 </body>
 </html>

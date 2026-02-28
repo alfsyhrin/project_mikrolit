@@ -135,7 +135,7 @@
   margin-bottom: 1rem;
 }
 
-.card-mahasiswa {
+.card-mahasiswa-data {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -144,7 +144,7 @@
   margin-bottom: 0.5rem;
 }
 
-.card-mahasiswa .info-mahasiswa {
+.card-mahasiswa-data .info-mahasiswa {
   display: flex;
   flex-direction: column;
 }
@@ -163,7 +163,7 @@
 }
 
 
-.card-mahasiswa .icon-aktif {
+.card-mahasiswa-data .icon-aktif {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -174,7 +174,7 @@
   font-size: 0.75rem;
 }
 
-.card-mahasiswa .icon-pasif {
+.card-mahasiswa-data .icon-pasif {
   display: flex;
   justify-content: center;
   align-items: center;

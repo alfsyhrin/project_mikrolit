@@ -235,7 +235,7 @@ button.simpan-perubahan .material-symbols-outlined {
 }
 
 /* State tersembunyi */
-.hidden {
+.sembunyi {
     opacity: 0;
     transform: translateY(8px);
     pointer-events: none;
