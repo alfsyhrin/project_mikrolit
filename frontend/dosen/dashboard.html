@@ -172,7 +172,7 @@
         }
 
         try {
-            const api = await import('./assets/js/api.js');
+            const api = await import('../../../assets/api.js');
             const data = await api.getProfileRequest(token);
 
             // initial render
