@@ -134,7 +134,7 @@ button.active-filter {
   /* box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05); */
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  /* gap: 0.75rem; */
 }
 
 .card-mahasiswa-header {
@@ -188,7 +188,7 @@ button.active-filter {
 }
 
 .nama-mahasiswa {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--primary-color);
   margin: 0;
   font-weight: 600;
@@ -208,9 +208,11 @@ button.active-filter {
 .meta-mahasiswa .npm-mahasiswa,
 .meta-mahasiswa .email-mahasiswa {
   white-space: nowrap;
+  color: var(--text-color);
+  font-size: 0.85rem;
 }
 
-.waktu-meta {
+p.waktu-meta {
   margin: 0;
   font-size: 0.85rem;
   color: var(--text-color);
@@ -272,6 +274,7 @@ button.active-filter {
   flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
+  margin-top: 0.75rem;
 }
 
 .btn-aksi {

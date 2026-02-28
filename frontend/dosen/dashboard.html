@@ -161,7 +161,7 @@
             else if (data.photo) src = data.photo + '?v=' + Date.now();
 
             if (src) {
-                fotoEl.innerHTML = `<img id="navProfileImg" src="${src}" alt="Foto Profil" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`;
+                fotoEl.innerHTML = `<img id="navProfileImg" src="${src}" alt="Foto Profil" ">`;
                 const img = document.getElementById('navProfileImg');
                 img.onerror = function() {
                     this.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.name || localStorage.getItem('name') || 'User');
