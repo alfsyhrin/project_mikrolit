@@ -83,7 +83,7 @@
     margin-bottom: 1rem;
 }
 
-.icon-profile p {
+/* .icon-profile p {
     display: flex; 
     justify-content: center;
     align-items: center;
@@ -96,6 +96,15 @@
 .icon-profile .material-symbols-outlined {
     font-size: 2.3rem;
     color: #fff;
+} */
+
+.icon-profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    border: 2px solid #ddd;
 }
 
 .icon-profile button {

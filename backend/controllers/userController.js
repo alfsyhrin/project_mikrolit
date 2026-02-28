@@ -1,84 +1,60 @@
 const userModel = require("../models/UserModel");
-const jwt = require("jsonwebtoken");
 
 exports.getUsers = (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).json({ message: "Token tidak ditemukan" });
+    // req.user sudah diisi oleh authMiddleware
+    if (req.user.role !== "dosen") {
+        return res.status(403).json({ message: "Akses ditolak. Hanya dosen yang dapat mengakses data pengguna." });
     }
 
-    const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    userModel.findByRole("mahasiswa", (err, results) => {
         if (err) {
-            return res.status(401).json({ message: "Token tidak valid" });
+            console.log("Error saat mengambil data pengguna", err);
+            return res.status(500).json({ message: "Server error" });
         }
-
-        if (decoded.role !== "dosen") {
-            return res.status(403).json({ message: "Akses ditolak. Hanya dosen yang dapat mengakses data pengguna." });
-        }
-
-        userModel.findByRole("mahasiswa", (err, results) => {
-            if (err) {
-                console.log("Error saat mengambil data pengguna", err);
-                return res.status(500).json({ message: "Server error" });
-            }
-            res.status(200).json(results);
-        });
+        res.status(200).json(results);
     });
 }
 
 exports.updateUsers = (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).json({ message: "Token tidak ditemukan" });
+    if (req.user.role !== "dosen") {
+        return res.status(403).json({ message: "Akses ditolak. Hanya dosen yang dapat memperbarui status pengguna." });
     }
 
-    const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    const { id } = req.params;
+    let { status } = req.body;
+
+    const statusMap = {
+        diterima: "diterima",
+        ditolak: "ditolak",
+        approved: "diterima",
+        rejected: "ditolak",
+        pending: "pending"
+    }
+
+    status = statusMap[status] || status;
+
+    const validStatus = ["diterima", "ditolak", "pending"];
+    if (!validStatus.includes(status)) {
+        return res.status(400).json({ message: "Status tidak valid. Harus 'diterima', 'ditolak', atau 'pending'." });
+    }
+    
+    userModel.findById(id, (err, results) => {
         if (err) {
-            return res.status(401).json({ message: "Token tidak valid" });
+            console.log("Error saat mencari pengguna", err);
+            return res.status(500).json({ message: "Server error" });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Pengguna tidak ditemukan" });
         }
 
-        if (decoded.role !== "dosen") {
-            return res.status(403).json({ message: "Akses ditolak. Hanya dosen yang dapat memperbarui status pengguna." });
-        }
-
-        const { id } = req.params;
-        let { status } = req.body;
-
-        const statusMap = {
-            diterima: "diterima",
-            ditolak: "ditolak",
-            approved: "diterima",
-            rejected: "ditolak",
-            pending: "pending"
-        }
-
-        status = statusMap[status] || status;
-
-        const validStatus = ["diterima", "ditolak", "pending"];
-        if (!validStatus.includes(status)) {
-            return res.status(400).json({ message: "Status tidak valid. Harus 'diterima', 'ditolak', atau 'pending'." });
-        }
-        
-        userModel.findById(id, (err, results) => {
+        userModel.updateStatus(id, status, (err, updateResult) => {
             if (err) {
-                console.log("Error saat mencari pengguna", err);
+                console.log("Error saat memperbarui status pengguna", err);
                 return res.status(500).json({ message: "Server error" });
             }
-            if (results.length === 0) {
-                return res.status(404).json({ message: "Pengguna tidak ditemukan" });
-            }
-
-            userModel.updateStatus(id, status, (err, updateResult) => {
-                if (err) {
-                    console.log("Error saat memperbarui status pengguna", err);
-                    return res.status(500).json({ message: "Server error" });
-                }
-                res.status(200).json({ 
-                    message: "Status pengguna berhasil diperbarui", 
-                    data: { id, status } 
-                });
+            res.status(200).json({ 
+                message: "Status pengguna berhasil diperbarui", 
+                data: { id, status } 
             });
         });
     });

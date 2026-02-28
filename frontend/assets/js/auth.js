@@ -24,6 +24,7 @@ if (loginForm) {
                 localStorage.setItem("name", result.name);
                 localStorage.setItem("nidn", result.nidn);
                 localStorage.setItem("email", result.email);
+                localStorage.setItem("id", result.id);
 
                 if (result.role === "dosen") {
                     window.location.href = "dashboard.html";

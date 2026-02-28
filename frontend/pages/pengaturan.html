@@ -47,28 +47,28 @@
       <div class="profile-container" id="editProfile">
         <h2>Edit Profile</h2>
         <div class="icon-profile">
-          <p>
-            <span class="material-symbols-outlined">person</span>
-          </p>
-          <button>Ubah Foto</button>
+          <img id="profilePhotoPreview" src="" alt="Foto Profil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;">
+    <input type="file" id="photoInput" accept="image/*" style="display:none;">
+          <button type="button" id="ubahFotoBtn">Ubah Foto</button>
+          <button type="button" id="hapusFotoBtn">Hapus Foto</button>
         </div>
   
         <div class="profile-info">
           <label for="namaLengkap">Nama Lengkap</label>
-          <input type="text">
+          <input type="text" id="namaLengkap">
         </div>
   
         <div class="profile-info">
           <label for="email">Email</label>
-          <input type="email">
+          <input type="email" id="email">
         </div>
   
         <div class="profile-info last">
           <label for="NIDN">NIDN</label>
-          <input type="nidn">
+          <input type="nidn" id="nidn">
         </div>
   
-        <button class="simpan-perubahan">
+        <button class="simpan-perubahan" id="simpanPerubahanBtn">
           <p>
             <span class="material-symbols-outlined">save</span>
           </p>
@@ -82,20 +82,20 @@
   
         <div class="password-info">
           <label for="passwordLama">Password Lama</label>
-          <input type="password">
+          <input type="password" id="passwordLama">
         </div>
   
         <div class="password-info">
           <label for="passwordBaru">Password Baru</label>
-          <input type="password">
+          <input type="password" id="passwordBaru">
         </div>
   
         <div class="password-info last">
           <label for="konfirmasiPassword">Konfirmasi Password</label>
-          <input type="password">
+          <input type="password" id="konfirmasiPassword">
         </div>
   
-        <button class="simpan-perubahan">
+        <button class="simpan-perubahan" id="ubahPasswordBtn">
           <p>
             <span class="material-symbols-outlined">save</span>
           </p>

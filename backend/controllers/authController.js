@@ -61,6 +61,7 @@ function authenticateUser(user, password, res) {
         res.json({
             message: "Login berhasil",
             token,
+            id: user.id,
             role: user.role,
             name: user.name,
             nidn: user.nidn,

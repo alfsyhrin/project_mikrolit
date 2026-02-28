@@ -29,8 +29,22 @@ const UserModel = {
     updateStatus: (id, status, callback) => {
         const sql = "UPDATE users SET status = ? WHERE id = ?";
         db.query(sql, [status, id], callback);
-    }  
+    },  
+
+    updateProfile: (id, data, callback) => {
+        const sql = "UPDATE users SET name = ?, email = ?, nidn = ?, photo = ? WHERE id = ?";
+        db.query(sql, [data.name, data.email, data.nidn, data.photo, id], callback);
+    },
     
+    updatePassword: (id, newPassword, callback) => {
+        const sql = "UPDATE users SET password = ? WHERE id = ?";
+        db.query(sql, [newPassword, id], callback);
+    },
+
+    updatePhoto: (id, photoFilename, callback) => {
+        const sql = "UPDATE users SET photo = ? WHERE id = ?";
+        db.query(sql, [photoFilename, id], callback);
+    }
 };
 
 module.exports = UserModel;
