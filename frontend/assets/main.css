@@ -172,3 +172,134 @@
     opacity: 1;
   }
 }
+
+/* ===========================
+   MODAL OVERLAY
+=========================== */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ===========================
+   MODAL BOX
+=========================== */
+
+.modal-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    transform: translateY(20px) scale(0.97);
+    transition: all 0.25s ease;
+}
+
+/* Sizes */
+.modal-box.small { max-width: 320px; }
+.modal-box.medium { max-width: 480px; }
+.modal-box.large { max-width: 720px; }
+
+.modal-overlay.active .modal-box {
+    transform: translateY(0) scale(1);
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.modal-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    cursor: pointer;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+}
+
+.modal-close .material-symbols-outlined {
+    font-size: 1.4rem;
+    color: #777;
+}
+
+/* ===========================
+   BODY & ACTIONS
+=========================== */
+
+.modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.modal-btn {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.modal-btn.cancel {
+    background: #eee;
+}
+
+.modal-btn.confirm {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+}
+
+/* ===========================
+   BOTTOM SHEET (MOBILE)
+=========================== */
+
+@media (max-width: 768px) {
+
+    .modal-overlay {
+        align-items: flex-end;
+    }
+
+    .modal-box {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 20px 20px 0 0;
+        transform: translateY(100%);
+    }
+
+    .modal-overlay.active .modal-box {
+        transform: translateY(0);
+    }
+}
