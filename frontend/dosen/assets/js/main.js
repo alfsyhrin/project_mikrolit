@@ -209,6 +209,75 @@ document.addEventListener("click", function (e) {
                     </div>
 
                 </div>
+
+                <div class="submission-card">
+
+                    <div class="submission-header">
+                        <div>
+                            <div class="submission-name">Cuppa</div>
+                            <div class="submission-npm">NPM: 07352211097</div>
+                        </div>
+                        <div class="submission-date">1/3/2026</div>
+                    </div>
+
+                    <div class="submission-file">
+                        <span class="material-symbols-outlined">description</span>
+                        <span>72426-75676719151-1-PB.pdf</span>
+                    </div>
+
+                </div>
+
+                <div class="submission-card">
+
+                    <div class="submission-header">
+                        <div>
+                            <div class="submission-name">Cuppa</div>
+                            <div class="submission-npm">NPM: 07352211097</div>
+                        </div>
+                        <div class="submission-date">1/3/2026</div>
+                    </div>
+
+                    <div class="submission-file">
+                        <span class="material-symbols-outlined">description</span>
+                        <span>72426-75676719151-1-PB.pdf</span>
+                    </div>
+
+                </div>
+
+                <div class="submission-card">
+
+                    <div class="submission-header">
+                        <div>
+                            <div class="submission-name">Cuppa</div>
+                            <div class="submission-npm">NPM: 07352211097</div>
+                        </div>
+                        <div class="submission-date">1/3/2026</div>
+                    </div>
+
+                    <div class="submission-file">
+                        <span class="material-symbols-outlined">description</span>
+                        <span>72426-75676719151-1-PB.pdf</span>
+                    </div>
+
+                </div>
+
+                <div class="submission-card">
+
+                    <div class="submission-header">
+                        <div>
+                            <div class="submission-name">Cuppa</div>
+                            <div class="submission-npm">NPM: 07352211097</div>
+                        </div>
+                        <div class="submission-date">1/3/2026</div>
+                    </div>
+
+                    <div class="submission-file">
+                        <span class="material-symbols-outlined">description</span>
+                        <span>72426-75676719151-1-PB.pdf</span>
+                    </div>
+
+                </div>
+
                 <div class="submission-card">
 
                     <div class="submission-header">
@@ -226,6 +295,9 @@ document.addEventListener("click", function (e) {
 
                 </div>
             </div>
+            <button type="download" class="modal-download-btn">
+                Download ZIP
+            </button>
         `
     });
 });

@@ -396,6 +396,19 @@ button.buat-tugas p {
     transition: all 0.2s ease;
 }
 
+.modal-box .modal-download-btn {
+    padding: 1rem;
+    border-radius: 16px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
 .modal-box .modal-submit-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 8px 18px rgba(0,0,0,0.12);
@@ -426,6 +439,8 @@ button.buat-tugas p {
     align-items: center;
     gap: 1rem;
     width: 100%;
+    margin-bottom: 1rem;
+    
 }
 
 .submission-card {
