@@ -2,9 +2,9 @@ const Writing = require("../models/Writing");
 
 exports.createTask = (req, res) => {
     const data = {
-        module_id: req.body.module_id,
+        module_id: req.body.module_id ||  null,
         instructions: req.body.instructions,
-        attachment_url: req.file ? "/uploads/attachment/" + req.file.filename : null,
+        attachment_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
         deadline: req.body.deadline
     };
 
@@ -14,10 +14,21 @@ exports.createTask = (req, res) => {
     });
 };
 
-exports.getTask = (req, res) => {
-    Writing.getTaskByUnit(req.params.unitId, (err, rows) => {
+exports.getTasksByModule = (req, res) => {
+    const moduleId = req.params.moduleId; // FIX PARAM
+    Writing.getTasksByModule(moduleId, (err, rows) => {
         if (err) return res.status(500).json({ error: err });
-        res.json(rows[0]);
+        res.json(rows); // JANGAN pake rows[0] karena bisa banyak task
+    });
+};
+
+exports.getAllTasks = (req, res) => {
+    Writing.getAllTasks((err, rows) => {
+        if (err) {
+            console.log("GET ALL TASK ERROR:", err);
+            return res.status(500).json({ error: err });
+        }
+        res.json(rows);
     });
 };
 

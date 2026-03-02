@@ -4,8 +4,8 @@ const auth = require("../middleware/authMiddleware");
 
 const { createModule, getModules, getModuleDetail } = require("../controllers/moduleController");
 
-router.post("/", auth, createModule);
-router.get("/", auth, getModules);
+router.post("/modules", auth, createModule);
+router.get("/modules", auth, getModules);
 router.get("/:id", auth, getModuleDetail);
 
 module.exports = router;
