@@ -216,7 +216,7 @@
 /* Sizes */
 .modal-box.small { max-width: 320px; }
 .modal-box.medium { max-width: 480px; }
-.modal-box.large { max-width: 720px; }
+.modal-box.large { max-width: 600px; }
 
 .modal-overlay.active .modal-box {
     transform: translateY(0) scale(1);

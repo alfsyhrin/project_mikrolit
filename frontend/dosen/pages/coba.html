@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .youtube-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .youtube-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- <video width="600" controls poster="thumbnail.jpg">
+        <source src="https://youtu.be/Rht8rS4cR1s?si=rrRQtiL-ORzxOdUI" type="video/mp4">
+    </video> -->
+    <!-- https://youtu.be/zA-EZ9EQ8iM?si=fpkMSC8nlQn7NnE5 -->
+    <div class="youtube-wrapper">
+        <iframe 
+            src="https://www.youtube.com/embed/Rht8rS4cR1s"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+        </iframe>
+    </div>
+</body>
+</html>

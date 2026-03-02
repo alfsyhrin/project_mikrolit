@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Tugas - Mikrolit LMS</title>
+</head>
+<body>
+    <div class="container-manajemen-tugas">
+        <div class="wrapper-search-tugas">
+            <div class="search-bar tugas">
+                <p><span class="material-symbols-outlined">search</span></p>
+                <input type="text" placeholder="Cari nama atau NPM..." id="searchMahasiswa">
+            </div>
+        </div>
+    </div>
+
+    <div class="container-filter-tugas-mhs">
+        <button class="active">Semua</button>
+        <button>Belum Dikumpulkan</button>
+        <button>Sudah Dikumpulkan</button>
+    </div>
+
+    <div class="container-list-tugas">
+        
+        <div class="card-tugas-mhs">
+            <div class="wrapper-card">
+                <p class="icon-tugas-mhs">
+                    <span class="material-symbols-outlined">task</span>
+                </p>
+                <div class="info-tugas-mhs">
+                    <h3 class="judul-tugas-mhs">Tugas 1 (Analisis Data)</h3>
+                    <p class="deskripsi-tugas-mhs">Analisis data hasil</p>
+                    <div class="meta-tugas-mhs">
+                        <p class="jenis-tugas-mhs">Lit-Starter</p>
+                        <p class="waktu-pengumpulan-tugas-mhs">
+                            <span class="material-symbols-outlined">calendar_today</span>
+                            10/04/2026
+                        </p>
+                        <p class="dokumen-tugas-mhs">
+                            <span class="material-symbols-outlined">description</span>
+                            tugas_1.pdf
+                        </p>
+                        <p class="status-tugas-mhs belumdikumpulkan">Belum Dikumpulkan</p>
+                    </div>
+                </div>
+            </div>
+            <div class="action-tugas-mhs">
+                <button class="download-soal-tugas">
+                    <p>
+                        <span class="material-symbols-outlined">download</span>
+                        Download
+                    </p>
+                </button>
+                <button class="upload-tugas" id="btnUploadTugas">
+                    <p>
+                        <span class="material-symbols-outlined">upload</span>
+                        Upload
+                    </p>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-tugas-mhs">
+            <div class="wrapper-card">
+                <p class="icon-tugas-mhs">
+                    <span class="material-symbols-outlined">task</span>
+                </p>
+                <div class="info-tugas-mhs">
+                    <h3 class="judul-tugas-mhs">Tugas 1 (Analisis Data)</h3>
+                    <p class="deskripsi-tugas-mhs">Analisis data hasil</p>
+                    <div class="meta-tugas-mhs">
+                        <p class="jenis-tugas-mhs">Lit-Starter</p>
+                        <p class="waktu-pengumpulan-tugas-mhs">
+                            <span class="material-symbols-outlined">calendar_today</span>
+                            10/04/2026
+                        </p>
+                        <p class="dokumen-tugas-mhs">
+                            <span class="material-symbols-outlined">description</span>
+                            tugas_1.pdf
+                        </p>
+                        <p class="status-tugas-mhs dikumpulkan">Dikumpulkan</p>
+                    </div>
+                </div>
+            </div>
+            <div class="action-tugas-mhs">
+                <button class="download-soal-tugas">
+                    <p>
+                        <span class="material-symbols-outlined">download</span>
+                        Download
+                    </p>
+                </button>
+                <button class="upload-tugas" id="btnUploadTugas">
+                    <p>
+                        <span class="material-symbols-outlined">upload</span>
+                        Upload
+                    </p>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

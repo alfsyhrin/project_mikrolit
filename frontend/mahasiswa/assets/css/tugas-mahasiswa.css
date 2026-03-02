@@ -1,0 +1,506 @@
+/* Awal header buat tugas */
+.header-manajemen-tugas {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.search-bar.tugas {
+
+    width: 100%;
+}
+
+
+.wrapper-search-tugas {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+/* Responsiv */
+@media (max-width: 768px) {
+    .wrapper-search-tugas {
+        grid-template-columns: 1fr;
+    }
+}
+/* Akhir header buat tugas */
+
+/* Awal filter tugas mahasiswa */
+.container-filter-tugas-mhs {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+}
+
+.container-filter-tugas-mhs button {
+    background: #EDEDED;
+    color: var(--text-color);
+    padding: 0.6rem;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.container-filter-tugas-mhs button.active {
+    background: var(--third-color);
+    color: #fff;
+}
+
+
+/* Akhir filter tugas mahasiswa */
+
+/* Awal list tugas dari Mahasiswa */
+.container-list-tugas {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.card-tugas-mhs {
+    padding: 1.5rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.wrapper-card {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.card-tugas-mhs .icon-tugas-mhs {
+    height: 45px;
+    width: 45px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--third-color));
+    border-radius: 10px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.icon-tugas-mhs .material-symbols-outlined {
+    font-size: 1.75rem;
+}
+
+.info-tugas-mhs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.info-tugas-mhs .judul-tugas-mhs {
+    font-size: 1rem;
+    font-weight: 560;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-width: 0;
+}
+
+.info-tugas-mhs .deskripsi-tugas-mhs {
+    font-size: 0.9rem;
+    font-weight: 450;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-width: 0;
+}
+
+.meta-tugas-mhs {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.meta-tugas-mhs .status-tugas-mhs {
+    padding: 0.2rem 0.4rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.meta-tugas-mhs .status-tugas-mhs.dikumpulkan {
+    background-color: var(--hijau-background);
+    color: var(--hijau);
+}
+
+.meta-tugas-mhs .status-tugas-mhs.belumdikumpulkan {
+    background-color: var(--merah-background);
+    color: var(--merah);
+}
+
+.meta-tugas-mhs .jenis-tugas-mhs {
+    padding: 0.2rem 0.4rem;
+    border-radius: 8px;
+    background-color: #37b7c327;
+    color: var(--third-color);
+    font-size: 0.8rem;
+}
+
+.meta-tugas-mhs .waktu-pengumpulan-tugas-mhs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.8rem;
+    color: var(--text-color);
+}
+
+.waktu-pengumpulan-tugas-mhs .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.meta-tugas-mhs .dokumen-tugas-mhs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.8rem;
+    color: var(--text-color);
+}
+
+.action-tugas-mhs .download-soal-tugas {
+    background: linear-gradient(135deg, var(--secondary-color), var(--third-color));
+    border: none;
+    width: 110px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.action-tugas-mhs .download-soal-tugas p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.action-tugas-mhs .upload-tugas {
+    background: linear-gradient(135deg, var(--primary-color), var(--biru));
+    border: none;
+    width: 110px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.action-tugas-mhs .upload-tugas p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.action-tugas-mhs button.download-soal-tugas .material-symbols-outlined, .action-tugas-mhs button.upload-tugas .material-symbols-outlined {
+    font-size: 1.2rem;
+}
+
+.dokumen-tugas-mhs .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.action-tugas-mhs {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+/* ===================================
+   FIX RESPONSIVE CARD TUGAS DOSEN
+=================================== */
+
+@media (max-width: 768px) {
+
+    .card-tugas-mhs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .wrapper-card {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .deskripsi-tugas-mhs {
+        width: 100%;
+    }
+
+    .meta-tugas-mhs {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .action-tugas-mhs {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #eee;
+
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .action-tugas-mhs button {
+        flex-shrink: 0;
+    }
+
+}
+/* Akhir list tugas dari Mahasiswa */
+
+/* Awal style untuk modal buat tugas */
+/* =====================================
+   MODAL - BUAT TUGAS
+   Scoped khusus untuk form tugas
+===================================== */
+
+.modal-box .modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+/* Label */
+.modal-box .modal-form label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1e2a44;
+}
+
+/* Group */
+.modal-box .modal-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.modal-box .modal-form-group.desc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border: 1px solid #e3e6ec;
+    background-color: #f9fafc;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.modal-box .modal-form-group.desc h3 {
+    font-size: 1.1rem;
+    font-color: #111;
+    font-weight: 550;
+}
+
+.modal-box .modal-form-group.desc p {
+    font-size: 0.9rem;
+    font-color: var(--text-color);
+}
+
+/* Row 2 Kolom */
+.modal-box .modal-form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.modal-box .modal-form-row .modal-form-group {
+    flex: 1;
+}
+
+/* Input, Select, Textarea */
+.modal-box .modal-form input,
+.modal-box .modal-form textarea,
+.modal-box .modal-form select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    border: 1.5px solid #e3e6ec;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    background: #f9fafc;
+}
+
+/* Focus effect */
+.modal-box .modal-form input:focus,
+.modal-box .modal-form textarea:focus,
+.modal-box .modal-form select:focus {
+    outline: none;
+    border-color: #1aa6b7;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(26,166,183,0.1);
+}
+
+/* Textarea */
+.modal-box .modal-form textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+/* File input */
+.input-file-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 2px dashed #adb5c7;
+  border-radius: 12px;
+  padding: 28px 20px;
+  cursor: pointer;
+  background-color: #f5f6f8;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.input-file-wrapper:hover {
+  border-color: #088395;
+  background-color: #EBF4F6;
+}
+
+.upload-icon {
+  font-size: 40px;
+  color: #7a8499;
+}
+
+.file-label {
+  font-size: 14px;
+  color: #7a8499;
+  font-weight: 500;
+}
+
+.file-types {
+  font-size: 13px;
+  color: #9aa0b0;
+}
+
+.file-name {
+  font-size: 13px;
+  color: #088395;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Submit button */
+.modal-box .modal-submit-btn {
+    padding: 1rem;
+    border-radius: 16px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    transition: all 0.2s ease;
+}
+
+.modal-box .modal-submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 768px) {
+
+    .modal-box .modal-form-row {
+        flex-direction: column;
+    }
+
+}
+/* Akhir style untuk modal buat tugas */
+
+/* Awal style untuk lihat submisi mahasiswa */
+/* ===============================
+   SUBMISSION MODAL STYLE
+================================= */
+
+.submission-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.submission-card {
+    background: #f5f7fa;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e3e8ef;
+    width: 100%;
+}
+
+.submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.submission-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.submission-npm {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.submission-date {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.submission-file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #334155;
+    cursor: pointer;
+}
+
+.submission-file .material-symbols-outlined {
+    font-size: 20px;
+    color: #64748b;
+}
+/* Akhir style untuk lihat submisi mahasiswa */
