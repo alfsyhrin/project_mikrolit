@@ -246,7 +246,10 @@ main {
   border-radius:50%;
   object-fit:cover;
   border: 2px solid var(--secondary-color);
-  margin-right: 0.5rem;
+  /* margin-right: 0.5rem; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .info-user h3 {

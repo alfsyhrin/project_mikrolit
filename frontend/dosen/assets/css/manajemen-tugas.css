@@ -21,6 +21,7 @@ button.buat-tugas {
     font-size: 0.9rem;
     gap: 0.4rem;
     font-weight: 500;
+    cursor: pointer;
 }
 
 button.buat-tugas p {
@@ -69,6 +70,7 @@ button.buat-tugas p {
     justify-content: center;
     align-items: flex-start;
     gap: 1rem;
+    min-width: 0;
 }
 
 .card-tugas-dosen .icon-tugas-dosen {
@@ -80,34 +82,46 @@ button.buat-tugas p {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .icon-tugas-dosen .material-symbols-outlined {
     font-size: 1.75rem;
 }
 
-.deskripsi-tugas-dosen {
+.info-tugas-dosen {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     gap: 0.5rem;
+    min-width: 0;
 }
 
-.deskripsi-tugas-dosen .judul-tugas-dosen {
+.info-tugas-dosen .judul-tugas-dosen {
     font-size: 1rem;
     font-weight: 560;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-width: 0;
 }
 
-.deskripsi-tugas-dosen .deskripsi-tugas-dosen {
+.info-tugas-dosen .deskripsi-tugas-dosen {
     font-size: 0.9rem;
     font-weight: 450;
     color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-width: 0;
 }
 
 .meta-tugas-dosen {
     display: flex;
-    juatify-content: flex-start;
+    justify-content: flex-start;
     align-items: center;
     gap: 0.8rem;
 }
@@ -122,7 +136,7 @@ button.buat-tugas p {
 
 .meta-tugas-dosen .waktu-pengumpulan-tugas-dosen {
     display: flex;
-    juatify-content: center;
+    justify-content: center;
     align-items: center;
     gap: 0.2rem;
     font-size: 0.8rem;
@@ -135,7 +149,7 @@ button.buat-tugas p {
 
 .meta-tugas-dosen .dokumen-tugas-dosen {
     display: flex;
-    juatify-content: center;
+    justify-content: center;
     align-items: center;
     gap: 0.2rem;
     font-size: 0.8rem;
@@ -214,4 +228,249 @@ button.buat-tugas p {
     font-size: 1.3rem;
     color: var(--merah);
 }
-/* Awal list tugas dari dosen */
+
+/* ===================================
+   FIX RESPONSIVE CARD TUGAS DOSEN
+=================================== */
+
+@media (max-width: 768px) {
+
+    .card-tugas-dosen {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .wrapper-card {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .deskripsi-tugas-dosen {
+        width: 100%;
+    }
+
+    .meta-tugas-dosen {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .action-tugas-dosen {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #eee;
+
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .action-tugas-dosen button {
+        flex-shrink: 0;
+    }
+
+}
+/* Akhir list tugas dari dosen */
+
+/* Awal style untuk modal buat tugas */
+/* =====================================
+   MODAL - BUAT TUGAS
+   Scoped khusus untuk form tugas
+===================================== */
+
+.modal-box .modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+/* Label */
+.modal-box .modal-form label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1e2a44;
+}
+
+/* Group */
+.modal-box .modal-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Row 2 Kolom */
+.modal-box .modal-form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.modal-box .modal-form-row .modal-form-group {
+    flex: 1;
+}
+
+/* Input, Select, Textarea */
+.modal-box .modal-form input,
+.modal-box .modal-form textarea,
+.modal-box .modal-form select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    border: 1.5px solid #e3e6ec;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    background: #f9fafc;
+}
+
+/* Focus effect */
+.modal-box .modal-form input:focus,
+.modal-box .modal-form textarea:focus,
+.modal-box .modal-form select:focus {
+    outline: none;
+    border-color: #1aa6b7;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(26,166,183,0.1);
+}
+
+/* Textarea */
+.modal-box .modal-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* File input */
+.input-file-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 2px dashed #adb5c7;
+  border-radius: 12px;
+  padding: 28px 20px;
+  cursor: pointer;
+  background-color: #f5f6f8;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.input-file-wrapper:hover {
+  border-color: #088395;
+  background-color: #EBF4F6;
+}
+
+.upload-icon {
+  font-size: 40px;
+  color: #7a8499;
+}
+
+.file-label {
+  font-size: 14px;
+  color: #7a8499;
+  font-weight: 500;
+}
+
+.file-types {
+  font-size: 13px;
+  color: #9aa0b0;
+}
+
+.file-name {
+  font-size: 13px;
+  color: #088395;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Submit button */
+.modal-box .modal-submit-btn {
+    padding: 1rem;
+    border-radius: 16px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    transition: all 0.2s ease;
+}
+
+.modal-box .modal-submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 768px) {
+
+    .modal-box .modal-form-row {
+        flex-direction: column;
+    }
+
+}
+/* Akhir style untuk modal buat tugas */
+
+/* Awal style untuk lihat submisi mahasiswa */
+/* ===============================
+   SUBMISSION MODAL STYLE
+================================= */
+
+.submission-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.submission-card {
+    background: #f5f7fa;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e3e8ef;
+    width: 100%;
+}
+
+.submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.submission-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.submission-npm {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.submission-date {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.submission-file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #334155;
+    cursor: pointer;
+}
+
+.submission-file .material-symbols-outlined {
+    font-size: 20px;
+    color: #64748b;
+}
+/* Akhir style untuk lihat submisi mahasiswa */
