@@ -34,6 +34,17 @@ const Writing = {
     `, callback);
   },
 
+  getTasksForMahasiswa: (studentId, callback) => {
+      db.query(`
+        SELECT wt.*, 
+          CASE WHEN ws.id IS NOT NULL THEN 'sudah dikumpulkan' ELSE 'belum dikumpulkan' END AS status
+        FROM writing_tasks wt
+        LEFT JOIN writing_submissions ws
+          ON ws.task_id = wt.id AND ws.student_id = ?
+        ORDER BY wt.id DESC
+      `, [studentId], callback);
+  },
+
   submitWriting: (data, callback) => {
     const sql = `
       INSERT INTO writing_submissions (task_id, student_id, file_url, answer_text)

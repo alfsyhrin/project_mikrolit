@@ -44,7 +44,8 @@ app.use("/api", userRoute);
 app.use("/api", profileRoute);
 app.use("/api", moduleRoute);
 app.use("/api", microUnitsRoute);
-app.use("/api", writingRoute);
+// Mount writing routes under /api/writing so endpoints are predictable
+app.use("/api/writing", writingRoute);
 app.use("/api", reflectRoute);
 
 app.get("/", (req, res) => {

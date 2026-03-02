@@ -2,7 +2,8 @@ const Writing = require("../models/Writing");
 
 exports.createTask = (req, res) => {
     const data = {
-        module_id: req.body.module_id ||  null,
+        module_id: req.body.module_id || null,
+        unit_id: req.body.unit_id || null,
         instructions: req.body.instructions,
         attachment_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
         deadline: req.body.deadline
@@ -28,6 +29,8 @@ exports.getAllTasks = (req, res) => {
             console.log("GET ALL TASK ERROR:", err);
             return res.status(500).json({ error: err });
         }
+        console.log("[GET /api/writing] user=", req.user ? req.user.id : null, "rows=", Array.isArray(rows) ? rows.length : typeof rows);
+        console.log("GET ALL TASKS RESULT:", rows);
         res.json(rows);
     });
 };
@@ -36,7 +39,7 @@ exports.submitWriting = (req, res) => {
     const data = {
         task_id: req.body.task_id,
         student_id: req.user.id,
-        file_url: req.file ? "/uploads/" + req.file.filename : null,
+        file_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
         answer_text: req.body.answer_text
     };
 
@@ -56,5 +59,21 @@ exports.gradeSubmission = (req, res) => {
     Writing.gradeSubmission(data, (err) => {
         if (err) return res.status(500).json({ error: err });
         res.json({ message: "Submission graded" });
+    });
+};
+
+exports.getTasksForMahasiswa = (req, res) => {
+    const studentId = req.user.id;
+    Writing.getTasksForMahasiswa(studentId, (err, rows) => {
+        if (err) return res.status(500).json({ error: err });
+        res.json(rows);
+    });
+};
+
+exports.getSubmissionsByTask = (req, res) => {
+    const taskId = req.params.taskId;
+    Writing.getSubmissions(taskId, (err, rows) => {
+        if (err) return res.status(500).json({ error: err });
+        res.json(rows);
     });
 };

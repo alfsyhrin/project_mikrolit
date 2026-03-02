@@ -121,6 +121,13 @@
         window.fetchAndRenderUsers = fetchAndRenderUsers;
         window.initManajemenPengguna = initManajemenPengguna;
     </script>
+
+    <script type="module">
+        import { initPengaturan } from "./assets/js/pengaturan.js";
+        
+        // Expose ke global scope agar bisa dipanggil dari inline script lain
+        window.initPengaturan = initPengaturan;
+    </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
     <script src="../assets/apexcharts.min.js"></script>
@@ -131,8 +138,6 @@
     <!-- Link untuk mengakses component di main.js -->
     <script type="module" src="../mahasiswa/assets/js/main.js"></script>
 
-    <!-- Link untuk pengaturan.js -->
-    <script src="./assets/js/pengaturan.js"></script>
     
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -180,7 +185,7 @@
 
                     if (page === "pengaturan") {
                         setTimeout(() => {
-                            initPengaturan();
+                            window.initPengaturan();
                         }, 50);
                     }
                     

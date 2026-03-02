@@ -1,4 +1,4 @@
-import { getProfileRequest, updateProfileRequest, updatePasswordRequest, deletePhotoRequest } from "./api.js";
+import { getProfileRequest, updateProfileRequest, updatePasswordRequest, deletePhotoRequest } from "../../../assets/api.js";
 
 function initPengaturan() {
     const filters = document.querySelectorAll(".filter-pengaturan");
