@@ -7,6 +7,10 @@ const authRoute = require("./routes/authRoute");
 const registRoute = require("./routes/registRoute");
 const userRoute = require("./routes/userRoute");
 const profileRoute = require("./routes/profileRoute");
+const moduleRoute = require("./routes/moduleRoute");
+const microUnitsRoute = require("./routes/microUnitsRoute");
+const writingRoute = require("./routes/writingRoute");
+const reflectRoute = require("./routes/reflectRoute");
 
 const app = express();
 app.use(cors());
@@ -38,6 +42,10 @@ app.use("/api", authRoute);
 app.use("/api", registRoute);
 app.use("/api", userRoute);
 app.use("/api", profileRoute);
+app.use("/api", moduleRoute);
+app.use("/api", microUnitsRoute);
+app.use("/api", writingRoute);
+app.use("/api", reflectRoute);
 
 app.get("/", (req, res) => {
     res.send("Server berjalan dengan baik!");
