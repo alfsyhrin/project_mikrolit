@@ -1,9 +1,13 @@
+const path = require("path");
+const fs = require("fs");
+const archiver = require("archiver");
 const Writing = require("../models/Writing");
 
 exports.createTask = (req, res) => {
     const data = {
         module_id: req.body.module_id || null,
         unit_id: req.body.unit_id || null,
+        task_title: req.body.task_title,
         instructions: req.body.instructions,
         attachment_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
         deadline: req.body.deadline
@@ -12,6 +16,38 @@ exports.createTask = (req, res) => {
     Writing.createTask(data, (err) => {
         if (err) return res.status(500).json({ error: err });
         res.json({ message: "Task created" });
+    });
+};
+
+exports.updateTask = (req, res) => {
+    if (req.user.role !== "dosen") {
+        return res.status(403).json({ message: "Akses ditolak. Hanya dosen yang dapat memperbarui tugas." });
+    }
+
+    const id = req.params.id;
+    const data = {
+        module_id: req.body.module_id || null,
+        unit_id: req.body.unit_id || null,
+        task_title: req.body.task_title,
+        instructions: req.body.instructions,
+        attachment_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
+        deadline: req.body.deadline
+    };
+
+    Writing.updateTask(id, data, (err) => {
+        if (err) return res.status(500).json({ error: err });
+        res.json({ message: "Task updated" });
+    });
+};
+
+exports.deleteTask = (req, res) => {
+    if (req.user.role !== "dosen") {
+        return res.status(403).json({ message: "Akses ditolak. Hanya dosen yang dapat menghapus tugas." });
+    }
+    const id = req.params.id;
+    Writing.deleteTask(id, (err) => {
+        if (err) return res.status(500).json({ error: err });
+        res.json({ message: "Task deleted" });
     });
 };
 
@@ -75,5 +111,31 @@ exports.getSubmissionsByTask = (req, res) => {
     Writing.getSubmissions(taskId, (err, rows) => {
         if (err) return res.status(500).json({ error: err });
         res.json(rows);
+    });
+};
+
+exports.downloadSubmissionsZip = (req, res) => {
+    const taskId = req.params.taskId;
+    Writing.getSubmissions(taskId, (err, submissions) => {
+        if (err || !submissions) return res.status(500).json({ error: err || "No submissions" });
+
+        res.set({
+            'Content-Type': 'application/zip',
+            'Content-Disposition': `attachment; filename="submissions_task_${taskId}.zip"`
+        });
+
+        const archive = archiver('zip', { zlib: { level: 9 } });
+        archive.pipe(res);
+
+        submissions.forEach(sub => {
+            if (sub.file_url) {
+                const filePath = path.join(__dirname, "..", sub.file_url);
+                if (fs.existsSync(filePath)) {
+                    archive.file(filePath, { name: `${sub.student_npm || sub.student_id}_${path.basename(filePath)}` });
+                }
+            }
+        });
+
+        archive.finalize();
     });
 };

@@ -10,7 +10,10 @@ const {
     gradeSubmission,
     getAllTasks,
     getTasksForMahasiswa,
-    getSubmissionsByTask
+    getSubmissionsByTask,
+    updateTask,
+    deleteTask,
+    downloadSubmissionsZip
 } = require("../controllers/writingController");
 
 router.get("/tasks", auth, getAllTasks);
@@ -22,5 +25,8 @@ router.post("/submit", auth, upload.tasks.single("file"), submitWriting);
 router.post("/grade/:submissionId", auth, gradeSubmission);
 router.get("/mahasiswa/tasks", auth, getTasksForMahasiswa);
 router.get("/submissions/:taskId", auth, getSubmissionsByTask);
+router.put("/task/:id", auth, upload.tasks.single("attachment"), updateTask);
+router.delete("/task/:id", auth, deleteTask);
+router.get("/task/:taskId/submissions/zip", auth, downloadSubmissionsZip);
 
 module.exports = router;

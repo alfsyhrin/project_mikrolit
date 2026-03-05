@@ -46,12 +46,23 @@ button.buat-tugas p {
 /* Akhir header buat tugas */
 
 /* Awal list tugas dari dosen */
-.container-list-tugas {
+#listTugasContainer {
     margin: 1rem 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+}
+
+.file-mhs {
+    color: var(--text-color);
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .card-tugas-dosen {
@@ -471,6 +482,18 @@ button.buat-tugas p {
 }
 
 .submission-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.submission-date-day {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.submission-time {
+    margin-top: 4px;
     font-size: 14px;
     color: #64748b;
 }

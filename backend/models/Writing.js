@@ -5,16 +5,37 @@ const Writing = {
 
   createTask: (data, callback) => {
     const sql = `
-      INSERT INTO writing_tasks (module_id, unit_id, instructions, attachment_url, deadline)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO writing_tasks (module_id, unit_id, task_title, instructions, attachment_url, deadline)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
     db.query(sql, [
       data.module_id,
       data.unit_id,
+      data.task_title,
       data.instructions,
       data.attachment_url,
       data.deadline
     ], callback);
+  },
+
+  updateTask: (id, data, callback) => {
+    const sql = `
+      UPDATE writing_tasks SET module_id = ?, unit_id = ?, task_title = ?, instructions = ?, attachment_url = ?, deadline = ?
+      WHERE id = ?
+    `;
+    db.query(sql, [
+      data.module_id,
+      data.unit_id,
+      data.task_title,
+      data.instructions,
+      data.attachment_url,
+      data.deadline,
+      id
+    ], callback);
+  },
+
+  deleteTask: (id, callback) => {
+    db.query("DELETE FROM writing_tasks WHERE id = ?", [id], callback);
   },
 
   getTasksByModule: (moduleId, callback) => {
@@ -27,7 +48,7 @@ const Writing = {
 
   getAllTasks: (callback) => {
     db.query(`
-      SELECT wt.*, m.title AS module_title
+      SELECT wt.id, wt.unit_id, wt.module_id, wt.task_title, wt.instructions, wt.attachment_url, DATE_FORMAT(wt.deadline, '%Y-%m-%d %H:%i:%s') AS deadline, m.title AS module_title
       FROM writing_tasks wt
       LEFT JOIN modules m ON wt.module_id = m.id
       ORDER BY wt.id DESC
@@ -58,11 +79,19 @@ const Writing = {
     ], callback);
   },
 
+
   getSubmissions: (taskId, callback) => {
     db.query(`
-      SELECT ws.*, u.name AS student_name
+      SELECT ws.id, ws.task_id, ws.student_id, ws.file_url, ws.answer_text,
+             DATE_FORMAT(ws.submitted_at, '%Y-%m-%d %H:%i:%s') AS submitted_at,
+             ws.score, ws.feedback,
+             u.name AS student_name,
+             u.nidn AS student_npm,
+             m.title AS module_title
       FROM writing_submissions ws
-      JOIN users u ON ws.student_id = u.id
+      LEFT JOIN users u ON ws.student_id = u.id
+      LEFT JOIN writing_tasks wt ON ws.task_id = wt.id
+      LEFT JOIN modules m ON wt.module_id = m.id
       WHERE ws.task_id = ?
     `, [taskId], callback);
   },

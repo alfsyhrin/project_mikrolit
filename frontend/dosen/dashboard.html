@@ -119,6 +119,12 @@
         window.initManajemenPengguna = initManajemenPengguna;
     </script>
 
+    <script type="module">
+        import { initManajemenTugas } from "./assets/js/manajemen-tugas.js";
+
+        window.initManajemenTugas = initManajemenTugas;
+    </script>
+
     <!-- Link untuk mengakses component di main.js -->
     <script type="module" src="../dosen/assets/js/main.js"></script>
     
@@ -215,6 +221,12 @@
                         setTimeout(() => {
                             window.initManajemenPengguna();
                             window.fetchAndRenderUsers();
+                        }, 50);
+                    }
+
+                    if (page === "manajemen-tugas") {
+                        setTimeout(() => {
+                            window.initManajemenTugas();
                         }, 50);
                     }
 
