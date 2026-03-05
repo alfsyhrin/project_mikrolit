@@ -362,7 +362,8 @@ async function handleViewSubmissions(taskId){
     try {
         const submissions = await getSubmissionsByTaskRequest(taskId, token);
         const content = submissions && submissions.length ? submissions.map(sub => {
-            const when = formatSubmittedAtToWIT_fromDb(sub.submitted_at);
+            const submittedAt = sub.submitted_at || "-";
+            const [date, time] = submittedAt.split(" ");
             return `
             <div class="submission-card">
                 <div class="submission-header">
@@ -371,8 +372,8 @@ async function handleViewSubmissions(taskId){
                         <div class="submission-npm">NPM : ${escapeHtml(String(sub.student_npm))}</div>
                     </div>
                     <div class="submission-date">
-                        <div class="submission-date-day">${when.date}</div>
-                        <div class="submission-time">${when.time}</div>
+                        <div class="submission-date-day">${date || "-"}</div>
+                        <div class="submission-time">${time ? time.slice(0,5) : "-"}</div>
                     </div>
                 </div>
                 <div class="submission-file">
