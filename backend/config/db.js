@@ -5,9 +5,17 @@ const db = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306
+    port: process.env.DB_PORT || 3306,
+    connectionLimit: 10
 });
 
-console.log("Database Pool Create");
+db.getConnection((err, connection) => {
+    if (err) {
+        console.error("Database connection failed:", err);
+    } else {
+        console.log("Database connected successfully");
+        connection.release();
+    }
+});
 
 module.exports = db;
