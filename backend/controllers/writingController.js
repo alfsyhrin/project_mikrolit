@@ -139,3 +139,12 @@ exports.downloadSubmissionsZip = (req, res) => {
         archive.finalize();
     });
 };
+
+exports.downloadTaskFile = (req, res) => {
+    const taskId = req.params.taskId;
+    Writing.getTaskById(taskId, (err, task) => {
+        if (err || !task) return res.status(500).json({ error: err || "Task not found" });
+        if (!task.attachment_url) return res.status(404).json({ error: "No attachment for this task" });
+        res.sendFile(path.join(__dirname, "..", task.attachment_url));
+    });
+};

@@ -128,6 +128,12 @@
         // Expose ke global scope agar bisa dipanggil dari inline script lain
         window.initPengaturan = initPengaturan;
     </script>
+
+    <script type="module">
+        import { initManajemenTugasMhs } from "./assets/js/tugas-mahasiswa.js";
+
+        window.initManajemenTugasMhs = initManajemenTugasMhs;
+    </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
     <script src="../assets/apexcharts.min.js"></script>
@@ -140,7 +146,7 @@
 
     
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
 
         // ==============================
         // ELEMENT
@@ -160,8 +166,48 @@
             return;
         }
 
-        document.getElementById("showName").innerText = localStorage.getItem("name");
-        document.getElementById("showNidn").innerText = localStorage.getItem("nidn");
+
+        // Ambil profile langsung dari backend supaya realtime setelah update
+        const token = localStorage.getItem("token");
+
+        // helper: update navbar dari data profile
+        function updateNavbarFromProfile(data) {
+            document.getElementById("showName").innerText = data.name || localStorage.getItem("name") || "";
+            document.getElementById("showNidn").innerText = data.nidn || localStorage.getItem("nidn") || "";
+
+            const fotoEl = document.querySelector('.foto-profil');
+            let src = null;
+            if (data.photoData) src = data.photoData;
+            else if (data.photo) src = data.photo + '?v=' + Date.now();
+
+            if (src) {
+                fotoEl.innerHTML = `<img id="navProfileImg" src="${src}" alt="Foto Profil" ">`;
+                const img = document.getElementById('navProfileImg');
+                img.onerror = function() {
+                    this.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.name || localStorage.getItem('name') || 'User');
+                };
+            } else {
+                fotoEl.innerHTML = '<span class="material-symbols-outlined">person</span>';
+            }
+        }
+
+        try {
+            const api = await import('../../../assets/api.js');
+            const data = await api.getProfileRequest(token);
+
+            // initial render
+            updateNavbarFromProfile(data);
+
+            // listen for updates emitted by pengaturan.js
+            window.addEventListener('profileUpdated', (e) => {
+                if (e && e.detail) updateNavbarFromProfile(e.detail);
+            });
+        } catch (err) {
+            // Jika fetch gagal, gunakan localStorage sebagai cadangan
+            console.error('Gagal fetch profile:', err);
+            document.getElementById("showName").innerText = localStorage.getItem("name") || "";
+            document.getElementById("showNidn").innerText = localStorage.getItem("nidn") || "";
+        }
 
         // ==============================
         // LOAD PAGE FUNCTION
@@ -180,6 +226,12 @@
                         setTimeout(() => {
                             window.initManajemenPengguna();
                             window.fetchAndRenderUsers();
+                        }, 50);
+                    }
+
+                    if (page === "tugas-mahasiswa") {
+                        setTimeout(() => {
+                            window.initManajemenTugasMhs();
                         }, 50);
                     }
 

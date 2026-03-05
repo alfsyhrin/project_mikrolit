@@ -1,5 +1,6 @@
 const API_BASE = "https://erica-slatier-neoma.ngrok-free.dev/api";
 
+//AUTH===================================================================================
 export async function loginRequest(emailOrNidn, password){
     const body = {};
 
@@ -28,6 +29,9 @@ export async function logoutRequest(){
     });
 }
 
+//====================================================================================
+
+//REGISTER============================================================================
 export async function registerRequest(name, email, password, nidn){
     const response = await fetch(API_BASE + "/register", {
         method: "POST",
@@ -36,7 +40,9 @@ export async function registerRequest(name, email, password, nidn){
         body: JSON.stringify({ name, email, password, nidn })
     });
 }
+//====================================================================================
 
+//USERS (DOSEN) ======================================================================
 export async function getUsersRequest(token){
     const response = await fetch(API_BASE + "/users", {
         method: "GET",
@@ -68,7 +74,9 @@ export async function updateUserStatusRequest(userId, status, token){
 
     return response.json();
 }
+//======================================================================================
 
+//PROFILE (SEMUA USER) =================================================================
 export async function getProfileRequest(token){
     const response = await fetch(API_BASE + "/profile", {
         method: "GET",
@@ -131,22 +139,11 @@ export async function deletePhotoRequest(token){
 
     return response.json();
 }
+//====================================================================================
 
+//MODULES & WRITING TASKS (DOSEN) ====================================================
 export async function getModulesRequest(token){
     const response = await fetch(API_BASE + "/modules", {
-        method: "GET",
-        headers: { 
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    return response.json();
-}
-
-export async function getTaskForMahasiswaRequest(token){
-    const response = await fetch(API_BASE + "/writing/mahasiswa/tasks", {
         method: "GET",
         headers: { 
             "Content-Type": "application/json",
@@ -185,27 +182,6 @@ export async function createTaskRequest(moduleId, taskTitle, instructions, attac
         headers: {
             "ngrok-skip-browser-warning": "true",
             // "content-type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`
-        },
-        body: formData
-    });
-
-    return response.json();
-}
-
-export async function submitWritingRequest(taskId, answerText, file, token){
-    const formData = new FormData();
-    formData.append("task_id", taskId);
-    formData.append("answer_text", answerText);
-    if (file) {
-        formData.append("file", file);
-    }
-
-    const response = await fetch(API_BASE + "/writing/submit", {
-        method: "POST",
-        headers: {
-            "ngrok-skip-browser-warning": "true",
-            "content-type": "multipart/form-data",
             "Authorization": `Bearer ${token}`
         },
         body: formData
@@ -273,4 +249,51 @@ export async function downloadSubmissionsZipRequest(taskId, token){
     });
     
     return response.blob();
+}
+
+//MODULES & TASK (MAHASISWA)=========================================================
+export async function getTaskForMahasiswaRequest(token){
+    const response = await fetch(API_BASE + "/writing/mahasiswa/tasks", {
+        method: "GET",
+        headers: { 
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}
+
+export async function downloadTaskFileRequest(taskId, token){
+    const response = await fetch(API_BASE + `/writing/task/${taskId}/download`, {
+        method: "GET",
+        headers: {
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.blob();
+}
+
+export async function submitWritingRequest(taskId, answerText, file, token){
+    const formData = new FormData();
+    formData.append("task_id", taskId);
+    formData.append("answer_text", answerText);
+    if (file) {
+        formData.append("file", file);
+    }
+
+    const response = await fetch(API_BASE + "/writing/submit", {
+        method: "POST",
+        headers: {
+            "ngrok-skip-browser-warning": "true",
+            // "content-type": "multipart/form-data",
+            "Authorization": `Bearer ${token}`
+        },
+        body: formData
+    });
+
+    return response.json();
 }

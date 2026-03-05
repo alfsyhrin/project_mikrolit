@@ -13,7 +13,8 @@ const {
     getSubmissionsByTask,
     updateTask,
     deleteTask,
-    downloadSubmissionsZip
+    downloadSubmissionsZip,
+    downloadTaskFile
 } = require("../controllers/writingController");
 
 router.get("/tasks", auth, getAllTasks);
@@ -28,5 +29,6 @@ router.get("/submissions/:taskId", auth, getSubmissionsByTask);
 router.put("/task/:id", auth, upload.tasks.single("attachment"), updateTask);
 router.delete("/task/:id", auth, deleteTask);
 router.get("/task/:taskId/submissions/zip", auth, downloadSubmissionsZip);
+router.get("/task/:taskId/download", auth, downloadTaskFile);
 
 module.exports = router;

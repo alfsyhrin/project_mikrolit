@@ -102,7 +102,14 @@ const Writing = {
       SET score = ?, feedback = ?
       WHERE id = ?
     `, [data.score, data.feedback, data.id], callback);
-  }
+  },
+
+  getTaskById: (taskId, callback) => {
+    db.query("SELECT * FROM writing_tasks WHERE id = ?", [taskId], (err, rows) => {
+        if (err) return callback(err);
+        callback(null, rows && rows[0] ? rows[0] : null);
+    });
+}
 };
 
 module.exports = Writing;
