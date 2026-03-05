@@ -58,7 +58,8 @@ const Writing = {
   getTasksForMahasiswa: (studentId, callback) => {
       db.query(`
         SELECT wt.*, 
-          CASE WHEN ws.id IS NOT NULL THEN 'sudah dikumpulkan' ELSE 'belum dikumpulkan' END AS status
+          CASE WHEN ws.id IS NOT NULL THEN 'sudah dikumpulkan' ELSE 'belum dikumpulkan' END AS status,
+          ws.submitted_at
         FROM writing_tasks wt
         LEFT JOIN writing_submissions ws
           ON ws.task_id = wt.id AND ws.student_id = ?

@@ -131,7 +131,7 @@ exports.downloadSubmissionsZip = (req, res) => {
             if (sub.file_url) {
                 const filePath = path.join(__dirname, "..", sub.file_url);
                 if (fs.existsSync(filePath)) {
-                    archive.file(filePath, { name: `${sub.student_npm || sub.student_id}_${path.basename(filePath)}` });
+                    archive.file(filePath, { name: `${sub.student_name || sub.student_id}_${path.basename(filePath)}` });
                 }
             }
         });
