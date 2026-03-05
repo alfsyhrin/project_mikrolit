@@ -69,7 +69,7 @@ document.addEventListener("submit", function (e) {
 
         // Di sini bisa kamu kirim ke backend pakai fetch()
 
-        Modal.hide();
+        // Modal.hide();
     }
 
 });
