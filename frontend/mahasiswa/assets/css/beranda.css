@@ -122,11 +122,21 @@ p.icon-beranda {
   font-size: 1.1rem;
 }
 
+.wrapper-card-modul-mahasiswa {
+  height: 405px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+
 .card-modul-mahasiswa {
   background-color: var(--background-color);
   padding: 1rem;
   border-radius: 10px;
-  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .header-card-modul-mahasiswa {

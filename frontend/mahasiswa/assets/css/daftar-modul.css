@@ -1,0 +1,206 @@
+.header {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+/* Awal container modul mahasiswa */
+.container-modul-mahasiswa {
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .container-modul-mahasiswa {
+    grid-template-columns: 1fr;
+  }
+}
+
+.container-modul-mahasiswa > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.container-modul-mahasiswa .judul-container-modul-mahasiswa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.judul-container-modul-mahasiswa h2 {
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.judul-container-modul-mahasiswa a {
+  font-size: 1rem;
+  font-weight: 650;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-size: 0.8rem;
+  gap: 0.1rem;
+  transition: 0.3s ease all;
+}
+
+.judul-container-modul-mahasiswa a:hover {
+  transform: translateX(5px);
+}
+
+.judul-container-modul-mahasiswa a .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
+.card-modul-mahasiswa-menu {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.header-card-modul-mahasiswa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.wrapper-header-card-modul-mhs {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.card-modul-mahasiswa-menu .header-card-modul-mahasiswa .icon-card-modul-mahasiswa {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--secondary-color), var(--third-color));
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.icon-card-modul-mahasiswa .material-symbols-outlined {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.info-judul-card-mhs {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.info-judul-card-mhs h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.info-judul-card-mhs p {
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+
+.info-judul-card-mhs h3,
+.info-judul-card-mhs p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.card-modul-mhs-status{
+  padding: 0.4rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.card-modul-mhs-status.selesai{
+  background-color: var(--hijau-background);
+  color: var(--hijau);
+}
+
+.card-modul-mhs-status.sedang-berlangsung{
+  background-color: #37b7c327;
+  color: var(--secondary-color);
+}
+
+.footer-card-modul-mahasiswa {
+  /* border-top: 1px solid #111; */
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.footer-card-modul-mahasiswa .progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-card-modul-mahasiswa .progress {
+  width: 120px;
+  height: 10px;
+  background-color: #e5e9f2;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.footer-card-modul-mahasiswa .progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--biru));
+  border-radius: 10px;
+}
+
+.footer-card-modul-mahasiswa .precentage {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #111;
+}
+
+a.lanjut-belajar-modul {
+  margin-top: 0.5rem;
+  text-decoration: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  font-weight: 500;
+  gap: 0.3rem;
+}
+
+a.lanjut-belajar-modul .material-symbols-outlined {
+  font-size: 1.3rem;
+}
+
+@media (max-width: 576px) {
+
+  .header-card-modul-mahasiswa {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .wrapper-header-card-modul-mhs {
+    width: 100%;
+  }
+
+  .card-modul-mhs-status {
+    margin-top: 0.5rem;
+  }
+
+}
+/* Akhir container modul mahasiswa */
