@@ -8,172 +8,190 @@
 <body>
   <div class="container-beranda">
     <div class="card-beranda-wrapper">
+
       <div class="card-beranda">
-        <div class="icon-judul-wrapper">
-          <h4>Total Modul</h4>
-          <p><span class="material-symbols-outlined">library_books</span></p>
+        <p class="icon-beranda"><span class="material-symbols-outlined">groups</span></p>
+        <div class="info-card-wrapper">
+          <h2>2/6</h2>
+          <p>Modul Selesai</p>
         </div>
-        <h2>12</h2>
-        <p>+2</p>
       </div>
 
       <div class="card-beranda">
-        <div class="icon-judul-wrapper">
-          <h4>Mahasiswa Terdaftar</h4>
-          <p><span class="material-symbols-outlined">groups</span></p>
+        <p class="icon-beranda"><span class="material-symbols-outlined">show_chart</span></p>
+        <div class="info-card-wrapper">
+          <h2>48%</h2>
+          <p>Progress Total</p>
         </div>
-        <h2>42</h2>
-        <p>+6</p>
       </div>
 
       <div class="card-beranda">
-        <div class="icon-judul-wrapper">
-          <h4>Rata-rata Akses</h4>
-          <p><span class="material-symbols-outlined">timer</span></p>
+        <p class="icon-beranda"><span class="material-symbols-outlined">nest_clock_farsight_analog</span></p>
+        <div class="info-card-wrapper">
+          <h2>12.5 jam</h2>
+          <p>Waktu Belajar</p>
         </div>
-        <h2>2.5 Jam</h2>
-        <p>Per minggu</p>
       </div>
 
       <div class="card-beranda">
-        <div class="icon-judul-wrapper">
-          <h4>Penyelesaian</h4>
-          <p><span class="material-symbols-outlined">show_chart</span></p>
+        <p class="icon-beranda"><span class="material-symbols-outlined">assignment</span></p>
+        <div class="info-card-wrapper">
+          <h2>2/8</h2>
+          <p>Tugas Dikumpulkan</p>
         </div>
-        <h2>12</h2>
-        <p>+2</p>
       </div>
+
     </div>
 
-    <div class="container-chart">
-      <div class="card-progres-modul">
-        <h4>Progress Modul per Micro-Unit</h4>
-        <div id="progressChart"></div>
+    <div class="container-modul-mhs">
+      <div class="judul-container-modul">
+        <h2>Modul Saya</h2>
+        <a href="">
+          Lihat Semua
+          <span class="material-symbols-outlined">keyboard_arrow_right</span>
+        </a>
       </div>
-      <div class="card-mahasiswa-terdaftar">
-        <h4>Mahasiswa Terdaftar</h4>
-        <div id="mahasiswaChart"></div>
-        <div class="daftar-mahasiswa-wrapper">
-          <div class="card-mahasiswa-data">
-            <div class="info-mahasiswa">
-              <h5>A Ming Lang</h5>
-              <p>07352211064</p>
-            </div>
-            <p class="icon-aktif">Aktif</p>
-          </div>
 
-          <div class="card-mahasiswa-data">
-            <div class="info-mahasiswa">
-              <h5>Cuppa</h5>
-              <p>073522110097</p>
+      <div class="card-modul-mahasiswa">
+        <div class="header-card-modul-mahasiswa">
+          <div class="wrapper-header-card-modul-mhs">
+            <p class="icon-card-modul-mahasiswa">
+              <span class="material-symbols-outlined">import_contacts</span>
+            </p>
+            <div class="info-judul-card-mhs">
+              <h3>Pengantar Literasi Digital</h3>
+              <p>Dasar-dasar literasi di era digital</p>
             </div>
-            <p class="icon-pasif">Pasif</p>
           </div>
-
-          <div class="card-mahasiswa-data">
-            <div class="info-mahasiswa">
-              <h5>Manray</h5>
-              <p>073522110092</p>
+          <p class="card-modul-mhs-status selesai">Selesai</p>
+        </div>
+        <div class="footer-card-modul-mahasiswa">
+          <div class="progress-wrapper">
+            <div class="progress">
+              <div class="progress-bar" style="width: 85%;"></div>
             </div>
-            <p class="icon-aktif">Aktif</p>
+            <span class="precentage">85%</span>
           </div>
         </div>
       </div>
+
+      <div class="card-modul-mahasiswa">
+        <div class="header-card-modul-mahasiswa">
+          <div class="wrapper-header-card-modul-mhs">
+            <p class="icon-card-modul-mahasiswa">
+              <span class="material-symbols-outlined">import_contacts</span>
+            </p>
+            <div class="info-judul-card-mhs">
+              <h3>Pengantar Literasi Digital</h3>
+              <p>Dasar-dasar literasi di era digital</p>
+            </div>
+          </div>
+          <p class="card-modul-mhs-status sedang-berlangsung">Sedang Berlangsung</p>
+        </div>
+        <div class="footer-card-modul-mahasiswa">
+          <div class="progress-wrapper">
+            <div class="progress">
+              <div class="progress-bar" style="width: 85%;"></div>
+            </div>
+            <span class="precentage">85%</span>
+          </div>
+          <a href="" class="lanjut-belajar-modul">
+            <span class="material-symbols-outlined">play_arrow</span>
+            Lanjut belajar - Step 4/5
+          </a>
+        </div>
+      </div>
+
     </div>
 
-    <div class="container-list-data">
-      <div class="card-pembelajaran-terakhir">
-        <h4>Pembelajaran Terakhir</h4>
-        <div class="card-pembelajaran-terakhir-wrapper">
+    <div class="wrapper-deadline-notifikasi">
+      
+      <div class="container-deadline-mhs">
+        <p class="header-container-deadline">
+          <span class="material-symbols-outlined">emergency_home</span>
+          Deadline Terdekat
+        </p>
+        <div class="wrapper-card-deadline-mhs">
 
-          <div class="card-modul-terakhir">
-            <div class="icon-info-wrapper">
-              <p class="icon-modul"><span class="material-symbols-outlined">auto_stories</span></p>
-              <div class="info-modul">
-                <h5>Pengantar Literasi</h5>
-                <p>2 jam lalu</p>
-              </div>
-            </div>
-            <p class="icon-selesai">Selesai</p>
+          <div class="card-deadline-mhs">
+            <h2>Tugas 1</h2>
+            <p>28 hari lagi</p>
           </div>
 
-          <div class="card-modul-terakhir">
-            <div class="icon-info-wrapper">
-              <p class="icon-modul"><span class="material-symbols-outlined">auto_stories</span></p>
-              <div class="info-modul">
-                <h5>Micro-Reader: Teks Argumentasi</h5>
-                <p>1 hari lalu</p>
-              </div>
-            </div>
-            <p class="icon-selesai">Dibuat</p>
+          <div class="card-deadline-mhs">
+            <h2>Tugas 2</h2>
+            <p>38 hari lagi</p>
           </div>
 
-          <div class="card-modul-terakhir">
-            <div class="icon-info-wrapper">
-              <p class="icon-modul"><span class="material-symbols-outlined">auto_stories</span></p>
-              <div class="info-modul">
-                <h5>Reflect-Sync: Diskusi Kritis</h5>
-                <p>3 hari lalu</p>
-              </div>
+          <div class="card-deadline-mhs">
+            <h2>Tugas 2</h2>
+            <p>38 hari lagi</p>
+          </div>
+
+          <div class="card-deadline-mhs">
+            <h2>Tugas 2</h2>
+            <p>38 hari lagi</p>
+          </div>
+          
+        </div>
+        <a href="" class="footer-container-deadline">
+          Lihat Semua Tugas
+          <span class="material-symbols-outlined">keyboard_arrow_right</span>
+        </a>
+      </div>
+  
+      <div class="container-notifikasi-mhs">
+        <p class="header-container-notifikasi">
+          <span class="material-symbols-outlined">notifications</span>
+          Notifikasi
+        </p>
+        <div class="wrapper-card-notifikasi-mhs">
+
+          <div class="card-notifikasi-mhs">
+            <p class="icon-notifikasi"></p>
+            <div class="info-notifikasi-mhs">
+              <h3>Modul baru 'Review Sejawat' telah tersedia</h3>
+              <span class="waktu-notifikasi">1 jam lalu</span>
             </div>
-            <p class="icon-selesai">Diedit</p>
+          </div>
+
+          <div class="card-notifikasi-mhs">
+            <p class="icon-notifikasi"></p>
+            <div class="info-notifikasi-mhs">
+              <h3>Modul baru 'Review Sejawat' telah tersedia</h3>
+              <span class="waktu-notifikasi">1 jam lalu</span>
+            </div>
+          </div>
+
+          <div class="card-notifikasi-mhs">
+            <p class="icon-notifikasi"></p>
+            <div class="info-notifikasi-mhs">
+              <h3>Modul baru 'Review Sejawat' telah tersedia</h3>
+              <span class="waktu-notifikasi">1 jam lalu</span>
+            </div>
+          </div>
+
+          <div class="card-notifikasi-mhs">
+            <p class="icon-notifikasi"></p>
+            <div class="info-notifikasi-mhs">
+              <h3>Modul baru 'Review Sejawat' telah tersedia</h3>
+              <span class="waktu-notifikasi">1 jam lalu</span>
+            </div>
+          </div>
+          
+          <div class="card-notifikasi-mhs">
+            <p class="icon-notifikasi"></p>
+            <div class="info-notifikasi-mhs">
+              <h3>Modul baru 'Review Sejawat' telah tersedia</h3>
+              <span class="waktu-notifikasi">1 jam lalu</span>
+            </div>
           </div>
           
         </div>
       </div>
 
-      <div class="card-notifikasi">
-        <h4>Notifikasi</h4>
-        <div class="card-notifikasi-wrapper">
-
-          <div class="card-notifikasi-terbaru">
-            <div class="icon-info-wrapper">
-              <p class="icon-notifikasi tugas"><span class="material-symbols-outlined">assignment</span></p>
-              <div class="info-notifikasi">
-                <h5>5 tugas baru masuk dari kelas A</h5>
-                <p>10 menit lalu</p>
-              </div>
-            </div>
-            <!-- <p class="icon-selesai">Selesai</p> -->
-          </div>
-
-          <div class="card-notifikasi-terbaru">
-            <div class="icon-info-wrapper">
-              <p class="icon-notifikasi revisi"><span class="material-symbols-outlined">schedule</span></p>
-              <div class="info-notifikasi">
-                <h5>2 permintaan revisi menunggu</h5>
-                <p>1 jam lalu</p>
-              </div>
-            </div>
-            <!-- <p class="icon-selesai">Selesai</p> -->
-          </div>
-
-          <div class="card-notifikasi-terbaru">
-            <div class="icon-info-wrapper">
-              <p class="icon-notifikasi selesai"><span class="material-symbols-outlined">assignment_turned_in</span></p>
-              <div class="info-notifikasi">
-                <h5>Peer review unit 3 selesai</h5>
-                <p>3 jam lalu</p>
-              </div>
-            </div>
-            <!-- <p class="icon-selesai">Selesai</p> -->
-          </div>
-
-          <div class="card-notifikasi-terbaru">
-            <div class="icon-info-wrapper">
-              <p class="icon-notifikasi diskusi"><span class="material-symbols-outlined">chat</span></p>
-              <div class="info-notifikasi">
-                <h5>Peer review unit 3 selesai</h5>
-                <p>3 jam lalu</p>
-              </div>
-            </div>
-            <!-- <p class="icon-selesai">Selesai</p> -->
-          </div>
-
-        </div>
-      </div>
     </div>
-
+    
   </div>
 
 

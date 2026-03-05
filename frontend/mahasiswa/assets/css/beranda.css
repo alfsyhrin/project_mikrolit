@@ -4,6 +4,7 @@
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr; /* default mobile */
+  margin-bottom: 1rem;
 }
 
 .card-beranda {
@@ -12,46 +13,43 @@
   border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.card-beranda h2 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+.info-card-wrapper h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .card-beranda p {
-  color: var(--hijau);
+  color: var(--text-color);
   font-size: 0.9rem;
   font-weight: 500;
 }
 
-.icon-judul-wrapper {
+.info-card-wrapper {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
 }
 
-.icon-judul-wrapper h4 {
-  color: var(--text-color);
-  font-size: 0.95rem;
-  font-weight: 500;
-  width: 80%;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.icon-judul-wrapper p {
+p.icon-beranda {
+  color: var(--secondary-color);
+  width: 45px;
+  height: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.4rem;
   border-radius: 7px;
   background-color: #37b7c327;
 }
 
-.icon-judul-wrapper .material-symbols-outlined {
-  font-size: 1.5rem;
+.icon-beranda .material-symbols-outlined {
+  font-size: 1.8rem;
   color: var(--secondary-color);
 }
 
@@ -83,330 +81,413 @@
 }
 /* Akhir Card Beranda */
 
-/* Awal card chart */
-.container-chart {
-  display: grid;
-  grid-template-columns: 2fr 1fr; /* desktop layout */
-  gap: 1rem;
-  width: 100%;
-  margin-top: 1rem;
-}
-
-
-.card-progres-modul {
-  flex: 2;
+/* Awal container modul mahasiswa */
+.container-modul-mhs {
   background-color: #fff;
-  border: 1px solid var(--card-border);
   border-radius: 10px;
-  padding: 1rem;
+  border: 1px solid #ddd;
+  padding: 1.5rem;
 }
 
-.card-progres-modul h4 {
+.container-modul-mhs .judul-container-modul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.judul-container-modul h2 {
   font-size: 1rem;
   font-weight: 650;
 }
 
-#progressChart {
-  margin-top: 20px;
-  width: 100%;
-}
-
-#progressChart .apexcharts-canvas {
-  margin: 0 auto;
-}
-
-#mahasiswaChart {
-  width: 100%;
+.judul-container-modul a {
+  font-size: 1rem;
+  font-weight: 650;
   display: flex;
   justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-size: 0.8rem;
+  gap: 0.1rem;
+  transition: 0.3s ease all;
 }
 
-.card-mahasiswa-terdaftar {
+.judul-container-modul a:hover {
+  transform: translateX(5px);
+}
+
+.judul-container-modul a .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
+.card-modul-mahasiswa {
+  background-color: var(--background-color);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.header-card-modul-mahasiswa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.wrapper-header-card-modul-mhs {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
   flex: 1;
-  background-color: #fff;
-  border: 1px solid var(--card-border);
+}
+
+.card-modul-mahasiswa .header-card-modul-mahasiswa .icon-card-modul-mahasiswa {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--secondary-color), var(--third-color));
   border-radius: 10px;
-  padding: 1rem;
-}
-
-.card-mahasiswa-terdaftar h4 {
-  font-size: 1rem;
-  font-weight: 650;
-  margin-bottom: 1rem;
-}
-
-.card-mahasiswa-data {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 0.5rem;
-  border-bottom: 1px solid var(--card-border);
-  margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
-.card-mahasiswa-data .info-mahasiswa {
+.icon-card-modul-mahasiswa .material-symbols-outlined {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.info-judul-card-mhs {
   display: flex;
+  justify-content: center;
+  align-items: flex-start;
   flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  flex: 1;
 }
 
-.info-mahasiswa h5 {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.2rem;
+.info-judul-card-mhs h3 {
+  font-size: 1rem;
+  font-weight: 600;
 }
 
-.info-mahasiswa p {
-  margin: 0;
+.info-judul-card-mhs p {
   font-size: 0.8rem;
   color: var(--text-color);
 }
 
-
-.card-mahasiswa-data .icon-aktif {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.3rem;
-  border-radius: 6px;
-  color: var(--hijau);
-  background-color: #37b73727;
-  font-size: 0.75rem;
-}
-
-.card-mahasiswa-data .icon-pasif {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.3rem;
-  border-radius: 6px;
-  color: var(--text-color);
-  background-color: #ddd;
-  font-size: 0.75rem;
-}
-
-.info-mahasiswa p {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--text-color-light);
-}
-
-.card-progres-modul,
-.card-mahasiswa-terdaftar {
-  min-width: 0; /* cegah overflow aneh */
-}
-
-
-/* Responsivitas */
-@media (max-width: 768px) {
-  .container-chart {
-    grid-template-columns: 1fr; /* 🔥 1 kolom */
-  }
-}
-
-/* Akhir card chart */
-
-/* Awal card list data */
-.container-list-data {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  /* width: 100%; */
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.card-pembelajaran-terakhir {
-  /* flex: 1; */
-  background-color: #fff;
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: 1rem;
-  height: 400px;
+.info-judul-card-mhs h3,
+.info-judul-card-mhs p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   width: 100%;
 }
 
-.card-pembelajaran-terakhir-wrapper {
-  height: 350px;
-  overflow-y: auto;
-}
-
-.card-modul-terakhir {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* gap: 1rem; */
+.card-modul-mhs-status{
+  padding: 0.4rem;
   border-radius: 10px;
-  padding: 0.9rem;
-  margin-bottom: 0.35rem;
-  transition: background-color 0.3s ease;
+  font-size: 0.7rem;
+  flex-shrink: 0;
 }
 
-.icon-info-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-}
-
-.card-modul-terakhir:hover {
-  background-color: #eeeeee;
-  cursor: pointer;
-}
-
-.card-modul-terakhir .icon-modul{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5rem;
-  border-radius: 8px;
-  background: linear-gradient(
-    135deg,
-    var(--secondary-color),
-    var(--third-color)
-  );
-  color: var(--background-color);
-  font-size: 1.5rem;
-}
-
-.card-modul-terakhir .info-modul {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  min-width: 0; /* cegah overflow aneh */
-}
-
-.info-modul h5 {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 500;
-  overflow-x: hidden;
-  width: 150px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.info-modul p {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--text-color);
-}
-
-.icon-selesai {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.3rem;
-  border-radius: 7px;
+.card-modul-mhs-status.selesai{
+  background-color: var(--hijau-background);
   color: var(--hijau);
-  background-color: #37b73727;
-  font-size: 0.75rem;
-  align-self: center;
 }
 
-.card-pembelajaran-terakhir h4,
-.card-notifikasi h4 {
-  font-size: 1rem;
-  font-weight: 650;
-  margin-bottom: 0.5rem;
-}
-
-.card-notifikasi {
-  /* flex: 1; */
-  background-color: #fff;
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: 1rem;
-  height: 400px;
-  /* margin-bottom: 1rem; */
-}
-
-.card-notifikasi-wrapper {
-  height: 350px;
-  overflow-y: auto;
-}
-
-.card-notifikasi-terbaru {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* gap: 1rem; */
-  border-radius: 10px;
-  padding: 0.9rem;
-  margin-bottom: 0.35rem;
-  transition: background-color 0.3s ease;
-}
-
-.card-notifikasi-terbaru:hover {
-  background-color: #eeeeee;
-  cursor: pointer;
-}
-
-.card-notifikasi-terbaru .icon-notifikasi{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5rem;
-  border-radius: 8px;
-  font-size: 1.5rem;
-}
-
-.card-notifikasi-terbaru .icon-notifikasi.tugas {
+.card-modul-mhs-status.sedang-berlangsung{
   background-color: #37b7c327;
   color: var(--secondary-color);
 }
 
-.card-notifikasi-terbaru .icon-notifikasi.revisi {
-  background-color: #f0c03727;
-  color: #f0c037;
+.footer-card-modul-mahasiswa {
+  /* border-top: 1px solid #111; */
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
-.card-notifikasi-terbaru .icon-notifikasi.selesai {
-  background-color: #37b73727;
-  color: var(--hijau);
+.footer-card-modul-mahasiswa .progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.card-notifikasi-terbaru .icon-notifikasi.diskusi {
-  background-color: #7843db2b;
-  color: #7743DB;
+.footer-card-modul-mahasiswa .progress {
+  width: 120px;
+  height: 10px;
+  background-color: #e5e9f2;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
 }
 
-.card-notifikasi-terbaru .info-notifikasi {
+.footer-card-modul-mahasiswa .progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--biru));
+  border-radius: 10px;
+}
+
+.footer-card-modul-mahasiswa .precentage {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #111;
+}
+
+a.lanjut-belajar-modul {
+  margin-top: 0.5rem;
+  text-decoration: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  font-weight: 500;
+  gap: 0.3rem;
+}
+
+a.lanjut-belajar-modul .material-symbols-outlined {
+  font-size: 1.3rem;
+}
+
+@media (max-width: 576px) {
+
+  .header-card-modul-mahasiswa {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .wrapper-header-card-modul-mhs {
+    width: 100%;
+  }
+
+  .card-modul-mhs-status {
+    margin-top: 0.5rem;
+  }
+
+}
+/* Akhir container modul mahasiswa */
+
+/* Awal Wrapper deadline notiifikasi */
+.wrapper-deadline-notifikasi {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .wrapper-deadline-notifikasi {
+    grid-template-columns: 1fr;
+  }
+}
+/* Akhir Wrapper deadline notiifikasi */
+
+/* Awal container deadline terakhir */
+.container-deadline-mhs {
+  flex: 1.5;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  height: 400px;
+  min-width: 0;
+}
+
+.header-container-deadline {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 0.3rem;
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 0.8rem;
+}
+
+.header-container-deadline .material-symbols-outlined {
+  color: #F0C037;
+  font-size: 1.5rem;
+}
+
+.wrapper-card-deadline-mhs {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  /* overflow: hidden; */
 }
 
-.info-notifikasi h5 {
-  margin: 0;
-  font-size: 0.9rem;
+.card-deadline-mhs {
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.3rem;
+  transition: 0.3s ease all;
+  cursor: pointer;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.card-deadline-mhs:hover {
+  transform: translatey(-5px);
+}
+
+.card-deadline-mhs h2 {
+  font-size: 1rem;
   font-weight: 500;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
-.info-notifikasi p {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--text-color);
+.card-deadline-mhs p {
+  font-size: 0.9rem;
+  font-weight: 450;
+  color: #F0C037;
 }
 
-.icon-selesai {
+.footer-container-deadline {
+  font-weight: 650;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.3rem;
-  border-radius: 7px;
-  color: var(--hijau);
-  background-color: #37b73727;
-  font-size: 0.75rem;
-  align-self: center;
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-size: 0.8rem;
+  gap: 0.1rem;
+  transition: 0.3s ease all;
+  width: 100%;
+  justify-content: flex-start;
+  margin-top: 0.8rem;
 }
-/* Responsivitas */
-@media (max-width: 768px) {
-  .container-list-data {
-    grid-template-columns: 1fr; /* 🔥 1 kolom */
-  }
+
+.footer-container-deadline .material-symbols-outlined {
+  font-size: 1.1rem;
 }
-/* Akhir card list data */
+
+.footer-container-deadline:hover {
+  transform: translateX(5px);
+}
+/* Akhir container deadline terakhir */
+
+/* Awal container notifikasi mahasiswa */
+.container-notifikasi-mhs {
+  flex: 1;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 400px;
+  min-width: 0;
+}
+
+.header-container-notifikasi {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 0.3rem;
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 0.8rem;
+}
+
+.header-container-notifikasi .material-symbols-outlined {
+  color: var(--secondary-color);
+  font-size: 1.5rem;
+}
+
+.wrapper-card-notifikasi-mhs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 0.8rem;
+  height: 100%;
+  padding: 0.5rem 0;
+  /* border: 1px solid red; */
+  overflow-y: auto;
+}
+
+.card-notifikasi-mhs {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.5rem;
+  transition: 0.3s ease all;
+  border-radius: 10px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.card-notifikasi-mhs:hover {
+  background-color: var(--background-color);
+}
+
+.icon-notifikasi {
+  padding: 0.25rem;
+  border-radius: 50%;
+  background-color: var(--third-color);
+  flex-shrink: 0;
+}
+
+.info-notifikasi-mhs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 0;
+  /* border: 1px solid red; */
+}
+
+.info-notifikasi-mhs h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  width: 100%;
+  /* white-space: nowrap; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* width: 100%; */
+}
+
+.info-notifikasi-mhs span {
+  font-size: 0.8rem;
+  font-color: var(--text-color);
+  font-weight: 450;
+}
+/* Akhir container notifikasi mahasiswa */
