@@ -527,4 +527,17 @@
     font-size: 0.9em;
 }
 
+.deadline-time {
+    color: #666;
+}
+
+.deadline-time::after {
+    content: attr(data-status);
+    color: #e74c3c;
+    font-size: 0.85em;
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+
 /* Akhir style untuk lihat submisi mahasiswa */

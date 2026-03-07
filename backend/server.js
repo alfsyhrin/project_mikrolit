@@ -1,5 +1,7 @@
 require("dotenv").config();
 const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
 const cors = require("cors");
 const path = require("path");
 
@@ -13,6 +15,10 @@ const writingRoute = require("./routes/writingRoute");
 const reflectRoute = require("./routes/reflectRoute");
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+    cors: { origin: "*" }
+});
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -32,6 +38,9 @@ app.use("/uploads", (req, res, next) => {
 });
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Middleware
+app.use(express.static('public'));
+
 // Handler khusus jika file tidak ditemukan di /uploads
 app.use("/uploads", (req, res) => {
     res.status(404).json({ message: "File not found" });
@@ -47,6 +56,9 @@ app.use("/api", microUnitsRoute);
 // Mount writing routes under /api/writing so endpoints are predictable
 app.use("/api/writing", writingRoute);
 app.use("/api", reflectRoute);
+
+// Socket.IO Handler
+require('./socket/socketHandler')(io);
 
 app.get("/", (req, res) => {
     res.send("Server berjalan dengan baik!");

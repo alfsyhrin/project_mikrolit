@@ -31,36 +31,48 @@ function formatDeadlineDisplay(deadline) {
     return `${dd}/${mm}/${yyyy}`;
 }
 
-function formatDeadlineParts(deadline) {
-    if (!deadline) return { date: '-', time: '-' };
+function formatDeadlineParts(task) { // ✅ Parameter task, bukan hanya deadline
+    if (!task || !task.deadline) return { date: '-', time: '-', isPast: false };
     
-    const date = new Date(deadline);
+    const deadline = new Date(task.deadline);
     const now = new Date();
     
-    // Format date: DD/MM/YYYY atau "Terlambat" jika sudah lewat
-    const formattedDate = date.toLocaleDateString('id-ID', {
+    // Cek apakah deadline sudah lewat > 1 hari (24 jam)
+    const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+    const isPastOneDay = deadline < oneDayAgo;
+    
+    // Format date: DD/MM/YYYY
+    const formattedDate = deadline.toLocaleDateString('id-ID', {
         day: '2-digit',
         month: '2-digit', 
         year: 'numeric'
     });
     
-    const isPastDeadline = date < now;
-    const displayDate = isPastDeadline ? 'Terlambat' : formattedDate;
+    // Status untuk time element
+    let timeStatus = "";
+    const isPastDeadline = deadline < now;
+    if (task.status === "sudah dikumpulkan" && isPastOneDay) {
+        timeStatus = "(sudah berakhir)"; // ✅ Kondisi yang diinginkan
+    } else if (task.status === "belum dikumpulkan" && isPastDeadline) {
+        timeStatus = "(sudah berakhir)";
+    }
     
     // Format time: HH:MM
-    const formattedTime = date.toLocaleTimeString('id-ID', {
+    const formattedTime = deadline.toLocaleTimeString('id-ID', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
     });
     
     return {
-        date: displayDate,
+        date: formattedDate,
         time: formattedTime,
-        isPast: isPastDeadline
+        timeStatus: timeStatus, // ✅ Status untuk ditampilkan di time
+        isPast: deadline < now,
+        isPastOneDay: isPastOneDay,
+        deadlineMerged: `${formattedDate} ${timeStatus}`.trim()
     };
 }
-
 
 // Render daftar tugas dengan filter dan search
 function renderTugasMahasiswa(tasks) {
@@ -96,7 +108,7 @@ function renderTugasMahasiswa(tasks) {
 
     container.innerHTML = tasks.map(task => {
         const isUploadDisabled = shouldDisableUpload(task);
-        const deadlineParts = formatDeadlineParts(task.deadline);
+        const deadlineParts = formatDeadlineParts(task);
         
         return `
         <div class="card-tugas-mhs" data-task-id="${task.id}">
@@ -119,13 +131,9 @@ function renderTugasMahasiswa(tasks) {
                         <!-- Deadline Time -->
                         <p class="waktu-pengumpulan-tugas-mhs">
                             <span class="material-symbols-outlined">schedule</span>
-                            <span class="deadline-time">${deadlineParts.time} WIT</span>
+                            <span class="deadline-time">${deadlineParts.time} WIT ${deadlineParts.timeStatus}</span>
                         </p>
                         
-                        <p class="dokumen-tugas-mhs">
-                            <span class="material-symbols-outlined">description</span>
-                            ${task.attachment_url ? escapeHtml(task.attachment_url.split("/").pop()) : "-"}
-                        </p>
                         <p class="status-tugas-mhs ${task.status === "sudah dikumpulkan" ? "dikumpulkan" : "belumdikumpulkan"}">
                             ${task.status === "sudah dikumpulkan" ? "Dikumpulkan" : "Belum Dikumpulkan"}
                         </p>
