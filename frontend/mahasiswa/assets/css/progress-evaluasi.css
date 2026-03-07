@@ -119,14 +119,14 @@
   margin: 0 auto;
 }
 
-#kemampuanliterasiChart {
+#waktuBelajarChart {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.card-kemampuan-literasi {
+.card-waktu-belajar {
   flex: 1;
   background-color: #fff;
   border: 1px solid var(--card-border);
@@ -136,14 +136,14 @@
   /* min-height: 500px; */
 }
 
-.card-kemampuan-literasi h4 {
+.card-waktu-belajar h4 {
   font-size: 1rem;
   font-weight: 650;
   margin-bottom: 1rem;
 }
 
 .card-progres-mingguan,
-.card-kemampuan-literasi {
+.card-waktu-belajar {
   min-width: 0;
 }
 
@@ -203,6 +203,10 @@ thead th {
   font-size: 0.9rem;
 }
 
+thead th.mid {
+  text-align: center;
+}
+
 tbody td {
   padding: 18px 10px;
   border-bottom: 1px solid #ddd;
@@ -214,7 +218,7 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
-.nama {
+.modul {
   font-weight: 550;
   color: var(--primary-color);
 }
@@ -223,6 +227,70 @@ tbody tr:last-child td {
   color: #6b7a90;
 }
 
+.quiz {
+  color: var(--third-color);
+  font-weight: 500;
+}
+
+
+.diskusi-selesai {
+  color: var(--hijau);
+  background-color: var(--hijau-background);
+  width: 60px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.diskusi-belum-selesai {
+  color: var(--merah);
+  background-color: var(--merah-background);
+  width: 100px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.diskusi-none {
+  color: var(--text-color);
+  width: 100px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.refleksi-selesai, .refleksi-belum-selesai, .refleksi-none{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.refleksi-none .material-symbols-outlined {
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+
+.refleksi-selesai .material-symbols-outlined {
+  font-size: 1.1rem;
+  color: var(--hijau);
+}
+
+.refleksi-belum-selesai .material-symbols-outlined {
+  font-size: 1.1rem;
+  color: var(--merah);
+}
+
+.wrapper-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /* Progress Bar */
 .progress-wrapper {
   display: flex;
@@ -251,13 +319,13 @@ tbody tr:last-child td {
 /* Akhir Container Tabel */
 
 /* Awal Container Tracking Kesulitan */
-.card-tracking-kesulitan h4 {
+.card-riwayat-pengumpulan h4 {
   font-size: 1rem;
   font-weight: 650;
   margin-bottom: 1rem;
 }
 
-.card-tracking-kesulitan {
+.card-riwayat-pengumpulan {
   background-color: #fff;
   border: 1px solid var(--card-border);
   border-radius: 10px;
@@ -265,65 +333,83 @@ tbody tr:last-child td {
   margin-bottom: 1rem;
 }
 
-.card-kesulitan-modul {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.9rem;
-  gap: 1rem;
-  border: 1px solid #ddd;
-  background-color: #eeeeee80;
-  border-radius: 10px;
-  margin-bottom: 0.6rem;
-}
-
-.tracking-wrapper {
+.pengumpulan-wrapper {
   height: 240px;
   overflow-y: auto;
   padding-right: 0.5rem;
-}
-
-.card-kesulitan-modul:last-child {
-  margin-bottom: 0;
-}
-
-.card-kesulitan-modul .wrapper-tracking {
   display: flex;
-  gap: 0.9rem;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 
-.card-kesulitan-modul .icon-kesulitan {
+.card-riwayat-pengumpulan-tugas {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  padding: 1rem;
   border-radius: 10px;
-  background-color: #f0c03727;
-  color: #f0c037;
-  padding: 0.5rem;
+  width: 100%;
 }
 
-.card-kesulitan-modul .info-kesulitan {
+.wrapper-icon-info-riwayat-tugas {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.icon-riwayat-tugas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-riwayat-tugas .material-symbols-outlined {
+  font-size: 1.5rem;
+  color: #111
+}
+
+.info-riwayat-tugas {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.3rem;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
 }
 
-.card-kesulitan-modul .info-kesulitan .nama-modul {
-  font-weight: 550;
-  color: var(--primary-color);
+.info-riwayat-tugas .judul-file {
+  font-size: 0.9rem;
+  font-weight: 530;
+  color: #111;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.card-kesulitan-modul .info-kesulitan .jumlah-mahasiswa {
-  color: #999;
+.info-riwayat-tugas .waktu-file {
   font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-color);
 }
 
-.progress-bar-kesulitan {
-  height: 100%;
-  background: linear-gradient(90deg, #f0c037, #f0bf37e2);
-  border-radius: 10px;
+.action-card-riwayat-pengumpulan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-card-riwayat-pengumpulan .material-symbols-outlined {
+  font-size: 1.2rem;
+  color: var(--hijau);
 }
 /* Akhir Container Tracking Kesulitan */

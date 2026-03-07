@@ -399,4 +399,70 @@ function renderKemampuanLiterasiChart() {
   });
 }
 
+// Awal chart waktu belajar mahasiswa
+function renderWaktuBelajarChart() {
+
+  const options = {
+    series: [{
+      name: "Jam Belajar",
+      data: [2.5, 1.7, 3.2, 0.6, 1.9, 1.5, 1.0]
+    }],
+    chart: {
+      type: "area",
+      height: 350,
+      toolbar: {
+        show: false
+      }
+    },
+    stroke: {
+      curve: "smooth",
+      width: 3
+    },
+    colors: ["#2CA6B1"],
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.1,
+        stops: [0, 100]
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    grid: {
+      borderColor: "#dfe6f1",
+      strokeDashArray: 5
+    },
+    xaxis: {
+      categories: ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]
+    },
+    yaxis: {
+      min: 0,
+      max: 3.2,
+      tickAmount: 4,
+      labels: {
+        formatter: function (value) {
+          return value.toFixed(1);
+        }
+      }
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return val + " jam";
+        }
+      }
+    }
+  };
+
+  const chart = new ApexCharts(
+    document.querySelector("#waktuBelajarChart"),
+    options
+  );
+
+  chart.render();
+}
+// Akhir chart waktu belajar mahasiswa
 
