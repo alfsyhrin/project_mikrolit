@@ -528,3 +528,38 @@
 }
 
 /* Akhir style untuk lihat submisi mahasiswa */
+
+/* Awal search bar */
+.search-bar {
+  flex: 4;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+}
+
+.search-bar:focus-within {
+  border-color: var(--secondary-color);
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.search-bar p {
+  color: var(--primary-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-bar .material-symbols-outlined {
+  font-size: 1.3rem;
+}

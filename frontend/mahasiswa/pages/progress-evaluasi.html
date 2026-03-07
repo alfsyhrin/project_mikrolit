@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring - Mikrolit LMS</title>
+</head>
+<body>
+  <div class="container-monitoring">
+
+    <div class="card-monitoring-wrapper">
+      <div class="card-monitoring">
+        <div class="icon-judul-wrapper">
+          <h4>Rata-rata Penyelesaian</h4>
+          <p><span class="material-symbols-outlined">analytics</span></p>
+        </div>
+        <h2>68%</h2>
+        <p>+5%</p>
+      </div>
+
+      <div class="card-monitoring">
+        <div class="icon-judul-wrapper">
+          <h4>Durasi Belajar</h4>
+          <p><span class="material-symbols-outlined">avg_time</span></p>
+        </div>
+        <h2>3.9 Jam</h2>
+        <p>Total Belajar</p>
+      </div>
+
+      <div class="card-monitoring">
+        <div class="icon-judul-wrapper">
+          <h4>Modul</h4>
+          <p><span class="material-symbols-outlined">auto_stories</span></p>
+        </div>
+        <h2>4/8</h2>
+        <p class="alert-card">4 Modul Belum Selesai</p>
+      </div>
+
+      <div class="card-monitoring">
+        <div class="icon-judul-wrapper">
+          <h4>Tugas</h4>
+          <p><span class="material-symbols-outlined">warning</span></p>
+        </div>
+        <h2>3/10</h2>
+        <p class="alert-card">7 Tugas Belum Dikumpulkan</p>
+      </div>
+    </div>
+    
+    <div class="container-chart">
+      <div class="card-progres-mingguan">
+        <h4>Penyelesaian Mingguan</h4>
+        <div id="progressmingguanChart"></div>
+      </div>
+      <div class="card-waktu-belajar">
+        <h4>Waktu Belajar Harian</h4>
+        <div id="waktuBelajarChart"></div>
+      </div>
+    </div>
+
+    <div class="card-tabel-mahasiswa">
+      <h4>Rekapitulasi Modul</h4>
+      <div class="wrapper-tabel">
+        <table>
+          <thead>
+              <tr>
+                  <th>Modul</th>
+                  <th class="mid">Quiz</th>
+                  <th class="mid">Diskusi</th>
+                  <th class="mid">Refleksi</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td class="nama">Pengantar Literasi Digital</td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="quiz">88</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="diskusi-selesai">Selesai</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="refleksi-selesai">
+                      <span class="material-symbols-outlined">check</span>
+                    </div>
+                  </td>
+              </tr>
+  
+              <tr>
+                  <td class="nama">Teks Argumentasi</td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="quiz">75</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="diskusi-belum-selesai">Belum Selesai</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="refleksi-belum-selesai">
+                      <span class="material-symbols-outlined">close</span>
+                    </div>
+                  </td>
+              </tr>
+  
+              <tr>
+                  <td class="nama">Diskusi Kritis</td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="quiz">-</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="diskusi-belum-selesai">Belum Selesai</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="refleksi-selesai">
+                      <span class="material-symbols-outlined">check</span>
+                    </div>
+                  </td>
+              </tr>
+  
+              <tr>
+                  <td class="nama">Menulis Esai Pendek</td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="quiz">-</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="diskusi-selesai">Selesai</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="refleksi-belum-selesai">
+                      <span class="material-symbols-outlined">close</span>
+                    </div>
+                  </td>
+              </tr>
+  
+              <tr>
+                  <td class="nama">Review Sejawat Esai</td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="quiz">-</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="wrapper-flex">
+                      <p class="diskusi-none">-</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="refleksi-none">
+                      <span class="material-symbols-outlined">-</span>
+                    </div>
+                  </td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card-riwayat-pengumpulan">
+      <h4>Riwayat Pengumpulan Tugas</h4>
+      <div class="pengumpulan-wrapper">
+        
+        <div class="card-riwayat-pengumpulan-tugas">
+          <div class="wrapper-icon-info-riwayat-tugas">
+            <p class="icon-riwayat-tugas">
+              <span class="material-symbols-outlined">
+                assignment
+              </span>
+            </p>
+            <div class="info-riwayat-tugas">
+              <h3 class="judul-file">72426-75676719151-1-PB.pdf</h3>
+              <span class="waktu-file">01/04/2026, 22.31.05</span>
+            </div>
+          </div>
+          <p class="action-card-riwayat-pengumpulan">
+            <span class="material-symbols-outlined">
+              check_circle
+            </span>
+          </p>
+        </div>
+
+        <div class="card-riwayat-pengumpulan-tugas">
+          <div class="wrapper-icon-info-riwayat-tugas">
+            <p class="icon-riwayat-tugas">
+              <span class="material-symbols-outlined">
+                assignment
+              </span>
+            </p>
+            <div class="info-riwayat-tugas">
+              <h3 class="judul-file">72426-75676719151-1-PB.pdf</h3>
+              <span class="waktu-file">01/04/2026, 22.31.05</span>
+            </div>
+          </div>
+          <p class="action-card-riwayat-pengumpulan">
+            <span class="material-symbols-outlined">
+              check_circle
+            </span>
+          </p>
+        </div>
+
+        <div class="card-riwayat-pengumpulan-tugas">
+          <div class="wrapper-icon-info-riwayat-tugas">
+            <p class="icon-riwayat-tugas">
+              <span class="material-symbols-outlined">
+                assignment
+              </span>
+            </p>
+            <div class="info-riwayat-tugas">
+              <h3 class="judul-file">72426-75676719151-1-PB.pdf</h3>
+              <span class="waktu-file">01/04/2026, 22.31.05</span>
+            </div>
+          </div>
+          <p class="action-card-riwayat-pengumpulan">
+            <span class="material-symbols-outlined">
+              check_circle
+            </span>
+          </p>
+        </div>
+        
+        <div class="card-riwayat-pengumpulan-tugas">
+          <div class="wrapper-icon-info-riwayat-tugas">
+            <p class="icon-riwayat-tugas">
+              <span class="material-symbols-outlined">
+                assignment
+              </span>
+            </p>
+            <div class="info-riwayat-tugas">
+              <h3 class="judul-file">72426-75676719151-1-PB.pdf</h3>
+              <span class="waktu-file">01/04/2026, 22.31.05</span>
+            </div>
+          </div>
+          <p class="action-card-riwayat-pengumpulan">
+            <span class="material-symbols-outlined">
+              check_circle
+            </span>
+          </p>
+        </div>
+        
+      </div>
+    </div>
+    
+  </div>
+</body>
+</html>

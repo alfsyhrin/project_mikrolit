@@ -14,17 +14,17 @@
     <!-- Link ke CSS registrasi.css -->
     <link rel="stylesheet" href="./assets/css/beranda.css">
 
-    <!-- Link ke CSS manajemen-pengguna.css -->
+    <!-- Link ke CSS daftar-modul.css -->
     <link rel="stylesheet" href="./assets/css/daftar-modul.css">
 
     <!-- Link ke CSS tugas-mahasiswa.css -->
     <link rel="stylesheet" href="./assets/css/tugas-mahasiswa.css">
 
-    <!-- Link ke CSS micro-learning.css -->
-    <link rel="stylesheet" href="./assets/css/micro-learning.css">
+    <!-- Link ke CSS diskusi.css -->
+    <link rel="stylesheet" href="./assets/css/diskusi.css">
 
-    <!-- Link ke CSS monitoring.css -->
-    <link rel="stylesheet" href="./assets/css/monitoring.css">
+    <!-- Link ke CSS progress-evaluasi.css -->
+    <link rel="stylesheet" href="./assets/css/progress-evaluasi.css">
 
     <!-- Link ke CSS pengaturan.css -->
     <link rel="stylesheet" href="./assets/css/pengaturan.css">
@@ -69,13 +69,13 @@
                             <a href="#" data-page="daftar-modul"><p><span class="material-symbols-outlined icon">list_alt</span></p><span class="text">Daftar Modul</span></a>
                         </li>
                         <li>
-                            <a href="#" data-page="monitoring"><p><span class="material-symbols-outlined icon">monitoring</span></p><span class="text">Monitoring</span></a>
+                            <a href="#" data-page="progress-evaluasi"><p><span class="material-symbols-outlined icon">chart_data</span></p><span class="text">Progress & Evaluasi</span></a>
                         </li>
                         <li>
                             <a href="#" data-page="tugas-mahasiswa"><p><span class="material-symbols-outlined icon">school</span></p><span class="text">Tugas Saya</span></a>
                         </li>
                         <li>
-                            <a href="#" data-page="micro-learning"><p><span class="material-symbols-outlined icon">auto_stories</span></p><span class="text">Micro-Learning</span></a>
+                            <a href="#" data-page="diskusi"><p><span class="material-symbols-outlined icon">chat_bubble</span></p><span class="text">Diskusi</span></a>
                         </li>
                         <li>
                             <a href="#" data-page="pengaturan"><p><span class="material-symbols-outlined icon">settings</span></p><span class="text">Pengaturan</span></a>
@@ -139,7 +139,7 @@
     <script src="../assets/apexcharts.min.js"></script>
 
     <!-- Link untuk mengakses kodingan Apex chart lokal -->
-    <script src="../dosen/assets/js/chart.js"></script>
+    <script src="../mahasiswa/assets/js/chart.js"></script>
 
     <!-- Link untuk mengakses component di main.js -->
     <script type="module" src="../mahasiswa/assets/js/main.js"></script>
@@ -248,10 +248,11 @@
                             renderMahasiswaChart();
                         }, 50);
                     }
-                    else if (page === "monitoring") {
+                    else if (page === "progress-evaluasi") {
                         setTimeout(() => {
                             renderProgressMingguanChart();
                             renderKemampuanLiterasiChart();
+                            renderWaktuBelajarChart();
                         }, 50);
                     }
                 })
