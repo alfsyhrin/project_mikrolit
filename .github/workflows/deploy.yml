@@ -22,7 +22,7 @@ jobs:
 
       # STEP 2
       - name: Deploy files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ftp://145.79.14.100
           username: ${{ secrets.FTP_USERNAME }}
