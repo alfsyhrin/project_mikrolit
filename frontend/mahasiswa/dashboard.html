@@ -29,6 +29,9 @@
     <!-- Link ke CSS pengaturan.css -->
     <link rel="stylesheet" href="./assets/css/pengaturan.css">
 
+    <!-- Link ke CSS pengaturan.css -->
+    <link rel="stylesheet" href="./assets/css/modul.css">
+
     <!-- Link ke CSS global -->
     <link rel="stylesheet" href="../assets/main.css">
 
@@ -157,6 +160,7 @@
         const collapseBtn = document.getElementById("collapseBtn");
         const content = document.querySelector(".content");
         const sidebarLinks = document.querySelectorAll(".sidebar-list a");
+        const modulLinks = document.querySelectorAll(".container-modul-mahasiswa a");
 
         // ==============================
         // AUTH CHECK
@@ -220,6 +224,36 @@
                 })
                 .then(data => {
                     content.innerHTML = data;
+
+                    // ==============================
+                    // HANDLE CLICK CARD MODUL
+                    // ==============================
+                    const modulCards = document.querySelectorAll(".card-modul-mahasiswa-menu");
+                    const linkCards = document.querySelectorAll(".lanjut-belajar-modul");
+
+                    modulCards.forEach(card => {
+                        card.addEventListener("click", function(e){
+                            e.preventDefault();
+
+                            const page = this.getAttribute("data-page");
+
+                            if(page){
+                                loadPage(page);
+                            }
+                        });
+                    });
+
+                    linkCards.forEach(card => {
+                        card.addEventListener("click", function(e){
+                            e.preventDefault();
+
+                            const page = this.getAttribute("data-page");
+
+                            if(page){
+                                loadPage(page);
+                            }
+                        });
+                    });
 
                     // 🔥 INIT FILTER jika halaman manajemen pengguna
                     if (page === "manajemen-pengguna") {
