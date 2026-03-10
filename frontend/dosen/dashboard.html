@@ -140,6 +140,13 @@
 
         window.initPengaturan = initPengaturan;
     </script>
+
+        <!-- Link untuk dashboard.js -->
+    <script type="module">
+        import { fetchMahasiswa } from "./assets/js/dashboard.js";
+
+        window.fetchMahasiswa = fetchMahasiswa;
+    </script>
     
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
@@ -241,6 +248,7 @@
                         setTimeout(() => {
                             renderChart();
                             renderMahasiswaChart();
+                            fetchMahasiswa(); // Panggil fungsi untuk fetch data mahasiswa dan render tabel
                         }, 50);
                     }
                     else if (page === "monitoring") {
