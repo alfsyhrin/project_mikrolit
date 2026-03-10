@@ -60,7 +60,7 @@ app.use("/api", reflectRoute);
 // Socket.IO Handler
 require('./socket/socketHandler')(io);
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("Server berjalan dengan baik!");
 });
 
