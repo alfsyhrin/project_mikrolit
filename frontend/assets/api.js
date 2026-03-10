@@ -1,4 +1,4 @@
-const API_BASE = "https://erica-slatier-neoma.ngrok-free.dev/api";
+const API_BASE = "https://beige-rabbit-276408.hostingersite.com/api";
 
 //AUTH===================================================================================
 export async function loginRequest(emailOrNidn, password){
