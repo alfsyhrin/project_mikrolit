@@ -409,4 +409,10 @@
     grid-template-columns: 1fr; /* 🔥 1 kolom */
   }
 }
+
+.daftar-mahasiswa-wrapper {
+  height: 200px;
+  overflow-y: auto;
+  padding-right: 0.8rem;
+}
 /* Akhir card list data */

@@ -31,6 +31,49 @@ function formatDeadlineDisplay(deadline) {
     return `${dd}/${mm}/${yyyy}`;
 }
 
+function formatDeadlineParts(task) { // ✅ Parameter task, bukan hanya deadline
+    if (!task || !task.deadline) return { date: '-', time: '-', isPast: false };
+    
+    const deadline = new Date(task.deadline);
+    const now = new Date();
+    
+    // Cek apakah deadline sudah lewat > 1 hari (24 jam)
+    const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+    const isPastOneDay = deadline < oneDayAgo;
+    
+    // Format date: DD/MM/YYYY
+    const formattedDate = deadline.toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: '2-digit', 
+        year: 'numeric'
+    });
+    
+    // Status untuk time element
+    let timeStatus = "";
+    const isPastDeadline = deadline < now;
+    if (task.status === "sudah dikumpulkan" && isPastOneDay) {
+        timeStatus = "(sudah berakhir)"; // ✅ Kondisi yang diinginkan
+    } else if (task.status === "belum dikumpulkan" && isPastDeadline) {
+        timeStatus = "(sudah berakhir)";
+    }
+    
+    // Format time: HH:MM
+    const formattedTime = deadline.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+    
+    return {
+        date: formattedDate,
+        time: formattedTime,
+        timeStatus: timeStatus, // ✅ Status untuk ditampilkan di time
+        isPast: deadline < now,
+        isPastOneDay: isPastOneDay,
+        deadlineMerged: `${formattedDate} ${timeStatus}`.trim()
+    };
+}
+
 // Render daftar tugas dengan filter dan search
 function renderTugasMahasiswa(tasks) {
     const container = document.querySelector(".container-list-tugas");
@@ -39,7 +82,35 @@ function renderTugasMahasiswa(tasks) {
         container.innerHTML = "<p>Tidak ada tugas</p>";
         return;
     }
-    container.innerHTML = tasks.map(task => `
+    
+    function shouldDisableUpload(task) {
+        // Kondisi 1: Jika status sudah "sudah dikumpulkan"
+        if (task.status === "sudah dikumpulkan") {
+            return true;
+        }
+        
+        // Kondisi 2: Jika deadline sudah lewat (status belum dikumpulkan)
+        if (task.status === "belum dikumpulkan" && task.deadline) {
+            const deadlineDate = new Date(task.deadline);
+            const now = new Date();
+            return deadlineDate < now; // Disable jika deadline sudah lewat
+        }
+        
+        // Kondisi 3: Jika submitted_at melewati deadline
+        if (task.submitted_at && task.deadline) {
+            const submittedDate = new Date(task.submitted_at);
+            const deadlineDate = new Date(task.deadline);
+            return submittedDate > deadlineDate;
+        }
+        
+        return false;
+    }
+
+    container.innerHTML = tasks.map(task => {
+        const isUploadDisabled = shouldDisableUpload(task);
+        const deadlineParts = formatDeadlineParts(task);
+        
+        return `
         <div class="card-tugas-mhs" data-task-id="${task.id}">
             <div class="wrapper-card">
                 <p class="icon-tugas-mhs">
@@ -49,15 +120,20 @@ function renderTugasMahasiswa(tasks) {
                     <h3 class="judul-tugas-mhs">${escapeHtml(task.task_title)}</h3>
                     <p class="deskripsi-tugas-mhs">${escapeHtml(task.instructions)}</p>
                     <div class="meta-tugas-mhs">
-                        <p class="jenis-tugas-mhs">${task.module_id ? "Module " + task.module_id : "-"}</p>
+                        <p class="jenis-tugas-mhs">${task.module_id ? "Module " + task.module_id : "Tanpa Modul"}</p>
+                        
+                        <!-- Deadline Date -->
                         <p class="waktu-pengumpulan-tugas-mhs">
                             <span class="material-symbols-outlined">calendar_today</span>
-                            ${formatDeadlineDisplay(task.deadline)}
+                            <span class="deadline-date">${deadlineParts.date}</span>
                         </p>
-                        <p class="dokumen-tugas-mhs">
-                            <span class="material-symbols-outlined">description</span>
-                            ${task.attachment_url ? escapeHtml(task.attachment_url.split("/").pop()) : "-"}
+                        
+                        <!-- Deadline Time -->
+                        <p class="waktu-pengumpulan-tugas-mhs">
+                            <span class="material-symbols-outlined">schedule</span>
+                            <span class="deadline-time">${deadlineParts.time} WIT ${deadlineParts.timeStatus}</span>
                         </p>
+                        
                         <p class="status-tugas-mhs ${task.status === "sudah dikumpulkan" ? "dikumpulkan" : "belumdikumpulkan"}">
                             ${task.status === "sudah dikumpulkan" ? "Dikumpulkan" : "Belum Dikumpulkan"}
                         </p>
@@ -71,7 +147,7 @@ function renderTugasMahasiswa(tasks) {
                         Download
                     </p>
                 </button>
-                <button class="upload-tugas" ${task.status === "sudah dikumpulkan" ? "disabled" : ""}>
+                <button class="upload-tugas terlambat"  ${isUploadDisabled ? "disabled" : ""}>
                     <p>
                         <span class="material-symbols-outlined">upload</span>
                         Upload
@@ -79,7 +155,8 @@ function renderTugasMahasiswa(tasks) {
                 </button>
             </div>
         </div>
-    `).join("");
+        `;
+    }).join("");
 }
 
 // Filter dan search tugas
@@ -229,7 +306,7 @@ function setupEventDelegation() {
             } catch (err) {
                 Modal.alert("Gagal mengumpulkan tugas.");
             }
-            Modal.hide();
+            // Modal.hide();
         }
     });
 }

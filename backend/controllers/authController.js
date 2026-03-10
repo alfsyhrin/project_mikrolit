@@ -42,6 +42,18 @@ exports.login = (req, res) => {
 
 // ✅ TAMBAHKAN FUNGSI INI (helper function)
 function authenticateUser(user, password, res) {
+    if (user.status === "pending") {
+        return res.status(403).json({ 
+            message: "Pengguna belum diverifikasi. Silahkan hubungi admin atau dosen." 
+        });
+    }
+
+    if (user.status === "ditolak") {
+        return res.status(403).json({
+            message: "Pengguna ditolak. Silahkan hubungi admin atau dosen untuk informasi lebih lanjut."
+        });
+    }
+
     bcrypt.compare(password, user.password, (err, isMatch) => {
         if (err) {
             return res.status(500).json({ message: "Server error" });
