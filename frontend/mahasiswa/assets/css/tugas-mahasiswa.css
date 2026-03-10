@@ -214,7 +214,7 @@
 }
 
 .action-tugas-mhs .upload-tugas.terlambat {
-    background: linear-gradient(135deg, var(--primary-color), var(--biru));
+    background: #07195267;
     border: none;
     width: 110px;
     height: 38px;
