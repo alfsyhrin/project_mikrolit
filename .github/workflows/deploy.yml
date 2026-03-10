@@ -27,8 +27,11 @@ jobs:
           server: ftp.mikrolit-lms.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
           local-dir: ./frontend/
           server-dir: ./
+          timeout: 600000
           exclude: |
             **/.git*
             **/.github*
