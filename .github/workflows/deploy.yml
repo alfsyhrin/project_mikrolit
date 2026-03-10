@@ -1,0 +1,41 @@
+name: Deploy Frontend to Hosting
+
+# menentukan kapan workflow dijalankan
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  # nama job bebas
+  ftp-deploy:
+
+    # runner environment dari GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # STEP 1
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # STEP 2
+      - name: Deploy files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ftp.mikrolit-lms.com
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          local-dir: ./frontend/
+          server-dir: ./
+          timeout: 600000
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+            package.json
+            package-lock.json
+            server-frontend.js
