@@ -1,4 +1,7 @@
 {
+ "scripts": {
+ "start": "npm --prefix backend install && npm --prefix backend start"
+ },
   "dependencies": {
     "socket.io": "^4.8.3"
   }
