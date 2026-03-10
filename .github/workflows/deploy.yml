@@ -29,3 +29,10 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./frontend/
           server-dir: ./
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+            package.json
+            package-lock.json
+            server-frontend.js
