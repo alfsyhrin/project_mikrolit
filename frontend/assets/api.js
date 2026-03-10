@@ -15,7 +15,6 @@ export async function loginRequest(emailOrNidn, password){
     const response = await fetch(API_BASE + "/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        "ngrok-skip-browser-warning": "true",
         body: JSON.stringify(body)
     });
 
@@ -36,7 +35,6 @@ export async function registerRequest(name, email, password, nidn){
     const response = await fetch(API_BASE + "/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        "ngrok-skip-browser-warning": "true",
         body: JSON.stringify({ name, email, password, nidn })
     });
 }
@@ -48,7 +46,6 @@ export async function getUsersRequest(token){
         method: "GET",
         headers: { 
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -66,7 +63,6 @@ export async function updateUserStatusRequest(userId, status, token){
         method: "POST",
         headers: { 
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ status })
@@ -82,7 +78,6 @@ export async function getProfileRequest(token){
         method: "GET",
         headers: { 
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -104,7 +99,6 @@ export async function updateProfileRequest(name, email, nidn, photoFile, token){
         method: "PUT",
         headers: {
             // Jangan set Content-Type, biarkan browser yang atur boundary
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         },
         body: formData
@@ -118,7 +112,6 @@ export async function updatePasswordRequest(currentPassword, newPassword, token)
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ currentPassword, newPassword })
@@ -132,7 +125,6 @@ export async function deletePhotoRequest(token){
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -147,7 +139,6 @@ export async function getModulesRequest(token){
         method: "GET",
         headers: { 
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -160,7 +151,6 @@ export async function getTaskForDosenRequest(token){
         method: "GET",
         headers: { 
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -180,7 +170,6 @@ export async function createTaskRequest(moduleId, taskTitle, instructions, attac
     const response = await fetch(API_BASE + "/writing/task", {
         method: "POST",
         headers: {
-            "ngrok-skip-browser-warning": "true",
             // "content-type": "multipart/form-data",
             "Authorization": `Bearer ${token}`
         },
@@ -203,7 +192,6 @@ export async function updateTaskRequest(taskId, moduleId, taskTitle, instruction
     const response = await fetch(API_BASE + `/writing/task/${taskId}`, {
         method: "PUT",
         headers: {
-            "ngrok-skip-browser-warning": "true",
             // "content-type": "multipart/form-data",
             "Authorization": `Bearer ${token}`
         },
@@ -218,7 +206,6 @@ export async function deleteTaskRequest(taskId, token){
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -231,7 +218,6 @@ export async function getSubmissionsByTaskRequest(taskId, token){
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -243,7 +229,6 @@ export async function downloadSubmissionsZipRequest(taskId, token){
     const response = await fetch(API_BASE + `/writing/task/${taskId}/submissions/zip`, {
         method: "GET",
         headers: {
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -257,7 +242,6 @@ export async function getTaskForMahasiswaRequest(token){
         method: "GET",
         headers: { 
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -269,7 +253,6 @@ export async function downloadTaskFileRequest(taskId, token){
     const response = await fetch(API_BASE + `/writing/task/${taskId}/download`, {
         method: "GET",
         headers: {
-            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
@@ -288,7 +271,6 @@ export async function submitWritingRequest(taskId, answerText, file, token){
     const response = await fetch(API_BASE + "/writing/submit", {
         method: "POST",
         headers: {
-            "ngrok-skip-browser-warning": "true",
             // "content-type": "multipart/form-data",
             "Authorization": `Bearer ${token}`
         },
