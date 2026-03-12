@@ -1,5 +1,9 @@
 // socket/socketHandler.js
+const { setIO } = require('../config/socket');
+
 module.exports = (io) => {
+    // register io instance so `getIO` can access it
+    setIO(io);
     // User join room
     io.on('connection', (socket) => {
         console.log('User connected:', socket.id);

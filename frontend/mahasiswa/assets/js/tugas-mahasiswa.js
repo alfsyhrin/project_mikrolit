@@ -51,8 +51,8 @@ function formatDeadlineParts(task) { // ✅ Parameter task, bukan hanya deadline
     // Status untuk time element
     let timeStatus = "";
     const isPastDeadline = deadline < now;
-    if (task.status === "sudah dikumpulkan" && isPastOneDay) {
-        timeStatus = "(sudah berakhir)"; // ✅ Kondisi yang diinginkan
+    if (task.status === "sudah dikumpulkan") {
+        timeStatus = "(dikumpul tepat waktu)"; // ✅ Kondisi yang diinginkan
     } else if (task.status === "belum dikumpulkan" && isPastDeadline) {
         timeStatus = "(sudah berakhir)";
     }
@@ -165,9 +165,8 @@ function renderTugasMahasiswa(tasks) {
 function applyFilterAndSearch() {
     filteredTasks = allTasks.filter(task => {
 
-        const isNotPastDeadline = task.deadline > now; // deadline masih di masa depan
         // Filter status
-        if (currentFilter === "Belum Dikumpulkan" && isNotPastDeadline) return false;
+        if (currentFilter === "Belum Dikumpulkan" && task.status !== "belum dikumpulkan") return false;
         if (currentFilter === "Sudah Dikumpulkan" && task.status !== "sudah dikumpulkan") return false;
         // Search judul
         if (currentSearch && !task.task_title.toLowerCase().includes(currentSearch.toLowerCase())) return false;

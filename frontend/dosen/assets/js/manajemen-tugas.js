@@ -1,4 +1,5 @@
 import Modal from "../../../assets/modal.js";
+import Toast from "../../../assets/toast.js";
 import { 
     getTaskForDosenRequest, 
     createTaskRequest, 
@@ -329,32 +330,40 @@ async function handleFormSubmit(form){
         if (taskId) {
             // update
             await updateTaskRequest(taskId, moduleId, taskTitle, instructions, attachmentFile, deadline, token);
-            alert("Tugas berhasil diperbarui");
+            Toast.error("Tugas berhasil diperbarui");
         } else {
             // create
             await createTaskRequest(moduleId, taskTitle, instructions, attachmentFile, deadline, token);
-            alert("Tugas berhasil dibuat");
+            Toast.success("Tugas berhasil dibuat");
         }
         currentEditTaskId = null;
         await loadTugas();
         Modal.hide();
     } catch (err) {
-        console.error("Gagal submit tugas:", err);
-        alert("Gagal menyimpan tugas");
+        Toast.error("Gagal submit tugas:", err);
+        Toast.error("Gagal menyimpan tugas");
     }
 }
 
 // delete
 async function handleDeleteTugas(id){
-    if (!confirm("Hapus tugas?")) return;
-    try {
-        await deleteTaskRequest(id, token);
-        alert("Tugas dihapus");
-        await loadTugas();
-    } catch (err){
-        console.error(err);
-        alert("Gagal menghapus tugas");
-    }
+    Modal.show({
+        title: "Konfirmasi Hapus",
+        content: `<p>Apakah Anda yakin ingin menghapus tugas ini?</p>`,
+        size: "small",
+        confirmText: "Hapus",
+        cancelText: "Batal",
+        onConfirm: async () => {
+            try {
+                await deleteTaskRequest(id, token);
+                Toast.success("Tugas dihapus");
+                await loadTugas();
+            } catch (err) {
+                console.error(err);
+                Toast.error("Gagal menghapus tugas");
+            }
+        }
+    });
 }
 
 // view submissions

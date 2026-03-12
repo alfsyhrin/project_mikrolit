@@ -28,7 +28,12 @@ const getIO = () => {
 
 };
 
+const setIO = (ioInstance) => {
+    io = ioInstance;
+};
+
 module.exports = {
     initSocket,
-    getIO
+    getIO,
+    setIO
 };
