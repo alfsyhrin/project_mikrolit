@@ -1,0 +1,135 @@
+/* DESKRIPSI STEP */
+
+.step-description{
+font-size:0.9rem;
+color:#6c7b88;
+margin-bottom:20px;
+}
+
+
+/* INFOGRAFIS CARD */
+
+.infografis-card{
+background:#f6f8fa;
+border:1px solid var(--card-border);
+border-radius:12px;
+overflow:hidden;
+margin-bottom:20px;
+}
+
+
+/* PREVIEW AREA */
+
+.infografis-preview{
+height:260px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+background:#eef2f5;
+text-align:center;
+padding:20px;
+}
+
+.preview-icon{
+font-size:36px;
+color:#5b6b7a;
+margin-bottom:8px;
+}
+
+.preview-title{
+font-weight:600;
+margin-bottom:4px;
+}
+
+.preview-desc{
+font-size:0.8rem;
+color:var(--text-color);
+}
+
+
+/* DOWNLOAD BUTTON */
+
+.infografis-card .btn-download{
+width:100%;
+border-top:1px solid var(--card-border);
+border-radius:0;
+padding:10px;
+background:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+cursor:pointer;
+}
+
+
+/* COMPLETE BUTTON */
+
+.btn-complete{
+width:100%;
+margin-top:10px;
+padding:12px;
+border:none;
+border-radius:8px;
+background:var(--primary-color);
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+font-size:0.9rem;
+cursor:pointer;
+}
+
+.btn-complete:hover{
+background:var(--biru);
+}
+
+
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+.infografis-preview{
+height:200px;
+}
+
+.preview-icon{
+font-size:30px;
+}
+
+.step-description{
+font-size:0.85rem;
+}
+
+.btn-complete{
+font-size:0.85rem;
+padding:12px;
+}
+
+}
+
+
+
+/* MOBILE KECIL */
+
+@media (max-width:480px){
+
+.infografis-preview{
+height:180px;
+padding:15px;
+}
+
+.preview-title{
+font-size:0.9rem;
+}
+
+.preview-desc{
+font-size:0.75rem;
+}
+
+}

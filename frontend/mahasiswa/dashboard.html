@@ -29,8 +29,17 @@
     <!-- Link ke CSS pengaturan.css -->
     <link rel="stylesheet" href="./assets/css/pengaturan.css">
 
-    <!-- Link ke CSS pengaturan.css -->
+    <!-- Link ke CSS modul.css -->
     <link rel="stylesheet" href="./assets/css/modul.css">
+
+    <!-- Link ke CSS modul-stepone.css -->
+    <link rel="stylesheet" href="./assets/css/modul-stepone.css">
+
+    <!-- Link ke CSS modul-steptwo.css -->
+    <link rel="stylesheet" href="./assets/css/modul-steptwo.css">
+
+    <!-- Link ke CSS modul-stepthree.css -->
+    <link rel="stylesheet" href="./assets/css/modul-stepthree.css">
 
     <!-- Link ke CSS global -->
     <link rel="stylesheet" href="../assets/main.css">
@@ -230,6 +239,7 @@
                     // ==============================
                     const modulCards = document.querySelectorAll(".card-modul-mahasiswa-menu");
                     const linkCards = document.querySelectorAll(".lanjut-belajar-modul");
+                    const linkModul = document.querySelectorAll(".step-item");
 
                     modulCards.forEach(card => {
                         card.addEventListener("click", function(e){
@@ -244,6 +254,18 @@
                     });
 
                     linkCards.forEach(card => {
+                        card.addEventListener("click", function(e){
+                            e.preventDefault();
+
+                            const page = this.getAttribute("data-page");
+
+                            if(page){
+                                loadPage(page);
+                            }
+                        });
+                    });
+
+                    linkModul.forEach(card => {
                         card.addEventListener("click", function(e){
                             e.preventDefault();
 

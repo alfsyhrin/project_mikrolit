@@ -1,0 +1,332 @@
+/* .container-step-modul{
+    max-width:900px;
+    margin:auto;
+} */
+
+/* BACK LINK */
+
+.back-link{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    text-decoration:none;
+    color:var(--text-color);
+    margin-bottom:1rem;
+    font-size:0.9rem;
+}
+
+/* CARD */
+
+.card-step{
+    background:#fff;
+    border:1px solid var(--card-border);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+/* HEADER */
+
+.card-step-header{
+    background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+    padding:1.2rem 1.5rem;
+    color:#fff;
+    border-radius: 10px;
+}
+
+.step-label{
+    font-size:0.8rem;
+    opacity:0.9;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    margin-bottom:4px;
+}
+
+.card-step-header h2{
+    font-size:1.1rem;
+    font-weight:600;
+}
+
+/* BODY */
+
+.card-step-body{
+    padding:1.5rem;
+}
+
+/* SECTION */
+
+.section-step{
+    margin-bottom:1.6rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:0.95rem;
+    margin-bottom:0.6rem;
+    color:var(--primary-color);
+}
+
+/* VIDEO */
+
+.video-wrapper{
+    border:1px solid var(--card-border);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.video-placeholder{
+    height:260px;
+    background:#f1f4f7;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+}
+
+.play-icon{
+    font-size:42px;
+    color:var(--primary-color);
+    margin-bottom:5px;
+}
+
+.video-title{
+    font-weight:600;
+    font-size:0.9rem;
+}
+
+.video-duration{
+    font-size:0.75rem;
+    color:var(--text-color);
+}
+
+.video-note{
+    padding:0.6rem 0.8rem;
+    font-size:0.75rem;
+    border-top:1px solid var(--card-border);
+    display:flex;
+    align-items:center;
+    gap:4px;
+    color:var(--text-color);
+}
+
+/* DOCUMENT */
+
+.document-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    border:1px solid var(--card-border);
+    padding:0.8rem;
+    border-radius:10px;
+}
+
+.doc-left{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.doc-icon{
+    width:38px;
+    height:38px;
+    background:#e8f6f8;
+    color:var(--secondary-color);
+    border-radius:8px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.doc-info h4{
+    font-size:0.85rem;
+}
+
+.doc-info p{
+    font-size:0.72rem;
+    color:var(--text-color);
+}
+
+/* DOWNLOAD BUTTON */
+
+.btn-download{
+    display:flex;
+    align-items:center;
+    gap:4px;
+
+    border:1px solid var(--card-border);
+    background:#f8f8f8;
+    border-radius:8px;
+    padding:0.4rem 0.7rem;
+
+    cursor:pointer;
+    font-size:0.75rem;
+}
+
+/* FOOTER */
+
+.card-step-footer{
+    padding:1rem 1.5rem;
+}
+
+.btn-selesai{
+    width:100%;
+
+    background:var(--primary-color);
+    color:#fff;
+
+    border:none;
+    border-radius:8px;
+    padding:0.7rem;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:5px;
+
+    cursor:pointer;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 992px){
+
+.container-step-modul{
+    padding:0 12px;
+}
+
+.card-step-body{
+    padding:1.2rem;
+}
+
+.video-placeholder{
+    height:220px;
+}
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:768px){
+
+.container-step-modul{
+    padding:0 10px;
+}
+
+/* Header */
+
+.card-step-header{
+    padding:1rem;
+}
+
+.card-step-header h2{
+    font-size:1rem;
+}
+
+/* Body */
+
+.card-step-body{
+    padding:1rem;
+}
+
+/* Section */
+
+.section-title{
+    font-size:0.85rem;
+}
+
+/* Video */
+
+.video-placeholder{
+    height:190px;
+}
+
+.play-icon{
+    font-size:36px;
+}
+
+.video-title{
+    font-size:0.85rem;
+}
+
+/* Document Card */
+
+.document-card{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+}
+
+.doc-left{
+    width:100%;
+}
+
+.doc-info h4{
+    font-size:0.82rem;
+}
+
+.doc-info p{
+    font-size:0.70rem;
+}
+
+/* Download Button */
+
+.btn-download{
+    width:100%;
+    justify-content:center;
+    padding:0.6rem;
+}
+
+/* Footer */
+
+.card-step-footer{
+    padding:1rem;
+}
+
+.btn-selesai{
+    padding:0.85rem;
+    font-size:0.9rem;
+}
+
+}
+
+
+/* =========================
+   SMALL PHONE
+========================= */
+
+@media (max-width:480px){
+
+.back-link{
+    font-size:0.8rem;
+}
+
+.video-placeholder{
+    height:160px;
+}
+
+.play-icon{
+    font-size:32px;
+}
+
+.video-duration{
+    font-size:0.7rem;
+}
+
+.doc-icon{
+    width:34px;
+    height:34px;
+}
+
+}
