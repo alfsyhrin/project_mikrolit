@@ -303,3 +303,147 @@
         transform: translateY(0);
     }
 }
+
+/* ==========================
+   TOAST CONTAINER
+========================== */
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+}
+
+/* ==========================
+   TOAST CARD
+========================== */
+
+.toast {
+    min-width: 260px;
+    max-width: 320px;
+
+    background: #fff;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+/* show animation */
+.toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* ==========================
+   ICON
+========================== */
+
+.toast-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast-icon .material-symbols-outlined {
+    font-size: 1.3rem;
+}
+
+/* ==========================
+   MESSAGE
+========================== */
+
+.toast-message {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+/* ==========================
+   CLOSE BUTTON
+========================== */
+
+.toast-close {
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.toast-close .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: #777;
+}
+
+/* ==========================
+   TYPES
+========================== */
+
+.toast.success {
+    border-left: 4px solid var(--hijau);
+}
+
+.toast.success .toast-icon {
+    color: var(--hijau);
+}
+
+.toast.error {
+    border-left: 4px solid var(--merah);
+}
+
+.toast.error .toast-icon {
+    color: var(--merah);
+}
+
+.toast.warning {
+    border-left: 4px solid orange;
+}
+
+.toast.warning .toast-icon {
+    color: orange;
+}
+
+.toast.info {
+    border-left: 4px solid var(--third-color);
+}
+
+.toast.info .toast-icon {
+    color: var(--third-color);
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width:768px){
+
+    .toast-container{
+        left: 10px;
+        right: 10px;
+        top: auto;
+        bottom: 20px;
+    }
+
+    .toast{
+        max-width: 100%;
+        width: 100%;
+        transform: translateY(120%);
+    }
+
+    .toast.show{
+        transform: translateY(0);
+    }
+
+}
