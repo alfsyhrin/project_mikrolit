@@ -167,6 +167,42 @@ document.addEventListener("click", function (e) {
 
             </div>
 
+            <!-- ================= PENGATURAN MODUL ================= -->
+
+            <div class="step-modul">
+
+                <h3>Pengaturan Modul</h3>
+
+                <div class="modal-form-group">
+                    <label>Fitur Modul</label>
+
+                    <label class="diskusi-card">
+
+                        <input type="checkbox" name="gunakan_forum" id="gunakanForum">
+
+                        <div class="diskusi-card-content">
+
+                            <span class="material-symbols-outlined icon-diskusi">
+                                forum
+                            </span>
+
+                            <div class="diskusi-info">
+                                <h4>Aktifkan Forum Diskusi</h4>
+                                <p>Mahasiswa dapat berdiskusi pada modul ini</p>
+                            </div>
+
+                            <span class="material-symbols-outlined check-icon">
+                                check_circle
+                            </span>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+            </div>
+            
             <!-- ================= STEP 1 ================= -->
 
             <div class="step-modul">
@@ -323,6 +359,8 @@ document.addEventListener("submit", function (e) {
         judul: formData.get("judul_modul"),
         deskripsi: formData.get("deskripsi_modul"),
         tujuan: formData.getAll("tujuan[]"),
+
+        gunakanForum: formData.get("gunakan_forum"),
 
         video: formData.get("video_microlearning"),
         dokumenPenelitian: formData.get("dokumen_penelitian"),
