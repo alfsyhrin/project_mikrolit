@@ -1,0 +1,229 @@
+/* BACK */
+
+.back-link{
+display:inline-flex;
+align-items:center;
+gap:6px;
+text-decoration:none;
+color:#5b6b7a;
+margin-bottom:15px;
+font-size:0.9rem;
+}
+
+/* CARD */
+
+.step-card{
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--card-border);
+    margin-bottom: 1rem;
+}
+
+/* HEADER */
+
+.step-header{
+padding:1.5rem;
+background:linear-gradient(135deg,var(--biru),var(--secondary-color));
+color:#fff;
+}
+
+.step-label{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:0.8rem;
+opacity:0.9;
+margin-bottom:6px;
+}
+
+.step-header h2{
+margin:0;
+font-size:1.4rem;
+}
+
+/* BODY */
+
+.step-body{
+    padding:1.5rem;
+}
+
+.section{
+margin-bottom:2rem;
+}
+
+.section-title{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:1rem;
+margin-bottom:12px;
+color:var(--primary-color);
+}
+
+/* FILE CARD */
+
+.file-card{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#f6f8fa;
+padding:15px;
+border-radius:12px;
+border:1px solid var(--card-border);
+}
+
+.file-left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.file-icon{
+width:40px;
+height:40px;
+border-radius:8px;
+background:#e1f0f4;
+display:flex;
+align-items:center;
+justify-content:center;
+color:var(--secondary-color);
+}
+
+.file-info h4{
+margin:0;
+font-size:0.9rem;
+}
+
+.file-info p{
+margin:2px 0 0;
+font-size:0.75rem;
+color:var(--text-color);
+}
+
+/* DOWNLOAD */
+
+.btn-download{
+display:flex;
+align-items:center;
+gap:6px;
+border:1px solid var(--card-border);
+padding:7px 12px;
+border-radius:8px;
+background:#fff;
+cursor:pointer;
+font-size:0.85rem;
+}
+
+/* DISCUSSION */
+
+.discussion-box{
+background:#f4f7f9;
+padding:18px;
+border-radius:12px;
+border:1px solid var(--card-border);
+}
+
+.discussion-info{
+font-size:0.85rem;
+color:#5d6c7b;
+margin-bottom:12px;
+}
+
+textarea{
+width:100%;
+height:120px;
+border-radius:10px;
+border:1px solid var(--card-border);
+padding:10px;
+resize:vertical;
+font-family:inherit;
+font-size:0.85rem;
+margin-bottom:12px;
+}
+
+.btn-submit-modul-dua{
+width:100%;
+padding:10px;
+border:none;
+border-radius:10px;
+background:var(--primary-color);
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+cursor:pointer;
+font-size:0.9rem;
+}
+
+.btn-submit:hover{
+background:#6a7a93;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width:768px){
+
+body{
+padding:10px;
+}
+
+.step-body{
+padding:1rem;
+}
+
+.step-header{
+padding:1rem;
+}
+
+.step-header h2{
+font-size:1.1rem;
+}
+
+.file-card{
+flex-direction:column;
+align-items:flex-start;
+gap:10px;
+}
+
+.btn-download{
+width:100%;
+justify-content:center;
+}
+
+textarea{
+height:110px;
+}
+
+.btn-submit{
+font-size:0.85rem;
+padding:12px;
+}
+
+}
+
+/* SMALL PHONE */
+
+@media (max-width:480px){
+
+.step-header h2{
+font-size:1rem;
+}
+
+.file-icon{
+width:34px;
+height:34px;
+}
+
+.file-info h4{
+font-size:0.8rem;
+}
+
+.file-info p{
+font-size:0.7rem;
+}
+
+}
