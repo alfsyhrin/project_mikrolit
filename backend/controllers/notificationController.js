@@ -1,22 +1,12 @@
 const Notification = require("../models/NotificationModel");
 
-exports.getNotifications = async (req, res) => {
-
-    try {
-
-        const notifications = await Notification.getAll();
-
-        res.json({
-            success: true,
-            data: notifications
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: "Gagal mengambil notifikasi"
-        });
-
-    }
-
+exports.getNotifications = (req, res) => {
+    Notification.getAll((err, rows) => {
+        if (err) {
+            console.error("Error fetching notifications:", err);
+            return res.status(500).json({ error: "Gagal mengambil notifikasi" });
+        }
+        console.log("DEBUG notifications rows:", rows);
+        res.json(rows);
+    });
 };

@@ -21,17 +21,8 @@ const Notification = {
         return result; // result.insertId, affectedRows, dsb.
     },
 
-    getAll: async () => {
-
-        const query = `
-            SELECT *
-            FROM notifications
-            ORDER BY created_at DESC
-            LIMIT 20
-        `;
-
-        const [rows] = await db.promise().query(query);
-        return rows;
+    getAll: (callback) => {
+        db.query(`SELECT id, title, message, type, reference_id, reference_type, created_at FROM notifications ORDER BY created_at DESC`, callback);
     }
 
 };

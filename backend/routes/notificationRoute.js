@@ -1,17 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/authMiddleware");
 
-const NotificationModel = require("../models/NotificationModel");
+const { getNotifications } = require("../controllers/notificationController");
 
-router.get("/notification", async (req, res) => {
-
-    const data = await NotificationModel.getAll();
-
-    res.json({
-        success: true,
-        data
-    });
-
-});
+router.get("/", auth, getNotifications);
+router.get("/allnotif", auth, getNotifications);
 
 module.exports = router;

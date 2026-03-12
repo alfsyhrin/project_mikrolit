@@ -61,7 +61,7 @@ app.use("/api", microUnitsRoute);
 // Mount writing routes under /api/writing so endpoints are predictable
 app.use("/api/writing", writingRoute);
 app.use("/api", reflectRoute);
-app.use("/api", notificationRoute);
+app.use("/api/notifications", notificationRoute);
 
 app.get("/", (req, res) => {
     res.send("Server berjalan dengan baik!");

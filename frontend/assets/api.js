@@ -297,3 +297,16 @@ export async function submitWritingRequest(taskId, answerText, file, token){
 
     return response.json();
 }
+
+export async function getNotificationsRequest(token){
+    const response = await fetch(API_BASE + "/notifications/allnotif", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}

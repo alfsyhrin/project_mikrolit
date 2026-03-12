@@ -140,6 +140,11 @@
         window.fetchAndRenderTaskSummary = fetchAndRenderTaskSummary;
 
     </script>
+
+<script type="module">
+    import { fetchAndRenderNotifications } from "./assets/js/dashboard.js";
+    window.fetchAndRenderNotifications = fetchAndRenderNotifications;
+</script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
     <script src="../assets/apexcharts.min.js"></script>
@@ -273,6 +278,10 @@
 
                             if (window.fetchAndRenderTaskSummary) {
                                 window.fetchAndRenderTaskSummary(token);
+                            }
+
+                            if (window.fetchAndRenderNotifications) {
+                                window.fetchAndRenderNotifications(token, '.wrapper-card-notifikasi-mhs', 5);
                             }
                         }, 50);
                     } else if (page === "progress-evaluasi") {
