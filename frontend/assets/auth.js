@@ -1,3 +1,4 @@
+import Toast from "./toast.js";
 import { loginRequest } from "./api.js";
 import { logoutRequest } from "./api.js";
 const loginForm = document.getElementById("loginForm");
@@ -11,7 +12,7 @@ if (loginForm) {
         const password = document.getElementById("password").value.trim();
 
         if (!emailOrNidn || !password) {
-            document.getElementById("loginMessage").innerText = "Email/NIDN dan password harus diisi.";
+            Toast.warning("Email/NIDN dan password harus diisi");
             return;
         }
 
@@ -19,6 +20,7 @@ if (loginForm) {
             const result = await loginRequest(emailOrNidn, password);
 
             if(result.token){
+
                 localStorage.setItem("token", result.token);
                 localStorage.setItem("role", result.role);
                 localStorage.setItem("name", result.name);
@@ -26,20 +28,24 @@ if (loginForm) {
                 localStorage.setItem("email", result.email);
                 localStorage.setItem("id", result.id);
 
-                if (result.role === "dosen") {
-                    window.location.href = "./dosen/dashboard.html";
-                } else if (result.role === "mahasiswa"){
-                    window.location.href = "./mahasiswa/dashboard.html";
-                }
+                Toast.success("Login berhasil!");
+
+                setTimeout(() => {
+                    if (result.role === "dosen") {
+                        window.location.href = "./dosen/dashboard.html";
+                    } 
+                    else if (result.role === "mahasiswa"){
+                        window.location.href = "./mahasiswa/dashboard.html";
+                    }
+                }, 1000);
+
+            } else {
+                Toast.error(result.message || "Login gagal");
             }
-            else {
-                document.getElementById("loginMessage").innerText = result.message || "Login gagal.";
-                document.getElementById("loginMessage").style.color = "red";
-            }
+
         } catch (err) {
             console.log("Error saat login:", err);
-            document.getElementById("loginMessage").innerText = "Terjadi kesalahan saat login.";
-            document.getElementById("loginMessage").style.color = "red";
+            Toast.error("Terjadi kesalahan saat login");
         }
     });
 }
@@ -50,12 +56,20 @@ if (logoutBtn) {
         
         try {
             await logoutRequest();
+
+            Toast.info("Berhasil logout");
+
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.href = "../../index.html";
+            }, 800);
+
+        } catch (err) {
+
+            console.error("Logout error:", err);
+
             localStorage.clear();
             window.location.href = "../../index.html";
-        } catch (err) {
-            console.error("Logout error:", err);
-            localStorage.clear();
-            window.location.href = "index.html";
         }
     });
 }
