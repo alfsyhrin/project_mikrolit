@@ -13,6 +13,7 @@ const moduleRoute = require("./routes/moduleRoute");
 const microUnitsRoute = require("./routes/microUnitsRoute");
 const writingRoute = require("./routes/writingRoute");
 const reflectRoute = require("./routes/reflectRoute");
+const notificationRoute = require("./routes/notificationRoute");
 
 const app = express();
 const server = http.createServer(app);
@@ -22,6 +23,10 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Socket.IO Handler
+require('./socket/socketHandler')(io);
+require('./listeners/notificationListener');
 
 // Middleware untuk CORS + CORP pada static files di /uploads
 app.use("/uploads", (req, res, next) => {
@@ -56,11 +61,9 @@ app.use("/api", microUnitsRoute);
 // Mount writing routes under /api/writing so endpoints are predictable
 app.use("/api/writing", writingRoute);
 app.use("/api", reflectRoute);
+app.use("/api", notificationRoute);
 
-// Socket.IO Handler
-require('./socket/socketHandler')(io);
-
-app.get("/api", (req, res) => {
+app.get("/", (req, res) => {
     res.send("Server berjalan dengan baik!");
 });
 

@@ -133,9 +133,12 @@
     </script>
 
     <script type="module">
-        import { initManajemenTugasMhs } from "./assets/js/tugas-mahasiswa.js";
+        import { initManajemenTugasMhs, fetchAndRenderDeadlineCards, fetchAndRenderTaskSummary } from "./assets/js/tugas-mahasiswa.js";
 
         window.initManajemenTugasMhs = initManajemenTugasMhs;
+        window.fetchAndRenderDeadlineCards = fetchAndRenderDeadlineCards;
+        window.fetchAndRenderTaskSummary = fetchAndRenderTaskSummary;
+
     </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
@@ -216,7 +219,7 @@
         // ==============================
         // LOAD PAGE FUNCTION
         // ==============================
-        function loadPage(page) {
+        function loadPage(page, options = { pushState: true }) {
             fetch(`./pages/${page}.html`)
                 .then(response => {
                     if (!response.ok) throw new Error("404");
@@ -225,69 +228,77 @@
                 .then(data => {
                     content.innerHTML = data;
 
-                    // ==============================
-                    // HANDLE CLICK CARD MODUL
-                    // ==============================
+                    // --- init/attach behavior pada halaman yg di-load ---
                     const modulCards = document.querySelectorAll(".card-modul-mahasiswa-menu");
                     const linkCards = document.querySelectorAll(".lanjut-belajar-modul");
-
                     modulCards.forEach(card => {
                         card.addEventListener("click", function(e){
                             e.preventDefault();
-
-                            const page = this.getAttribute("data-page");
-
-                            if(page){
-                                loadPage(page);
-                            }
+                            const p = this.getAttribute("data-page");
+                            if(p) loadPage(p);
                         });
                     });
-
                     linkCards.forEach(card => {
                         card.addEventListener("click", function(e){
                             e.preventDefault();
-
-                            const page = this.getAttribute("data-page");
-
-                            if(page){
-                                loadPage(page);
-                            }
+                            const p = this.getAttribute("data-page");
+                            if(p) loadPage(p);
                         });
                     });
 
-                    // 🔥 INIT FILTER jika halaman manajemen pengguna
                     if (page === "manajemen-pengguna") {
                         setTimeout(() => {
                             window.initManajemenPengguna();
                             window.fetchAndRenderUsers();
                         }, 50);
                     }
-
                     if (page === "tugas-mahasiswa") {
                         setTimeout(() => {
                             window.initManajemenTugasMhs();
                         }, 50);
                     }
-
                     if (page === "pengaturan") {
                         setTimeout(() => {
                             window.initPengaturan();
                         }, 50);
                     }
-                    
-                    // 🔥 Render chart jika halaman beranda
                     if (page === "beranda") {
                         setTimeout(() => {
                             renderChart();
                             renderMahasiswaChart();
+                            // render deadline tasks pada beranda
+                            if (window.fetchAndRenderDeadlineCards) {
+                                window.fetchAndRenderDeadlineCards(token, '.wrapper-card-deadline-mhs', 4);
+                            }
+
+                            if (window.fetchAndRenderTaskSummary) {
+                                window.fetchAndRenderTaskSummary(token);
+                            }
                         }, 50);
-                    }
-                    else if (page === "progress-evaluasi") {
+                    } else if (page === "progress-evaluasi") {
                         setTimeout(() => {
                             renderProgressMingguanChart();
                             renderKemampuanLiterasiChart();
                             renderWaktuBelajarChart();
                         }, 50);
+                    }
+                    // --- akhir init ---
+
+                    // Update sidebar active link
+                    sidebarLinks.forEach(item => item.classList.remove("active"));
+                    const sidebarLink = document.querySelector(`.sidebar-list a[data-page="${page}"]`);
+                    if (sidebarLink) sidebarLink.classList.add("active");
+
+                    // Optional: update navbar title if you want
+                    const navTitle = document.querySelector('.navbar-kiri h2');
+                    if (navTitle) {
+                        // simple mapping or just show page name
+                        navTitle.textContent = page.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase());
+                    }
+
+                    // Push history state so back/forward works
+                    if (options.pushState && history && history.pushState) {
+                        history.pushState({ page }, '', `#${page}`);
                     }
                 })
                 .catch(() => {
@@ -295,7 +306,19 @@
                 });
         }
 
+        window.addEventListener('popstate', function(e) {
+            const page = (e.state && e.state.page) || 'beranda';
+            loadPage(page, { pushState: false });
+        });
 
+        // Intercept any link that uses data-page (except sidebar links which already have handlers)
+        document.addEventListener('click', function(e){
+        const a = e.target.closest('a[data-page]');
+        if (!a) return;
+        if (a.closest('.sidebar-list')) return; // biarkan handler sidebar berjalan
+        e.preventDefault();
+        loadPage(a.getAttribute('data-page'));
+        });
         // ==============================
         // SIDEBAR LINK CLICK
         // ==============================

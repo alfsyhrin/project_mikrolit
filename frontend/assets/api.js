@@ -1,4 +1,4 @@
-const API_BASE = "https://darkgoldenrod-loris-389330.hostingersite.com/api";
+const API_BASE = "http://localhost:4000/api";
 
 //AUTH===================================================================================
 export async function loginRequest(emailOrNidn, password){

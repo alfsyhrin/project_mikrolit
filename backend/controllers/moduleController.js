@@ -1,6 +1,8 @@
 const Module = require("../models/Module");
+const eventBus = require("../events/eventBus");
 
 exports.createModule = (req, res) => {
+
     const data = {
         title: req.body.title,
         description: req.body.description,
@@ -9,9 +11,23 @@ exports.createModule = (req, res) => {
     };
 
     Module.create(data, (err, result) => {
+
         if (err) return res.status(500).json({ error: err });
-        res.json({ message: "Module created", moduleId: result.insertId });
+
+        const moduleData = {
+            id: result.insertId,
+            ...data
+        };
+
+        eventBus.emit("module_created", moduleData);
+
+        res.json({
+            message: "Module created",
+            moduleId: result.insertId
+        });
+
     });
+
 };
 
 exports.getModules = (req, res) => {
