@@ -17,6 +17,12 @@
   justify-content: flex-start;
   align-items: center;
   gap: 0.75rem;
+  transition: 0.3s ease all;
+  cursor: pointer;
+}
+
+.card-beranda:hover {
+  border: 1px solid var(--third-color);
 }
 
 .info-card-wrapper h2 {
@@ -87,6 +93,11 @@ p.icon-beranda {
   border-radius: 10px;
   border: 1px solid #ddd;
   padding: 1.5rem;
+  transition: 0.3s ease all;
+}
+
+.container-modul-mhs:hover {
+  border: 1px solid var(--third-color);
 }
 
 .container-modul-mhs .judul-container-modul {
@@ -138,6 +149,13 @@ p.icon-beranda {
   padding: 1rem;
   border-radius: 10px;
   width: 100%;
+  transition: 0.3s ease all; 
+  border: 1px solid transparent;
+}
+
+.card-modul-mahasiswa:hover {
+  transform: translateX(0.3rem);
+  border: 1px solid var(--third-color);
 }
 
 .header-card-modul-mahasiswa {
@@ -313,6 +331,11 @@ a.lanjut-belajar-modul .material-symbols-outlined {
   flex-direction: column;
   height: 400px;
   min-width: 0;
+  transition: 0.3s ease all;
+}
+
+.container-deadline-mhs:hover {
+  border: 1px solid var(--third-color);
 }
 
 .header-container-deadline {
@@ -346,7 +369,7 @@ a.lanjut-belajar-modul .material-symbols-outlined {
 }
 
 .card-deadline-mhs {
-  background-color: var(--background-color);
+  background-color: #f4f2f2;
   border-radius: 10px;
   padding: 1rem;
   width: 100%;
@@ -359,11 +382,16 @@ a.lanjut-belajar-modul .material-symbols-outlined {
   cursor: pointer;
   min-width: 0;
   flex-shrink: 0;
+  border: 1px solid transparent;
 }
 
 .card-deadline-mhs:hover {
-  transform: translatey(-5px);
+  transform: translateX(0.3rem);
+  border: 1px solid var(--third-color);
+
 }
+
+
 
 .card-deadline-mhs h2 {
   font-size: 1rem;
@@ -417,6 +445,11 @@ a.lanjut-belajar-modul .material-symbols-outlined {
   flex-direction: column;
   height: 400px;
   min-width: 0;
+  transition: 0.3s ease all;
+}
+
+.container-notifikasi-mhs:hover {
+  border: 1px solid var(--third-color);
 }
 
 .header-container-notifikasi {
@@ -460,10 +493,12 @@ a.lanjut-belajar-modul .material-symbols-outlined {
   border-radius: 10px;
   cursor: pointer;
   min-width: 0;
+  background-color: #f4f2f2;
+  border: 1px solid transparent;
 }
 
 .card-notifikasi-mhs:hover {
-  background-color: var(--background-color);
+  border: 1px solid var(--third-color);
 }
 
 .icon-notifikasi {
@@ -504,3 +539,18 @@ a.lanjut-belajar-modul .material-symbols-outlined {
   font-weight: 450;
 }
 /* Akhir container notifikasi mahasiswa */
+
+/* Awal Sembunyikan Scrollbar */
+.wrapper-card-deadline-mhs,  
+.wrapper-card-notifikasi-mhs,
+.wrapper-card-modul-mahasiswa{
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE / Edge lama */
+}
+
+.wrapper-card-deadline-mhs::-webkit-scrollbar,
+.wrapper-card-notifikasi-mhs::-webkit-scrollbar,
+.wrapper-card-modul-mahasiswa::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Edge */
+}
+/* Akhir Sembunyikan Scrollbar */
