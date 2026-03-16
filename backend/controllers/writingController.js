@@ -2,8 +2,9 @@ const path = require("path");
 const fs = require("fs");
 const archiver = require("archiver");
 const Writing = require("../models/Writing");
+const eventBus = require("../events/eventBus");
 
-exports.createTask = (req, res) => {
+exports.createTask = async (req, res) => {
     const data = {
         module_id: req.body.module_id || null,
         unit_id: req.body.unit_id || null,
@@ -13,10 +14,22 @@ exports.createTask = (req, res) => {
         deadline: req.body.deadline
     };
 
-    Writing.createTask(data, (err) => {
+    Writing.createTask(data, (err, result) => { 
         if (err) return res.status(500).json({ error: err });
-        res.json({ message: "Task created" });
+
+        const taskData = {
+            id: result.insertId,
+            ...data
+        };
+
+        eventBus.emit("task_created", taskData);
+
+        res.json({ 
+            message: "Task created",
+            taskId: result.insertId
+        });
     });
+
 };
 
 exports.updateTask = (req, res) => {

@@ -82,8 +82,14 @@ class ModalComponent {
             const confirmBtn = document.createElement("button");
             confirmBtn.className = "modal-btn confirm";
             confirmBtn.innerText = confirmText;
-            confirmBtn.onclick = () => {
-                if (onConfirm) onConfirm();
+            confirmBtn.onclick = async () => {
+                if (onConfirm) {
+                    try {
+                        await onConfirm();
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
                 this.hide();
             };
 

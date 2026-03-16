@@ -19,7 +19,7 @@
   margin-bottom: 0.5rem;
 }
 
-.card-beranda p {
+.card-beranda h5 {
   color: var(--hijau);
   font-size: 0.9rem;
   font-weight: 500;

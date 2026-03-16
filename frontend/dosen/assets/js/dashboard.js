@@ -1,4 +1,5 @@
 import { getUsersRequest } from '../../../assets/api.js'
+import { renderMahasiswaChart } from './chart.js';
 
 async function fetchMahasiswa() {
     const token = localStorage.getItem("token");
@@ -14,6 +15,7 @@ async function fetchMahasiswa() {
 
         console.log('[fetchMahasiswa] filtered mahasiswa:', mahasiswa.length, mahasiswa);
         renderMahasiswaCardDashboard(mahasiswa);
+        renderMahasiswaChart(mahasiswa);
     } catch (error) {
         console.error('Error fetching users:', error);
     }
@@ -67,4 +69,40 @@ function escapeHtml(str) {
         .replace(/'/g, '&#39;');
 }
 
-export { fetchMahasiswa };
+async function updateMahasiswaStatsCards() {
+    const token = localStorage.getItem("token");
+    try {
+        const users = await getUsersRequest(token);
+        
+        const acceptedStatuses = ['diterima', 'disetujui', 'approved'];
+        const allMahasiswa = (users || []).filter(user =>
+            (user.role || '').toLowerCase() === 'mahasiswa'
+        );
+
+        // Hitung mahasiswa aktif (diterima/disetujui/approved)
+        const aktivCount = allMahasiswa.filter(m =>
+            acceptedStatuses.includes((m.status || '').toLowerCase())
+        ).length;
+
+        // Hitung mahasiswa pending
+        const pendingCount = allMahasiswa.filter(m =>
+            (m.status || '').toLowerCase() === 'pending'
+        ).length;
+
+        // Update card di HTML (card kedua = Mahasiswa Terdaftar)
+        const cards = document.querySelectorAll('.card-beranda');
+        if (cards.length >= 2) {
+            const h2 = cards[1].querySelector('h2');
+            const p = cards[1].querySelector('h5');
+            
+            if (h2) h2.textContent = aktivCount;
+            if (p) p.textContent = pendingCount > 0 ? `+${pendingCount}` : pendingCount;
+        }
+
+        console.log('[updateMahasiswaStatsCards] Aktif:', aktivCount, 'Pending:', pendingCount);
+    } catch (error) {
+        console.error('Error updating mahasiswa stats:', error);
+    }
+}
+
+export { fetchMahasiswa, updateMahasiswaStatsCards };

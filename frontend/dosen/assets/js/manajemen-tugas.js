@@ -1,4 +1,5 @@
 import Modal from "../../../assets/modal.js";
+import Toast from "../../../assets/toast.js";
 import { 
     getTaskForDosenRequest, 
     createTaskRequest, 
@@ -85,7 +86,7 @@ function renderTugas(tasks, container) {
         return;
     }
     container.innerHTML = tasks.map(task => {
-        const deadline = formatDeadlineDisplay(task.deadline);
+        const deadlineParts = formatDeadlinePartsForDosen(task);
         const filename = task.attachment_url ? task.attachment_url.split("/").pop() : "-";
         const moduleName = task.module_title || (task.module_id ? `Module ${task.module_id}` : "Tanpa Modul");
         return `
@@ -97,7 +98,9 @@ function renderTugas(tasks, container) {
                     <p class="deskripsi-tugas-dosen">${escapeHtml(task.instructions || "-")}</p>
                     <div class="meta-tugas-dosen">
                         <p class="jenis-tugas-dosen">${escapeHtml(moduleName)}</p>
-                        <p class="waktu-pengumpulan-tugas-dosen"><span class="material-symbols-outlined">calendar_today</span> ${deadline}</p>
+                        <p class="waktu-pengumpulan-tugas-dosen"><span class="material-symbols-outlined">calendar_today</span> ${escapeHtml(deadlineParts.date)}</p>
+                        <p class="waktu-pengumpulan-tugas-dosen"><span class="material-symbols-outlined">schedule</span> ${escapeHtml(deadlineParts.time)} WIT</p>
+                        
                         <p class="dokumen-tugas-dosen"><span class="material-symbols-outlined">description</span> ${escapeHtml(filename)}</p>
                     </div>
                 </div>
@@ -144,6 +147,32 @@ function parseDbDatetimeToDate(dbString){
     const wibDate = new Date(y, m-1, d, hh, mm, ss || 0);
     wibDate.setHours(wibDate.getHours() + 2);
     return wibDate;
+}
+
+// helper: format deadline untuk tampilan (date, time, timeStatus)
+function formatDeadlinePartsForDosen(task){
+    if(!task || !task.deadline) return { date: "-", time: "-", timeStatus: "" };
+    const d = parseDbDatetimeToDate(String(task.deadline));
+    if(!d) return { date: "-", time: "-", timeStatus: "" };
+
+    const formattedDate = d.toLocaleDateString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric'
+    });
+
+    const formattedTime = d.toLocaleTimeString('id-ID', {
+        hour: '2-digit', minute: '2-digit', hour12: false
+    });
+
+    let timeStatus = "";
+    const now = new Date();
+    const isPastDeadline = d < now;
+    if (task.status === "sudah dikumpulkan") {
+        timeStatus = "(dikumpul tepat waktu)";
+    } else if (task.status === "belum dikumpulkan" && isPastDeadline) {
+        timeStatus = "(sudah berakhir)";
+    }
+
+    return { date: formattedDate, time: formattedTime, timeStatus };
 }
 
 // helper submitted_at WIB -> WIT
@@ -329,32 +358,40 @@ async function handleFormSubmit(form){
         if (taskId) {
             // update
             await updateTaskRequest(taskId, moduleId, taskTitle, instructions, attachmentFile, deadline, token);
-            alert("Tugas berhasil diperbarui");
+            Toast.success("Tugas berhasil diperbarui");
         } else {
             // create
             await createTaskRequest(moduleId, taskTitle, instructions, attachmentFile, deadline, token);
-            alert("Tugas berhasil dibuat");
+            Toast.success("Tugas berhasil dibuat");
         }
         currentEditTaskId = null;
         await loadTugas();
         Modal.hide();
     } catch (err) {
-        console.error("Gagal submit tugas:", err);
-        alert("Gagal menyimpan tugas");
+        Toast.error("Gagal submit tugas:", err);
+        Toast.error("Gagal menyimpan tugas");
     }
 }
 
 // delete
 async function handleDeleteTugas(id){
-    if (!confirm("Hapus tugas?")) return;
-    try {
-        await deleteTaskRequest(id, token);
-        alert("Tugas dihapus");
-        await loadTugas();
-    } catch (err){
-        console.error(err);
-        alert("Gagal menghapus tugas");
-    }
+    Modal.show({
+        title: "Konfirmasi Hapus",
+        content: `<p>Apakah Anda yakin ingin menghapus tugas ini?</p>`,
+        size: "small",
+        confirmText: "Hapus",
+        cancelText: "Batal",
+        onConfirm: async () => {
+            try {
+                await deleteTaskRequest(id, token);
+                Toast.success("Tugas dihapus");
+                await loadTugas();
+            } catch (err) {
+                console.error(err);
+                Toast.error("Gagal menghapus tugas");
+            }
+        }
+    });
 }
 
 // view submissions

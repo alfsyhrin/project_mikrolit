@@ -1,4 +1,4 @@
-const API_BASE = "https://darkgoldenrod-loris-389330.hostingersite.com/api";
+const API_BASE = "http://localhost:4000/api";
 
 //AUTH===================================================================================
 export async function loginRequest(emailOrNidn, password){
@@ -293,6 +293,19 @@ export async function submitWritingRequest(taskId, answerText, file, token){
             "Authorization": `Bearer ${token}`
         },
         body: formData
+    });
+
+    return response.json();
+}
+
+export async function getNotificationsRequest(token){
+    const response = await fetch(API_BASE + "/notifications/allnotif", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
     });
 
     return response.json();

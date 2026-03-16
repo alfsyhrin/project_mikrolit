@@ -132,7 +132,7 @@
     <script src="../assets/apexcharts.min.js"></script>
 
     <!-- Link untuk mengakses kodingan Apex chart lokal -->
-    <script src="../dosen/assets/js/chart.js"></script>
+    <!-- <script src="../dosen/assets/js/chart.js"></script> -->
 
     <!-- Link untuk pengaturan.js -->
     <script type="module">
@@ -143,9 +143,25 @@
 
         <!-- Link untuk dashboard.js -->
     <script type="module">
-        import { fetchMahasiswa } from "./assets/js/dashboard.js";
+        import { fetchMahasiswa, updateMahasiswaStatsCards } from "./assets/js/dashboard.js";
 
         window.fetchMahasiswa = fetchMahasiswa;
+        window.updateMahasiswaStatsCards = updateMahasiswaStatsCards;
+
+    </script>
+
+    <script type="module">
+        import { 
+            renderChart, 
+            renderProgressMingguanChart, 
+            renderKemampuanLiterasiChart,
+            destroyAllCharts 
+        } from "./assets/js/chart.js";
+        
+        window.renderChart = renderChart;
+        window.renderProgressMingguanChart = renderProgressMingguanChart;
+        window.renderKemampuanLiterasiChart = renderKemampuanLiterasiChart;
+        window.destroyAllCharts = destroyAllCharts;
     </script>
     
     <script>
@@ -165,7 +181,7 @@
         // AUTH CHECK
         // ==============================
         if (!localStorage.getItem("token") || localStorage.getItem("role") !== "dosen") {
-            window.location.href = "index.html";
+            window.location.href = "../index.html";
             return;
         }
 
@@ -215,6 +231,7 @@
         // LOAD PAGE FUNCTION
         // ==============================
         function loadPage(page) {
+            window.destroyAllCharts(); // Hancurkan semua chart sebelum load halaman baru
             fetch(`./pages/${page}.html`)
                 .then(response => {
                     if (!response.ok) throw new Error("404");
@@ -245,10 +262,10 @@
                     
                     // 🔥 Render chart jika halaman beranda
                     if (page === "beranda") {
-                        setTimeout(() => {
-                            renderChart();
-                            renderMahasiswaChart();
-                            fetchMahasiswa(); // Panggil fungsi untuk fetch data mahasiswa dan render tabel
+                        setTimeout(async () => {
+                            await renderChart();
+                            await updateMahasiswaStatsCards(); // Update kartu statistik mahasiswa
+                            await fetchMahasiswa(); // Panggil fungsi untuk fetch data mahasiswa dan render tabel
                         }, 50);
                     }
                     else if (page === "monitoring") {

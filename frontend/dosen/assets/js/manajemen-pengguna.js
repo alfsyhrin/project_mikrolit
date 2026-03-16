@@ -1,4 +1,5 @@
 import { getUsersRequest, updateUserStatusRequest } from "../../../assets/api.js";
+import Toast from "../../../assets/toast.js";
 
 let allUsers = [];
 
@@ -15,12 +16,29 @@ async function fetchAndRenderUsers() {
       return;
     }
 
+    // ✅ SORT: Pending di atas, lalu diterima, ditolak
+    allUsers.sort((a, b) => {
+      const statusPriority = {
+        "pending": 0,
+        "diterima": 1,
+        "approved": 1,
+        "ditolak": 2,
+        "rejected": 2
+      };
+      
+      const priorityA = statusPriority[a.status] ?? 3;
+      const priorityB = statusPriority[b.status] ?? 3;
+      
+      return priorityA - priorityB;
+    });
+
     renderUsers(allUsers);
     initManajemenPengguna();
   } catch (err) {
     container.innerHTML = "<p>Gagal mengambil data pengguna.</p>";
   }
 }
+
 
 function renderUsers(users) {
   const container = document.querySelector(".daftar-mahasiswa");
@@ -103,7 +121,7 @@ function initManajemenPengguna() {
       const visibleCards = document.querySelectorAll(".card-mahasiswa:not(.hide)");
 
       if (!visibleCards.length) {
-        alert("Tidak ada data untuk diexport.");
+        Toast.error("Tidak ada data untuk diexport.");
         return;
       }
 
@@ -142,42 +160,61 @@ function initManajemenPengguna() {
     });
   }
 
-  function applyFilter() {
-    let filtered = allUsers.filter(user => {
-      let cocokStatus =
-        currentFilter === "semua" ||
-        (currentFilter === "diterima" && (user.status === "diterima" || user.status === "approved")) ||
-        (currentFilter === "pending" && user.status === "pending") ||
-        (currentFilter === "ditolak" && (user.status === "ditolak" || user.status === "rejected"));
+function applyFilter() {
+  let filtered = allUsers.filter(user => {
+    let cocokStatus =
+      currentFilter === "semua" ||
+      (currentFilter === "diterima" && (user.status === "diterima" || user.status === "approved")) ||
+      (currentFilter === "pending" && user.status === "pending") ||
+      (currentFilter === "ditolak" && (user.status === "ditolak" || user.status === "rejected"));
 
-      let nama = user.name?.toLowerCase() || "";
-      let npm = user.nidn?.toLowerCase() || "";
-      let cocokSearch = nama.includes(currentSearch) || npm.includes(currentSearch);
+    let nama = user.name?.toLowerCase() || "";
+    let npm = user.nidn?.toLowerCase() || "";
+    let cocokSearch = nama.includes(currentSearch) || npm.includes(currentSearch);
 
-      return cocokStatus && cocokSearch;
-    });
+    return cocokStatus && cocokSearch;
+  });
 
-    const allCards = document.querySelectorAll(".card-mahasiswa");
-    const filteredIds = filtered.map(u => u.id);
-
-    allCards.forEach(card => {
-      const userId = parseInt(card.dataset.userId);
-      const shouldShow = filteredIds.includes(userId);
-
-      if (shouldShow) {
-        card.classList.remove("hide");
-        requestAnimationFrame(() => {
-          card.classList.remove("fade-out");
-        });
-      } else {
-        card.classList.add("fade-out");
-
-        setTimeout(() => {
-          card.classList.add("hide");
-        }, 250); // harus sama dengan durasi transition CSS
-      }
+  // ✅ SORT: Pending di atas hanya saat filter "semua"
+  if (currentFilter === "semua") {
+    filtered.sort((a, b) => {
+      const statusPriority = {
+        "pending": 0,
+        "diterima": 1,
+        "approved": 1,
+        "ditolak": 2,
+        "rejected": 2
+      };
+      
+      const priorityA = statusPriority[a.status] ?? 3;
+      const priorityB = statusPriority[b.status] ?? 3;
+      
+      return priorityA - priorityB;
     });
   }
+
+  const allCards = document.querySelectorAll(".card-mahasiswa");
+  const filteredIds = filtered.map(u => u.id);
+
+  allCards.forEach(card => {
+    const userId = parseInt(card.dataset.userId);
+    const shouldShow = filteredIds.includes(userId);
+
+    if (shouldShow) {
+      card.classList.remove("hide");
+      requestAnimationFrame(() => {
+        card.classList.remove("fade-out");
+      });
+    } else {
+      card.classList.add("fade-out");
+
+      setTimeout(() => {
+        card.classList.add("hide");
+      }, 250); // harus sama dengan durasi transition CSS
+    }
+  });
+}
+
 
   // FILTER CLICK
   filterButtons.forEach(button => {
@@ -223,13 +260,13 @@ function attachUpdateStatusListeners() {
     try {
       const response = await updateUserStatusRequest(userId, status, token);
       if (response.message) {
-        alert(response.message);
+        Toast.success(response.message);
         fetchAndRenderUsers(); // Refresh data setelah update status
       } else {
-        alert("Gagal memperbarui status pengguna.");
+        Toast.error("Gagal memperbarui status pengguna.");
       }
     } catch (err) {
-      alert("Terjadi kesalahan saat memperbarui status pengguna.");
+      Toast.error("Terjadi kesalahan saat memperbarui status pengguna.");
       console.error(err);
     }
   }
