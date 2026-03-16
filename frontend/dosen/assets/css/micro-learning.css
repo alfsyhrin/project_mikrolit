@@ -489,3 +489,68 @@ header {
 
 }
 /* Akhir style modal buat modul */
+
+/* Awal style untuk lihat submisi mahasiswa */
+/* ===============================
+   SUBMISSION MODAL STYLE
+================================= */
+
+.submission-modul-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    
+}
+
+.submission-modul-card {
+    background: #f5f7fa;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e3e8ef;
+    width: 100%;
+}
+
+.submission-modul-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* margin-bottom: 12px; */
+}
+
+.submission-modul-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.submission-modul-npm {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.submission-modul-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.submission-modul-date-day {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.submission-modul-time {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+#btnLihatPenyelesaian {
+  cursor: pointer;
+}
+/* Akhir style untuk lihat submisi mahasiswa */

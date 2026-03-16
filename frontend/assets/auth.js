@@ -1,4 +1,5 @@
 import Toast from "./toast.js";
+import Toast from "./modal.js";
 import { loginRequest } from "./api.js";
 import { logoutRequest } from "./api.js";
 const loginForm = document.getElementById("loginForm");

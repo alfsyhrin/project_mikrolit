@@ -388,3 +388,73 @@ document.addEventListener("submit", function (e) {
 
 });
 // Akhir modal buat modul
+
+// Awal lihat mahasiswa penyelesaian modul
+document.addEventListener("click", function (e) {
+    const btnSubmisi = e.target.closest("#btnLihatPenyelesaian");
+
+    if (!btnSubmisi) return;
+
+    Modal.show({
+        title: "Penyelesaian Modul Mahasiswa",
+        size: "medium",
+        content: `
+            <div class="submission-modul-card-wrapper">
+                <div class="submission-modul-card">
+                    <div class="submission-modul-header">
+                        <div>
+                            <div class="submission-modul-name">Cuppa</div>
+                            <div class="submission-modul-npm">NPM : 07352211097</div>
+                        </div>
+                        <div class="submission-modul-date">
+                            <div class="submission-modul-date-day"></div>
+                            <div class="submission-modul-time"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submission-modul-card">
+                    <div class="submission-modul-header">
+                        <div>
+                            <div class="submission-modul-name">A Ming Lang</div>
+                            <div class="submission-modul-npm">NPM : 07352211062</div>
+                        </div>
+                        <div class="submission-modul-date">
+                            <div class="submission-modul-date-day"></div>
+                            <div class="submission-modul-time"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submission-modul-card">
+                    <div class="submission-modul-header">
+                        <div>
+                            <div class="submission-modul-name">Manray</div>
+                            <div class="submission-modul-npm">NPM : 07352211092</div>
+                        </div>
+                        <div class="submission-modul-date">
+                            <div class="submission-modul-date-day"></div>
+                            <div class="submission-modul-time"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        `
+    });
+});
+// Akhir lihat mahasiswa penyelesaian modul
+
+// Awal Modal Konfirmasi hapus modul
+document.addEventListener("click", function(e){
+
+    const btnHapus = e.target.closest("#btnHapusModul");
+
+    if(!btnHapus) return;
+
+    Modal.confirmDelete(
+        "Apakah Anda yakin ingin menghapus modul ini?"
+    );
+
+});
+// Akhir Modal Konfirmasi hapus modul
