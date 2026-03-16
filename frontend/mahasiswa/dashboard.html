@@ -142,12 +142,12 @@
     </script>
 
     <script type="module">
-        import { initManajemenTugasMhs, fetchAndRenderDeadlineCards, fetchAndRenderTaskSummary } from "./assets/js/tugas-mahasiswa.js";
+        import { initManajemenTugasMhs, fetchAndRenderDeadlineCards, fetchAndRenderTaskSummary, fetchAndRenderTaskStats } from "./assets/js/tugas-mahasiswa.js";
 
         window.initManajemenTugasMhs = initManajemenTugasMhs;
         window.fetchAndRenderDeadlineCards = fetchAndRenderDeadlineCards;
         window.fetchAndRenderTaskSummary = fetchAndRenderTaskSummary;
-
+        window.fetchAndRenderTaskStats = fetchAndRenderTaskStats;
     </script>
 
 <script type="module">
@@ -312,6 +312,7 @@
                             renderProgressMingguanChart();
                             renderKemampuanLiterasiChart();
                             renderWaktuBelajarChart();
+                            window.fetchAndRenderTaskStats(token); // Fetch dan render statistik tugas pada halaman progress-evaluasi
                         }, 50);
                     }
                     // --- akhir init ---

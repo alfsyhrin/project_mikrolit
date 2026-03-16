@@ -397,6 +397,37 @@ async function fetchAndRenderTaskSummary(token, targetSelector = '.card-beranda-
     }
 }
 
+// Render task stats di progress-evaluasi: "submitted/total" ke h2 dan jumlah belum dikumpulkan ke p
+async function fetchAndRenderTaskStats(token, targetH2Selector = '.card-monitoring:last-child h2', targetPSelector = '.card-monitoring:last-child p.alert-card') {
+    try {
+        const tasks = await getTaskForMahasiswaRequest(token);
+        
+        const total = Array.isArray(tasks) ? tasks.length : 0;
+        const submitted = Array.isArray(tasks) ? tasks.filter(t => t.status === "sudah dikumpulkan").length : 0;
+        const pending = total - submitted; // Tugas belum dikumpulkan
+
+        // Update h2 dengan format "submitted/total"
+        const h2El = document.querySelector(targetH2Selector);
+        if (h2El) {
+            h2El.textContent = `${submitted}/${total}`;
+        }
+
+        // Update p dengan pesan jumlah belum dikumpulkan
+        const pEl = document.querySelector(targetPSelector);
+        if (pEl) {
+            if (pending > 0) {
+                pEl.textContent = `${pending} Tugas Belum Dikumpulkan`;
+            } else {
+                pEl.textContent = "Semua Tugas Sudah Dikumpulkan";
+            }
+        }
+
+        console.log('[fetchAndRenderTaskStats] Total:', total, 'Submitted:', submitted, 'Pending:', pending);
+    } catch (err) {
+        console.error('Gagal fetch task stats:', err);
+    }
+}
+
 // Inisialisasi SPA
 function initManajemenTugasMhs() {
     loadTugasMahasiswa();
@@ -410,5 +441,6 @@ export {
     initManajemenTugasMhs,
     showUploadTugasModal,
     fetchAndRenderDeadlineCards,
-    fetchAndRenderTaskSummary
+    fetchAndRenderTaskSummary,
+    fetchAndRenderTaskStats
 };

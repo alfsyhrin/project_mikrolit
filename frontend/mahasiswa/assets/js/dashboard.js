@@ -1,4 +1,4 @@
-import { getNotificationsRequest } from "../../../assets/api.js";
+import { getNotificationsRequest, getUsersRequest } from "../../../assets/api.js";
 
 // Format relative time: "Baru saja", "x menit lalu", "x jam lalu", "x hari lalu"
 function timeAgo(isoDate) {
@@ -73,3 +73,4 @@ export async function fetchAndRenderNotifications(token, targetSelector = ".wrap
         container.innerHTML = `<p style="padding:16px">Gagal memuat notifikasi</p>`;
     }
 }
+

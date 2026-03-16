@@ -1,9 +1,29 @@
-function renderChart() {
+let progressChartInstance = null;
+let mahasiswaChartInstance = null;
+
+// ✅ Function untuk destroy semua chart instances
+export function destroyAllCharts() {
+  if (progressChartInstance) {
+    progressChartInstance.destroy();
+    progressChartInstance = null;
+  }
+  if (mahasiswaChartInstance) {
+    mahasiswaChartInstance.destroy();
+    mahasiswaChartInstance = null;
+  }
+}
+
+export async function renderChart() {
 
     const chartContainer = document.querySelector("#progressChart");
 
     // Jika container tidak ada, jangan jalankan
     if (!chartContainer) return;
+
+    // ✅ Destroy instance lama jika ada
+    if (progressChartInstance) {
+        progressChartInstance.destroy();
+    }
 
     const options = {
         series: [
@@ -55,63 +75,61 @@ function renderChart() {
         colors: ["#088395", "#dce4e6"]
     };
 
-    const chart = new ApexCharts(chartContainer, options);
-    chart.render();
+    // ✅ Buat instance baru
+    progressChartInstance = new ApexCharts(chartContainer, options);
+    await progressChartInstance.render();
 }
 
-function renderMahasiswaChart() {
+export async function renderMahasiswaChart(mahasiswaArray = []) {
+  const chartContainer = document.querySelector("#mahasiswaChart");
+  if (!chartContainer) {
+    console.warn('renderMahasiswaChart: #mahasiswaChart container not found');
+    return;
+  }
 
-    const chartContainer = document.querySelector("#mahasiswaChart");
-    if (!chartContainer) return;
+  // ✅ Destroy instance lama jika ada
+  if (mahasiswaChartInstance) {
+    mahasiswaChartInstance.destroy();
+  }
 
-    const options = {
-        series: [34, 8], // Aktif, Pasif
-        chart: {
-            type: "donut",
-            height: 220
-        },
-        labels: ["Aktif", "Pasif"],
-        colors: ["#088395", "#dce4e6"],
-        legend: {
-            position: "bottom",
-            fontSize: "14px",
-            markers: {
-                radius: 12
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        plotOptions: {
-            pie: {
-                donut: {
-                    size: "65%"
-                }
-            }
-        },
-        responsive: [
-            {
-                breakpoint: 768,
-                options: {
-                chart: {
-                    height: 240
-                },
-                legend: {
-                    position: "bottom"
-                }
-                }
-            }
-        ],
-        stroke: {
-            width: 0
+  const aktifCount = (mahasiswaArray || []).filter(m =>
+    (m.status || '').toLowerCase() === 'diterima'
+  ).length;
+
+  const options = {
+    series: [aktifCount],
+    chart: { type: "donut", height: 220 },
+    labels: ["Aktif"],
+    colors: ["#088395"],
+    legend: {
+      position: "bottom",
+      fontSize: "14px",
+      markers: { radius: 12 }
+    },
+    dataLabels: { enabled: false },
+    plotOptions: {
+      pie: {
+        donut: { size: "65%" }
+      }
+    },
+    responsive: [
+      {
+        breakpoint: 768,
+        options: {
+          chart: { height: 240 },
+          legend: { position: "bottom" }
         }
-    };
+      }
+    ],
+    stroke: { width: 0 }
+  };
 
-    const chart = new ApexCharts(chartContainer, options);
-    chart.render();
+  // ✅ Buat instance baru
+  mahasiswaChartInstance = new ApexCharts(chartContainer, options);
+  await mahasiswaChartInstance.render();
 }
 
-function renderProgressMingguanChart() {
+export async function renderProgressMingguanChart() {
   const chartContainer = document.querySelector("#progressmingguanChart");
   if (!chartContainer) return;
 
@@ -254,7 +272,7 @@ function renderProgressMingguanChart() {
 // =============================================
 
 // ✅ Hitung ukuran radar secara dinamis berdasarkan lebar container
-function getRadarSize(containerWidth) {
+export function getRadarSize(containerWidth) {
   if (containerWidth < 300) return 80;
   if (containerWidth < 400) return 100;
   if (containerWidth < 500) return 120;
@@ -262,7 +280,7 @@ function getRadarSize(containerWidth) {
   return 160;
 }
 
-function renderKemampuanLiterasiChart() {
+export async function renderKemampuanLiterasiChart() {
   const chartContainer = document.querySelector("#kemampuanliterasiChart");
   if (!chartContainer) return;
 

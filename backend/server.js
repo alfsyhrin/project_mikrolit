@@ -14,6 +14,10 @@ const microUnitsRoute = require("./routes/microUnitsRoute");
 const writingRoute = require("./routes/writingRoute");
 const reflectRoute = require("./routes/reflectRoute");
 const notificationRoute = require("./routes/notificationRoute");
+const studentLearningRoute = require("./routes/studentLearningRoute");
+const discussionRoute = require("./routes/discussionRoute");
+const socketHandler = require("./socket/socketHandler");
+const monitoringRoute = require("./routes/moduleMonitoringRoute");
 
 const app = express();
 const server = http.createServer(app);
@@ -62,13 +66,19 @@ app.use("/api", microUnitsRoute);
 app.use("/api/writing", writingRoute);
 app.use("/api", reflectRoute);
 app.use("/api/notifications", notificationRoute);
+app.use("/api/student", studentLearningRoute);
+app.use("/api/discussion", discussionRoute);
+app.use("/api/monitoring", monitoringRoute);
+
 
 app.get("/", (req, res) => {
     res.send("Server berjalan dengan baik!");
 });
 
+socketHandler(io);
+
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log("Backend berjalan di http://localhost:" + PORT);
 });
 
