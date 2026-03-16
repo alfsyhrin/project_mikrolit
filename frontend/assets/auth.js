@@ -1,5 +1,5 @@
 import Toast from "./toast.js";
-import Toast from "./modal.js";
+import Modal from "./modal.js";
 import { loginRequest } from "./api.js";
 import { logoutRequest } from "./api.js";
 const loginForm = document.getElementById("loginForm");
@@ -52,25 +52,34 @@ if (loginForm) {
 }
 
 if (logoutBtn) {
-    logoutBtn.addEventListener("click", async function(e){
+
+    logoutBtn.addEventListener("click", function(e){
+
         e.preventDefault();
-        
-        try {
-            await logoutRequest();
 
-            Toast.info("Berhasil logout");
+        Modal.confirmLogout(async () => {
 
-            setTimeout(() => {
+            try {
+
+                await logoutRequest();
+
+                Toast.info("Berhasil logout");
+
+                setTimeout(() => {
+                    localStorage.clear();
+                    window.location.href = "../../index.html";
+                }, 800);
+
+            } catch (err) {
+
+                console.error("Logout error:", err);
+
                 localStorage.clear();
                 window.location.href = "../../index.html";
-            }, 800);
+            }
 
-        } catch (err) {
+        });
 
-            console.error("Logout error:", err);
-
-            localStorage.clear();
-            window.location.href = "../../index.html";
-        }
     });
+
 }
