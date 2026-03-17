@@ -1,3 +1,22 @@
+.back-link{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    text-decoration:none;
+    color:var(--text-color);
+    margin-bottom:1rem;
+    font-size:0.9rem;
+    transition: 0.3s ease all;
+}
+
+.back-link .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.back-link:hover {
+    color: var(--primary-color);
+}
+
 /* DESKRIPSI STEP */
 
 .step-description{

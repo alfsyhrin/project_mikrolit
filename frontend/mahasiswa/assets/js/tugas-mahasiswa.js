@@ -372,8 +372,13 @@ async function fetchAndRenderDeadlineCards(token, targetSelector = ".wrapper-car
             const label = timeInfo ? timeInfo.label : "Sudah berakhir";
             return `
                 <div class="card-deadline-mhs">
-                    <h2>${escapeHtml(t.task_title)}</h2>
-                    <p>${label}</p>
+                    <p class="icon-deadline">
+                        <span class="material-symbols-outlined">assignment</span>
+                    </p>
+                    <div class="wrapper-info-card-deadline">
+                        <h2>${escapeHtml(t.task_title)}</h2>
+                        <p>${label}</p>
+                    </div>
                 </div>
             `;
         }).join("");
