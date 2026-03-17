@@ -4,6 +4,8 @@ const router = express.Router();
 const studentLearningController =
 require("../controllers/studentLearningController");
 
+const DiscussionController = require("../controllers/studentDiscussionController");
+
 const authMiddleware =
 require("../middleware/authMiddleware");
 
@@ -41,6 +43,18 @@ router.get(
     "/modules/:moduleId/steps",
     authMiddleware,
     studentLearningController.getModuleSteps
+);
+
+router.get(
+    "/modules/:moduleId/steps/:stepNumber/download",
+    authMiddleware,
+    studentLearningController.downloadResource
+);
+
+router.post(
+'/modules/:moduleId/steps/:stepNumber/discussion',
+authMiddleware,
+DiscussionController.submitDiscussion
 );
 
 module.exports = router;

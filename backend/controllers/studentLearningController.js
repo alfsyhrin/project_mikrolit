@@ -156,3 +156,23 @@ exports.getModuleSteps = async (req, res) => {
         });
     }
 };
+
+exports.downloadResource = async (req, res) => {
+    try {
+        const resourceId = req.params.resourceId;
+        const resource = await learningService.getResourceById(resourceId);
+        if (!resource) {
+        return res.status(404).json({
+            success: false,
+            message: "Resource not found"
+        });
+        }
+        res.download(resource.file_path, resource.file_name);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+        success: false,
+        message: "Failed to download resource"
+        });
+    }
+};
