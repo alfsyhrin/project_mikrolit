@@ -6,6 +6,14 @@ exports.createModule = async (req, res) => {
     try {
         const moduleId = await ModuleService.createModule(req.body);
 
+                // Validasi role dosen
+        if (!req.user || req.user.role !== "dosen") {
+            return res.status(403).json({
+                success: false,
+                message: "Akses ditolak. Hanya dosen yang dapat membuat modul."
+            });
+        }
+
         // ✅ Gunakan req.body atau moduleData yang didefinisikan
         eventBus.emit("module_created", {
             id: moduleId,

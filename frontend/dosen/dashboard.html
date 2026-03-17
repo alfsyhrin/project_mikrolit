@@ -151,6 +151,11 @@
     </script>
 
     <script type="module">
+        import { renderModuleList } from "./assets/js/micro-learning.js";
+        window.renderModuleList = renderModuleList;
+    </script>
+
+    <script type="module">
         import { 
             renderChart, 
             renderProgressMingguanChart, 
@@ -257,6 +262,22 @@
                     if (page === "pengaturan") {
                         setTimeout(() => {
                             window.initPengaturan();
+                        }, 50);
+                    }
+
+                    if (page === "micro-learning") {
+                        setTimeout(async () => {
+                            // Render awal dan simpan data modul
+                            allModules = await window.renderModuleList(token) || [];
+
+                            // Tambahkan event listener search
+                            const searchInput = document.getElementById("searchMahasiswa");
+                            if (searchInput) {
+                                searchInput.addEventListener("input", function() {
+                                    const keyword = this.value;
+                                    window.renderModuleList(token, keyword, allModules);
+                                });
+                            }
                         }, 50);
                     }
                     

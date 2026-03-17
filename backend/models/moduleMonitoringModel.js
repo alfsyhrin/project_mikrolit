@@ -39,7 +39,49 @@ const ModuleMonitoring = {
     });
   },
 
+  getModuleDashboard: async () => {
+    const query = `
+      SELECT
+      m.id AS module_id,
+      m.title,
+      m.is_active,
 
+      COUNT(DISTINCT smp.user_id) AS total_students,
+
+      SUM(
+      CASE
+      WHEN smp.completed_at IS NOT NULL
+      THEN 1
+      ELSE 0
+      END
+      ) AS students_completed,
+
+      ROUND(
+      SUM(
+      CASE
+      WHEN smp.completed_at IS NOT NULL
+      THEN 1
+      ELSE 0
+      END
+      ) / COUNT(DISTINCT smp.user_id) * 100
+      ) AS completion_percent
+
+      FROM modules m
+
+      LEFT JOIN student_module_progress smp
+      ON smp.module_id = m.id
+
+      GROUP BY m.id
+      ORDER BY m.created_at DESC
+      `;
+
+    return new Promise((resolve, reject) => {
+      db.query(query, (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows || []);
+      });
+    });
+  }
   
 };
 

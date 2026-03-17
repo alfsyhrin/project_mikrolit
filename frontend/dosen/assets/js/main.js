@@ -349,42 +349,42 @@ document.addEventListener("click", function (e) {
    SUBMIT FORM MODUL
 ========================= */
 
-document.addEventListener("submit", function (e) {
+// document.addEventListener("submit", function (e) {
 
-    if (e.target.id !== "formBuatModul") return;
+//     if (e.target.id !== "formBuatModul") return;
 
-    e.preventDefault();
+//     e.preventDefault();
 
-    const formData = new FormData(e.target);
+//     const formData = new FormData(e.target);
 
-    const data = {
-        judul: formData.get("judul_modul"),
-        deskripsi: formData.get("deskripsi_modul"),
-        tujuan: formData.getAll("tujuan[]"),
+//     const data = {
+//         judul: formData.get("judul_modul"),
+//         deskripsi: formData.get("deskripsi_modul"),
+//         tujuan: formData.getAll("tujuan[]"),
 
-        gunakanForum: formData.get("gunakan_forum"),
+//         gunakanForum: formData.get("gunakan_forum"),
 
-        video: formData.get("video_microlearning"),
-        dokumenPenelitian: formData.get("dokumen_penelitian"),
+//         video: formData.get("video_microlearning"),
+//         dokumenPenelitian: formData.get("dokumen_penelitian"),
 
-        filePPT: formData.get("file_ppt"),
-        diskusi: formData.get("diskusi_rangkuman"),
+//         filePPT: formData.get("file_ppt"),
+//         diskusi: formData.get("diskusi_rangkuman"),
 
-        infografis1: formData.get("infografis1"),
-        infografis2: formData.get("infografis2")
-    };
+//         infografis1: formData.get("infografis1"),
+//         infografis2: formData.get("infografis2")
+//     };
 
-    console.log("Data Modul:", data);
+//     console.log("Data Modul:", data);
 
-    // contoh kirim ke backend
-    /*
-    fetch("/api/modul",{
-        method:"POST",
-        body:formData
-    })
-    */
+//     // contoh kirim ke backend
+//     /*
+//     fetch("/api/modul",{
+//         method:"POST",
+//         body:formData
+//     })
+//     */
 
-    Modal.hide();
+//     Modal.hide();
 
-});
+// });
 // Akhir modal buat modul

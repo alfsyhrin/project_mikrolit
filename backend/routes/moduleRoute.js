@@ -10,7 +10,7 @@ router.post("/modules", auth, createModule);
 router.get("/modules", auth, getModules);
 router.get("/modules/:id", auth, getModuleDetail);
 router.post(
-  "/module-resources/upload",
+  "/module-resources/upload", auth,
   uploadModuleResource.single("file"),
   ModuleResourceController.uploadResource
 );

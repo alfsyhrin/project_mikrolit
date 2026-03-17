@@ -16,3 +16,25 @@ exports.getStudentMonitoring = async (req, res) => {
     });
   }
 };
+
+exports.getDashboard = async (req,res)=>{
+
+try{
+
+const data = await MonitoringService.getModuleMonitoring();
+
+res.json({
+success:true,
+data:data
+});
+
+}catch(err){
+
+res.status(500).json({
+success:false,
+message:err.message
+});
+
+}
+
+};

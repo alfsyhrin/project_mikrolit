@@ -264,24 +264,33 @@ export async function createModuleRequest(moduleData, token){
     return response.json();
 }
 
-export async function uploadModuleResourcesRequest(moduleId, resources, token){
-    const formData = new FormData();
-    formData.append("module_id", moduleId);
-    resources.forEach((res, index) => {
-        formData.append(`resources[${index}][step_id]`, res.step_id);
-        formData.append(`resources[${index}][type]`, res.type);
-        formData.append(`resources[${index}][value]`, res.value);
-    });
+// tambahkan ini di frontend/assets/api.js
+export async function uploadFileResourceRequest(file, token){
+    const fd = new FormData();
+    fd.append("file", file);
 
-    const response = await fetch(API_BASE + "/module-resources/upload", {
+    const res = await fetch(API_BASE + "/module-resources/upload", {
         method: "POST",
         headers: {
-            "ngrok-skip-browser-warning": "true",
-            // "content-type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`
+        "ngrok-skip-browser-warning": "true",
+        "Authorization": `Bearer ${token}`
         },
-        body: formData
+        body: fd
     });
+
+    return res.json();
+}
+
+export async function getModuleListRequest(token){
+    const response = await fetch(API_BASE + "/monitoring/modules/dashboard", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
     return response.json();
 }
 
