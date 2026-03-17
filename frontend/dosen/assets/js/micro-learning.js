@@ -1,6 +1,146 @@
-import { createModuleRequest, uploadFileResourceRequest, getModuleListRequest } from "../../../assets/api.js";
+import { createModuleRequest, uploadFileResourceRequest, getModuleListRequest, updateModuleRequest, deleteModuleRequest, getCompleteStudentByModuleIdRequest, getModuleById } from "../../../assets/api.js";
 import Modal from "../../../assets/modal.js";
 console.log("micro-learning.js loaded");
+
+// ============================================
+// HELPER: Generate Edit Module Form
+// ============================================
+function generateEditModuleForm(modul) {
+    // Parse steps jika modul.steps ada
+    const steps = modul.steps || [];
+    const step1 = steps.find(s => s.step_number === 1) || {};
+    const step2 = steps.find(s => s.step_number === 2) || {};
+    const step3 = steps.find(s => s.step_number === 3) || {};
+
+    const step1Resources = step1.resources || [];
+    const step2Resources = step2.resources || [];
+    const step3Resources = step3.resources || [];
+
+    const videoLink = step1Resources.find(r => r.type === "video_link")?.value || "";
+    const pptFile = step2Resources.find(r => r.type === "ppt")?.value || "";
+
+    const objectives = modul.objectives || [];
+    const objectivesHtml = objectives.map((obj, idx) => `
+        <div class="tujuan-item">
+            <input type="text" name="tujuan[]" placeholder="Tujuan pembelajaran ${idx + 1}" value="${obj}">
+            ${idx >= 3 ? '<button type="button" class="hapus-tujuan"><span class="material-symbols-outlined">delete</span></button>' : ''}
+        </div>
+    `).join("");
+
+    return `
+        <form id="formEditModul" class="modal-form">
+            <!-- JUDUL -->
+            <div class="modal-form-group">
+                <label>Judul Modul</label>
+                <input type="text" name="judul_modul" value="${modul.title || ''}" required>
+            </div>
+
+            <!-- DESKRIPSI -->
+            <div class="modal-form-group">
+                <label>Deskripsi Modul</label>
+                <textarea name="deskripsi_modul" rows="3">${modul.description || ''}</textarea>
+            </div>
+
+            <!-- TUJUAN -->
+            <div class="modal-form-group">
+                <label>Tujuan Pembelajaran</label>
+                <div id="tujuanContainer">
+                    ${objectivesHtml || `
+                        <div class="tujuan-item">
+                            <input type="text" name="tujuan[]" placeholder="Tujuan pembelajaran 1">
+                        </div>
+                        <div class="tujuan-item">
+                            <input type="text" name="tujuan[]" placeholder="Tujuan pembelajaran 2">
+                        </div>
+                        <div class="tujuan-item">
+                            <input type="text" name="tujuan[]" placeholder="Tujuan pembelajaran 3">
+                        </div>
+                    `}
+                </div>
+                <button type="button" id="btnTambahTujuan" class="btn-tambah-tujuan">
+                    <span class="material-symbols-outlined">add</span>
+                    Tambah Tujuan
+                </button>
+            </div>
+
+            <!-- ================= PENGATURAN MODUL ================= -->
+            <div class="step-modul">
+                <h3>Pengaturan Modul</h3>
+                <div class="modal-form-group">
+                    <label>Fitur Modul</label>
+                    <label class="diskusi-card">
+                        <input type="checkbox" name="gunakan_forum" id="gunakanForum" ${modul.discussion_enabled ? 'checked' : ''}>
+                        <div class="diskusi-card-content">
+                            <span class="material-symbols-outlined icon-diskusi">forum</span>
+                            <div class="diskusi-info">
+                                <h4>Aktifkan Forum Diskusi</h4>
+                                <p>Mahasiswa dapat berdiskusi pada modul ini</p>
+                            </div>
+                            <span class="material-symbols-outlined check-icon">check_circle</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- ================= STEP 1 ================= -->
+            <div class="step-modul">
+                <h3>STEP 1 — Microlearning</h3>
+                <div class="modal-form-group">
+                    <label>Link Video Microlearning (±5 menit)</label>
+                    <input type="url" name="video_microlearning" placeholder="https://youtube.com/..." value="${videoLink}">
+                </div>
+                <div class="modal-form-group">
+                    <label>Dokumen Contoh Penelitian</label>
+                    <input type="file" name="dokumen_penelitian">
+                    <small>File saat ini: ${step1Resources.find(r => r.type === "document")?.value || 'Belum ada'}</small>
+                </div>
+            </div>
+
+            <!-- ================= STEP 2 ================= -->
+            <div class="step-modul">
+                <h3>STEP 2 — Diskusi</h3>
+                <div class="modal-form-group">
+                    <label>Upload File PPT</label>
+                    <input type="file" name="file_ppt">
+                    <small>File saat ini: ${pptFile || 'Belum ada'}</small>
+                </div>
+                <div class="modal-form-group">
+                    <label>Aktivitas Diskusi</label>
+                    <label class="diskusi-card">
+                        <input type="checkbox" name="diskusi_rangkuman" ${step2.discussion_enabled ? 'checked' : ''}>
+                        <div class="diskusi-card-content">
+                            <span class="material-symbols-outlined icon-diskusi">forum</span>
+                            <div class="diskusi-info">
+                                <h4>Catat Poin Penting</h4>
+                                <p>Buat rangkuman atau poin penting dari materi PPT</p>
+                            </div>
+                            <span class="material-symbols-outlined check-icon">check_circle</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- ================= STEP 3 ================= -->
+            <div class="step-modul">
+                <h3>STEP 3 — Infografis</h3>
+                <div class="modal-form-group">
+                    <label>Upload Infografis 1</label>
+                    <input type="file" name="infografis1">
+                    <small>File saat ini: ${step3Resources.find(r => r.type === "image")?.value || 'Belum ada'}</small>
+                </div>
+                <div class="modal-form-group">
+                    <label>Upload Infografis 2</label>
+                    <input type="file" name="infografis2">
+                    <small>File saat ini: ${step3Resources[1]?.value || 'Belum ada'}</small>
+                </div>
+            </div>
+
+            <button type="submit" class="modal-submit-btn">
+                Simpan Perubahan
+            </button>
+        </form>
+    `;
+}
 
 // Fungsi untuk upload file
 async function handleFileUpload(inputElement, token) {
@@ -33,22 +173,20 @@ async function handleFileUpload(inputElement, token) {
 document.addEventListener("change", function (e) {
     const inputFile = e.target.closest('input[type="file"]');
     if (inputFile) {
-        const token = localStorage.getItem("token"); // Ambil token dari localStorage
+        const token = localStorage.getItem("token");
         handleFileUpload(inputFile, token);
     }
 });
 
-// Fungsi untuk submit form modul
+// Fungsi untuk submit form modul CREATE
 async function handleSubmitCreateModule(formElement, token) {
     const formData = new FormData(formElement);
 
-    // Ambil path file dari localStorage
     const dokumenPath = localStorage.getItem("modul_resource_path_dokumen_penelitian");
     const pptPath = localStorage.getItem("modul_resource_path_file_ppt");
     const infografis1Path = localStorage.getItem("modul_resource_path_infografis1");
     const infografis2Path = localStorage.getItem("modul_resource_path_infografis2");
 
-    // Validasi: pastikan semua file sudah diupload (jika wajib)
     if (!dokumenPath || !pptPath || !infografis1Path || !infografis2Path) {
         alert("Pastikan semua file sudah diupload sebelum submit!");
         return;
@@ -57,7 +195,7 @@ async function handleSubmitCreateModule(formElement, token) {
     const body = {
         title: formData.get("judul_modul"),
         description: formData.get("deskripsi_modul"),
-        learning_outcomes: formData.get("judul_modul"), // atau buat input terpisah di form
+        learning_outcomes: formData.get("judul_modul"),
         discussion_enabled: !!formData.get("gunakan_forum"),
         created_by: parseInt(localStorage.getItem("user_id")) || 1,
         objectives: formData.getAll("tujuan[]").filter(obj => obj.trim()),
@@ -99,14 +237,14 @@ async function handleSubmitCreateModule(formElement, token) {
         
         if (response.success) {
             alert("Modul berhasil dibuat!");
-            
-            // 🔥 CLEANUP: hapus path dari localStorage setelah submit sukses
             localStorage.removeItem("modul_resource_path_dokumen_penelitian");
             localStorage.removeItem("modul_resource_path_file_ppt");
             localStorage.removeItem("modul_resource_path_infografis1");
             localStorage.removeItem("modul_resource_path_infografis2");
             
             Modal.hide();
+            // Refresh list modul
+            window.renderModuleList(localStorage.getItem("token"));
         } else {
             alert(`Gagal membuat modul: ${response.message}`);
         }
@@ -116,12 +254,80 @@ async function handleSubmitCreateModule(formElement, token) {
     }
 }
 
-// Tambahkan event listener untuk submit form
+async function handleSubmitEditModule(formElement, token, moduleId) {
+    const formData = new FormData(formElement);
+
+    const body = {
+        title: formData.get("judul_modul"),
+        description: formData.get("deskripsi_modul"),
+        learning_outcomes: formData.get("judul_modul"),
+        discussion_enabled: !!formData.get("gunakan_forum"),
+        objectives: formData.getAll("tujuan[]").filter(obj => obj.trim()),
+        steps: [
+            {
+                step_number: 1,
+                step_title: "Microlearning",
+                step_type: "video",
+                resources: [
+                    { type: "video_link", value: formData.get("video_microlearning") }
+                ]
+            },
+            {
+                step_number: 2,
+                step_title: "Diskusi",
+                step_type: "discussion",
+                discussion_enabled: !!formData.get("diskusi_rangkuman"),
+                resources: []
+            },
+            {
+                step_number: 3,
+                step_title: "Infografis",
+                step_type: "infographic",
+                resources: []
+            }
+        ]
+    };
+
+    try {
+        console.log("Updating module with body:", body);
+        // PERBAIKAN: urutan parameter harus moduleId, body, token
+        const response = await updateModuleRequest(moduleId, body, token);
+        console.log("Update module response:", response);
+        
+        if (response.success) {
+            alert("Modul berhasil diperbarui!");
+            Modal.hide();
+            // Refresh list modul
+            window.allModules = await renderModuleList(token) || [];
+        } else {
+            alert(`Gagal update modul: ${response.message}`);
+        }
+    } catch (error) {
+        console.error("Error saat update modul:", error);
+        alert("Terjadi kesalahan saat update modul.");
+    }
+}
+
+// Event listener untuk submit form CREATE
 document.addEventListener("submit", function (e) {
     if (e.target.id === "formBuatModul") {
         e.preventDefault();
-        const token = localStorage.getItem("token"); // Ambil token dari localStorage
+        const token = localStorage.getItem("token");
         handleSubmitCreateModule(e.target, token);
+    }
+});
+
+// Event listener untuk submit form EDIT
+document.addEventListener("submit", function (e) {
+    if (e.target.id === "formEditModul") {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const moduleId = e.target.dataset.moduleId;
+        if (!moduleId) {
+            alert("Module ID tidak ditemukan.");
+            return;
+        }
+        handleSubmitEditModule(e.target, token, moduleId);
     }
 });
 
@@ -129,9 +335,9 @@ document.addEventListener("submit", function (e) {
  * Render list modul ke .list-modul, bisa dengan filter judul (keyword)
  * @param {string} token - Token auth
  * @param {string} [keyword] - (Opsional) kata kunci pencarian judul
- * @param {Array} [modulesData] - (Opsional) data modul, jika sudah ada (biar tidak fetch ulang)
+ * @param {Array} [modulesData] - (Opsional) data modul, jika sudah ada
  */
-export async function renderModuleList(token, keyword = "", modulesData = null) {
+async function renderModuleList(token, keyword = "", modulesData = null) {
     console.log("[renderModuleList] Mulai fetch/render data modul...");
     try {
         let modules = modulesData;
@@ -162,7 +368,6 @@ export async function renderModuleList(token, keyword = "", modulesData = null) 
             return;
         }
 
-        // Kosongkan list sebelum render ulang
         listContainer.innerHTML = "";
 
         filteredModules.forEach(modul => {
@@ -173,6 +378,9 @@ export async function renderModuleList(token, keyword = "", modulesData = null) 
 
             const card = document.createElement("div");
             card.className = "card-list-modul";
+            if (modul.id || modul.module_id) {
+                card.dataset.moduleId = modul.id || modul.module_id;
+            }
             card.innerHTML = `
                 <div class="header-modul">
                   <div class="tema-modul">
@@ -186,11 +394,14 @@ export async function renderModuleList(token, keyword = "", modulesData = null) 
                   </div>
                   <div class="action-modul">
                     <p class="status-modul ${is_active}">${is_active.charAt(0).toUpperCase() + is_active.slice(1)}</p>
-                    <p>
+                    <p id="btnLihatPenyelesaian" title="Lihat Penyelesaian">
                       <span class="material-symbols-outlined">visibility</span>
                     </p>
-                    <p>
+                    <p id="btnEditModul" title="Edit Modul">
                       <span class="material-symbols-outlined">edit_square</span>
+                    </p>
+                    <p id="btnHapusModul" title="Hapus Modul">
+                        <span class="material-symbols-outlined">delete</span>
                     </p>
                   </div>
                 </div>
@@ -210,9 +421,159 @@ export async function renderModuleList(token, keyword = "", modulesData = null) 
         });
 
         console.log(`[renderModuleList] Berhasil render ${filteredModules.length} modul`);
-        // Return data agar bisa dipakai ulang (misal untuk search berikutnya)
         return modules;
     } catch (err) {
         console.error("[renderModuleList] Error:", err);
     }
 }
+
+// ============================================
+// EVENT DELEGATION: LIHAT PENYELESAIAN (PERBAIKAN)
+// ============================================
+document.addEventListener("click", async function (e) {
+    const btn = e.target.closest("#btnLihatPenyelesaian");
+    if (!btn) return;
+
+    const card = btn.closest(".card-list-modul");
+    const moduleId = card?.dataset?.moduleId;
+    if (!moduleId) {
+        alert("Module ID tidak ditemukan.");
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    try {
+        // PERBAIKAN: moduleId dulu, token kedua
+        const res = await getCompleteStudentByModuleIdRequest(moduleId, token);
+        if (!res.success || !Array.isArray(res.data)) {
+            Modal.show({
+                title: "Penyelesaian Modul Mahasiswa",
+                size: "medium",
+                content: `<div class="submission-modul-card-wrapper"><p>Belum ada data mahasiswa.</p></div>`
+            });
+            return;
+        }
+        const html = res.data.map(mhs => `
+            <div class="submission-modul-card">
+                <div class="submission-modul-header">
+                    <div>
+                        <div class="submission-modul-name">${mhs.name || '-'}</div>
+                        <div class="submission-modul-npm">NPM : ${mhs.nidn || '-'}</div>
+                    </div>
+                </div>
+            </div>
+        `).join("");
+        Modal.show({
+            title: "Penyelesaian Modul Mahasiswa",
+            size: "medium",
+            content: `<div class="submission-modul-card-wrapper">${html}</div>`
+        });
+    } catch (err) {
+        console.error("Error:", err);
+        alert("Gagal mengambil data mahasiswa.");
+    }
+});
+
+// ============================================
+// EVENT DELEGATION: EDIT MODUL (OPTIMIZED)
+// ============================================
+document.addEventListener("click", async function (e) {
+    const btn = e.target.closest("#btnEditModul");
+    if (!btn) return;
+
+    const card = btn.closest(".card-list-modul");
+    const moduleId = card?.dataset?.moduleId;
+    if (!moduleId) {
+        alert("Module ID tidak ditemukan.");
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    
+    try {
+        console.log("[Edit Modul] Fetch data lengkap dari API untuk moduleId:", moduleId);
+        
+        // Fetch data lengkap dari API (yang sudah sesuai dengan form)
+        const response = await getModuleById(moduleId, token);
+        
+        if (!response.success || !response.data) {
+            alert("Gagal mengambil data modul.");
+            return;
+        }
+
+        const modul = response.data;
+        console.log("[Edit Modul] Data modul:", modul);
+
+        // Generate form dengan data modul
+        const formContent = generateEditModuleForm(modul);
+        
+        Modal.show({
+            title: "Edit Modul Pembelajaran",
+            size: "large",
+            content: formContent
+        });
+
+        // Set moduleId ke form untuk submit handler
+        setTimeout(() => {
+            const form = document.getElementById("formEditModul");
+            if (form) {
+                form.dataset.moduleId = moduleId;
+            }
+        }, 50);
+
+    } catch (err) {
+        console.error("Error:", err);
+        alert("Gagal mengambil data modul.");
+    }
+});
+
+// ============================================
+// EVENT DELEGATION: HAPUS MODUL (PERBAIKAN)
+// ============================================
+document.addEventListener("click", function (e) {
+    const btn = e.target.closest("#btnHapusModul");
+    if (!btn) return;
+
+    const card = btn.closest(".card-list-modul");
+    const moduleId = card?.dataset?.moduleId;
+    if (!moduleId) {
+        alert("Module ID tidak ditemukan.");
+        return;
+    }
+
+    Modal.show({
+        title: "Konfirmasi Hapus Modul",
+        size: "small",
+        content: `
+            <p>Apakah Anda yakin ingin menghapus modul ini?</p>
+            <button id="confirmDeleteModul" class="modal-submit-btn">Hapus</button>
+        `
+    });
+
+    // Handler konfirmasi hapus
+    const handler = async function (ev) {
+        if (ev.target.id === "confirmDeleteModul") {
+            ev.preventDefault();
+            const token = localStorage.getItem("token");
+            try {
+                // PERBAIKAN: moduleId dulu, token kedua
+                const res = await deleteModuleRequest(moduleId, token);
+                if (res.success) {
+                    Modal.hide();
+                    // Refresh list modul
+                    renderModuleList(token);
+                } else {
+                    alert("Gagal menghapus modul.");
+                }
+            } catch (err) {
+                alert("Gagal menghapus modul.");
+            }
+            document.removeEventListener("click", handler);
+        }
+    };
+    document.addEventListener("click", handler);
+});
+
+export {
+    renderModuleList
+};

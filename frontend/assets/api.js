@@ -1,4 +1,4 @@
-const API_BASE = "https://erica-slatier-neoma.ngrok-free.dev/api";
+const API_BASE = "http://localhost:4000/api";
 
 //AUTH===================================================================================
 export async function loginRequest(emailOrNidn, password){
@@ -293,6 +293,57 @@ export async function getModuleListRequest(token){
 
     return response.json();
 }
+
+export async function updateModuleRequest(moduleId, moduleData, token){
+    const response = await fetch(API_BASE + `/modules/${moduleId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(moduleData)
+    });
+    return response.json();
+}
+
+export async function deleteModuleRequest(moduleId, token){
+    const response = await fetch(API_BASE + `/modules/${moduleId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.json();
+}
+
+export async function getCompleteStudentByModuleIdRequest(moduleId, token){
+    const response = await fetch(API_BASE + `/monitoring/modules/${moduleId}/completed-students`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.json();
+}
+
+export async function getModuleById(moduleId, token){
+    const response = await fetch(API_BASE + `/modules/${moduleId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        } 
+    });
+
+    return response.json();
+}
+
 
 //MODULES & TASK (MAHASISWA)=========================================================
 export async function getTaskForMahasiswaRequest(token){

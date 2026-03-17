@@ -18,7 +18,23 @@ async function getModuleMonitoring() {
   return modules;
 }
 
+async function getCompletedStudents(moduleId){
+  if (!moduleId) {
+    throw new Error("Module ID is required");
+  }
+
+  const students = await MonitoringModel.getCompletedStudents(moduleId);
+  const formatted = students.map(s => {
+    return {
+      ...s,
+      duration_minutes: Math.floor(s.total_duration_seconds / 60),
+    };
+  });
+  return formatted;
+}
+
 module.exports = {
   getStudentMonitoring,
-  getModuleMonitoring
+  getModuleMonitoring,
+  getCompletedStudents
 };

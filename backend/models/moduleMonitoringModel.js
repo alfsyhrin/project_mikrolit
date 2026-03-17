@@ -81,6 +81,30 @@ const ModuleMonitoring = {
         resolve(rows || []);
       });
     });
+  },
+
+  getCompletedStudents: async (moduleId) => {
+      const query = `
+        SELECT
+        u.id AS user_id,
+        u.name,
+        u.nidn,
+        smp.completed_at,
+        TIMESTAMPDIFF(SECOND, smp.started_at, smp.completed_at) AS duration_seconds
+        FROM student_module_progress smp
+        JOIN users u ON u.id = smp.user_id
+        WHERE
+        smp.module_id = ?
+        AND smp.completed_at IS NOT NULL
+        ORDER BY smp.completed_at DESC
+        `;
+
+      return new Promise((resolve, reject) => {
+        db.query(query, [moduleId], (err, rows) => {
+          if (err) return reject(err);
+          resolve(rows || []);
+        });
+      });
   }
   
 };
