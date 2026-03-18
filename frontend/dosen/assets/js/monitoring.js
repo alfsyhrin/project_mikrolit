@@ -44,6 +44,10 @@ function formatDuration(seconds) {
  * Render tabel Progress Mahasiswa dari monitoring API
  * @param {string} token - Auth token
  */
+/**
+ * Render tabel Progress Mahasiswa dari monitoring API
+ * @param {string} token - Auth token
+ */
 async function renderMonitoringTable(token) {
     try {
         const response = await monitoringRequest(token);
@@ -69,6 +73,22 @@ async function renderMonitoringTable(token) {
             const lastAccess = formatTimeAgo(data.last_access);
             const totalDurasi = formatDuration(data.total_duration_seconds);
             const progressPercent = parseInt(data.progress_percent) || 0;
+
+            // 🔥 Set user_id
+            row.dataset.userId = data.user_id;
+
+            // 🔥 Ambil module_id dari discussion_points (yang paling baru)
+            if (Array.isArray(data.discussion_points) && data.discussion_points.length > 0) {
+                // Ambil discussion point yang paling baru berdasarkan created_at
+                const latestDiscussionPoint = data.discussion_points.reduce((latest, current) => {
+                    return new Date(current.created_at) > new Date(latest.created_at) 
+                        ? current 
+                        : latest;
+                });
+                row.dataset.moduleId = latestDiscussionPoint.module_id;
+            } else {
+                row.dataset.moduleId = null;
+            }
 
             row.innerHTML = `
                 <td class="nama">${data.name || "-"}</td>
@@ -98,4 +118,68 @@ async function renderMonitoringTable(token) {
     }
 }
 
-export { renderMonitoringTable };
+/**
+ * Helper: Format tanggal dari ISO string
+ * @param {string} isoDateString - ISO datetime string
+ * @returns {object} - { date: "DD/MM/YYYY", time: "HH.mm WIT" }
+ */
+function formatDateTimeFromISO(isoDateString) {
+    if (!isoDateString) return { date: "-", time: "-" };
+    
+    const date = new Date(isoDateString);
+    
+    // Format tanggal DD/MM/YYYY
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+    
+    // Format waktu HH.mm WIT
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const formattedTime = `${hours}.${minutes} WIT`;
+    
+    return { date: formattedDate, time: formattedTime };
+}
+
+/**
+ * Ambil discussion point berdasarkan userId dan moduleId
+ * @param {Array} monitoringData - Array dari monitoringRequest response
+ * @param {number} userId - User ID yang dicari
+ * @param {number} moduleId - Module ID yang dicari
+ * @returns {object|null} - Discussion point object atau null jika tidak ditemukan
+ */
+function getDiscussionPoint(monitoringData, userId, moduleId) {
+    const user = monitoringData.find(item => item.user_id === userId);
+    if (!user || !Array.isArray(user.discussion_points)) return null;
+    
+    return user.discussion_points.find(dp => dp.module_id === moduleId) || null;
+}
+
+/**
+ * Ambil dan format data step 2 yang diperlukan untuk modal
+ * @param {Array} monitoringData - Data dari monitoringRequest
+ * @param {number} userId - Student user ID
+ * @param {number} moduleId - Module ID
+ * @returns {object|null} - { discussionPoint, date, time, studentName } atau null
+ */
+function getStepTwoData(monitoringData, userId, moduleId) {
+    const discussionPoint = getDiscussionPoint(monitoringData, userId, moduleId);
+    
+    if (!discussionPoint) {
+        console.warn(`[getStepTwoData] No discussion point found for userId: ${userId}, moduleId: ${moduleId}`);
+        return null;
+    }
+    
+    const { date, time } = formatDateTimeFromISO(discussionPoint.created_at);
+    const studentName = monitoringData.find(item => item.user_id === userId)?.name || "Mahasiswa";
+    
+    return {
+        discussionPoint: discussionPoint.discussion_point || "-",
+        date: date,
+        time: time,
+        studentName: studentName
+    };
+}
+
+export { renderMonitoringTable, getStepTwoData, getDiscussionPoint };

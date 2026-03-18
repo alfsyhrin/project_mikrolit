@@ -390,59 +390,59 @@ document.addEventListener("click", function (e) {
 // Akhir modal buat modul
 
 // Awal lihat mahasiswa penyelesaian modul
-document.addEventListener("click", function (e) {
-    const btnSubmisi = e.target.closest("#btnLihatPenyelesaian");
+// document.addEventListener("click", function (e) {
+//     const btnSubmisi = e.target.closest("#btnLihatPenyelesaian");
 
-    if (!btnSubmisi) return;
+//     if (!btnSubmisi) return;
 
-    Modal.show({
-        title: "Penyelesaian Modul Mahasiswa",
-        size: "medium",
-        content: `
-            <div class="submission-modul-card-wrapper">
-                <div class="submission-modul-card">
-                    <div class="submission-modul-header">
-                        <div>
-                            <div class="submission-modul-name">Cuppa</div>
-                            <div class="submission-modul-npm">NPM : 07352211097</div>
-                        </div>
-                        <div class="submission-modul-date">
-                            <div class="submission-modul-date-day">19-03-2026</div>
-                            <div class="submission-modul-time">00.34 WIT</div>
-                        </div>
-                    </div>
-                </div>
+//     Modal.show({
+//         title: "Penyelesaian Modul Mahasiswa",
+//         size: "medium",
+//         content: `
+//             <div class="submission-modul-card-wrapper">
+//                 <div class="submission-modul-card">
+//                     <div class="submission-modul-header">
+//                         <div>
+//                             <div class="submission-modul-name">Cuppa</div>
+//                             <div class="submission-modul-npm">NPM : 07352211097</div>
+//                         </div>
+//                         <div class="submission-modul-date">
+//                             <div class="submission-modul-date-day">19-03-2026</div>
+//                             <div class="submission-modul-time">00.34 WIT</div>
+//                         </div>
+//                     </div>
+//                 </div>
 
-                <div class="submission-modul-card">
-                    <div class="submission-modul-header">
-                        <div>
-                            <div class="submission-modul-name">A Ming Lang</div>
-                            <div class="submission-modul-npm">NPM : 07352211062</div>
-                        </div>
-                        <div class="submission-modul-date">
-                            <div class="submission-modul-date-day">19-03-2026</div>
-                            <div class="submission-modul-time">00.34 WIT</div>
-                        </div>
-                    </div>
-                </div>
+//                 <div class="submission-modul-card">
+//                     <div class="submission-modul-header">
+//                         <div>
+//                             <div class="submission-modul-name">A Ming Lang</div>
+//                             <div class="submission-modul-npm">NPM : 07352211062</div>
+//                         </div>
+//                         <div class="submission-modul-date">
+//                             <div class="submission-modul-date-day">19-03-2026</div>
+//                             <div class="submission-modul-time">00.34 WIT</div>
+//                         </div>
+//                     </div>
+//                 </div>
 
-                <div class="submission-modul-card">
-                    <div class="submission-modul-header">
-                        <div>
-                            <div class="submission-modul-name">Manray</div>
-                            <div class="submission-modul-npm">NPM : 07352211092</div>
-                        </div>
-                        <div class="submission-modul-date">
-                            <div class="submission-modul-date-day">19-03-2026</div>
-                            <div class="submission-modul-time">00.34 WIT</div>
-                        </div>
-                    </div>
-                </div>
+//                 <div class="submission-modul-card">
+//                     <div class="submission-modul-header">
+//                         <div>
+//                             <div class="submission-modul-name">Manray</div>
+//                             <div class="submission-modul-npm">NPM : 07352211092</div>
+//                         </div>
+//                         <div class="submission-modul-date">
+//                             <div class="submission-modul-date-day">19-03-2026</div>
+//                             <div class="submission-modul-time">00.34 WIT</div>
+//                         </div>
+//                     </div>
+//                 </div>
 
-            </div>
-        `
-    });
-});
+//             </div>
+//         `
+//     });
+// });
 // Akhir lihat mahasiswa penyelesaian modul
 
 // Awal Modal Konfirmasi hapus modul
@@ -460,31 +460,59 @@ document.addEventListener("click", function(e){
 // Akhir Modal Konfirmasi hapus modul
 
 // Awal lihat penyelesaian step 2
-document.addEventListener("click", function (e) {
+document.addEventListener("click", async function (e) {
     const btnSubmisi = e.target.closest("#btnLihatHasilStep");
 
     if (!btnSubmisi) return;
 
-    Modal.show({
-        title: "Penyelesaian Step Dua Mahasiswa",
-        size: "medium",
-        content: `
-            <div class="submission-step-two-wrapper">
-                <div class="submission-step-two-card">
-                    <div class="submission-step-two-header">
-                        <p class="hasil-step-two">
-                            Rangkuman (ringkasan) adalah pemadatan isi suatu bacaan, berita, atau pembahasan dengan mengambil poin-poin penting tanpa menghilangkan urutan dasar atau pesan aslinya. Ini merupakan penyajian singkat dari karangan panjang dalam bentuk yang lebih efektif. 
-                        </p>
-                    </div>
-                    <div class="submission-step-two-footer">
-                    </div>
-                    <div class="submission-step-two-date">
-                        <div class="submission-step-two-date-day">19/03/2026</div>
-                        <div class="submission-step-two-time">00.49 WIT</div>
-                    </div>
-                </div>
-            </div>
-        `
-    });
+    try {
+        const token = localStorage.getItem("token");
+        
+        // Ambil userId dan moduleId dari data attribute button
+        const userId = parseInt(btnSubmisi.closest("tr")?.dataset.userId);
+        const moduleId = parseInt(btnSubmisi.closest("tr")?.dataset.moduleId);
+        
+        if (!userId || !moduleId) {
+            console.error("[btnLihatHasilStep] Missing userId or moduleId");
+            return;
+        }
+
+        // Import fungsi dari monitoring.js
+        const { getStepTwoData } = await import("./monitoring.js");
+        
+        // Fetch data monitoring
+        const api = await import("../../../assets/api.js");
+        const response = await api.monitoringRequest(token);
+        
+        if (response.success && Array.isArray(response.data)) {
+            const stepData = getStepTwoData(response.data, userId, moduleId);
+            
+            if (stepData) {
+                Modal.show({
+                    title: "Penyelesaian Step Dua Mahasiswa",
+                    size: "medium",
+                    content: `
+                        <div class="submission-step-two-wrapper">
+                            <div class="submission-step-two-card">
+                                <div class="submission-step-two-header">
+                                    <p class="hasil-step-two">
+                                        ${stepData.discussionPoint}
+                                    </p>
+                                </div>
+                                <div class="submission-step-two-footer">
+                                </div>
+                                <div class="submission-step-two-date">
+                                    <div class="submission-step-two-date-day">${stepData.date}</div>
+                                    <div class="submission-step-two-time">${stepData.time}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                });
+            }
+        }
+    } catch (error) {
+        console.error("[btnLihatHasilStep] Error:", error);
+    }
 });
 // Akhir lihat penyelesaian step 2
