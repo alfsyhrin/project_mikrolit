@@ -357,6 +357,18 @@ export async function monitoringRequest(token){
     return response.json();
 }
 
+export async function getNotificationForTeacher(token){
+    const response = await fetch(API_BASE + "/notifications/teacher", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.json();
+}
+
 //MODULES & TASK (MAHASISWA)=========================================================
 export async function getTaskForMahasiswaRequest(token){
     const response = await fetch(API_BASE + "/writing/mahasiswa/tasks", {

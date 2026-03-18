@@ -141,14 +141,27 @@
         window.initPengaturan = initPengaturan;
     </script>
 
-        <!-- Link untuk dashboard.js -->
-    <script type="module">
-        import { fetchMahasiswa, updateMahasiswaStatsCards, getTotalActiveMahasiswa } from "./assets/js/dashboard.js";
+<!-- Link untuk dashboard.js -->
+<script type="module">
+    import { 
+        fetchMahasiswa, 
+        updateMahasiswaStatsCards, 
+        getTotalActiveMahasiswa,
+        fetchAndRenderTeacherNotifications 
+    } from "./assets/js/dashboard.js";
 
-        window.fetchMahasiswa = fetchMahasiswa;
-        window.updateMahasiswaStatsCards = updateMahasiswaStatsCards;
-        window.getTotalActiveMahasiswa = getTotalActiveMahasiswa;
-    </script>
+    window.fetchMahasiswa = fetchMahasiswa;
+    window.updateMahasiswaStatsCards = updateMahasiswaStatsCards;
+    window.getTotalActiveMahasiswa = getTotalActiveMahasiswa;
+    window.fetchAndRenderTeacherNotifications = fetchAndRenderTeacherNotifications;
+    
+    console.log('[dashboard.html] Functions exported:', {
+        fetchMahasiswa: typeof window.fetchMahasiswa,
+        updateMahasiswaStatsCards: typeof window.updateMahasiswaStatsCards,
+        getTotalActiveMahasiswa: typeof window.getTotalActiveMahasiswa,
+        fetchAndRenderTeacherNotifications: typeof window.fetchAndRenderTeacherNotifications
+    });
+</script>
 
     <script type="module">
         import { renderModuleList, updateModulAktifCard, updateTotalModulCard, updateCompletedModulCard, prepareChartDataFromModules } from "./assets/js/micro-learning.js";
@@ -308,13 +321,16 @@
                             if (response.success && Array.isArray(response.data)) {
                                 window.updateTotalModulCard(response.data);
                                 window.updateCompletedModulCard(response.data);
-                                await renderChart(response.data, totalActiveMahasiswa); // Pass total aktif
+                                await renderChart(response.data, totalActiveMahasiswa);
                             } else {
                                 await renderChart();
                             }
                             
                             await updateMahasiswaStatsCards();
                             await fetchMahasiswa();
+                            
+                            // 🔥 TAMBAHKAN BARIS INI
+                            await window.fetchAndRenderTeacherNotifications(token, '.card-notifikasi-wrapper', 10);
                         }, 50);
                     }
                     else if (page === "monitoring") {
