@@ -428,6 +428,49 @@ async function renderModuleList(token, keyword = "", modulesData = null) {
 }
 
 // ============================================
+// HELPER: Parse ISO Date menjadi date dan time string
+// ============================================
+function parseCompletedDate(isoString) {
+    if (!isoString) {
+        return {
+            date: "-",
+            time: "-"
+        };
+    }
+    
+    try {
+        const date = new Date(isoString);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        
+        return {
+            date: `${yyyy}-${mm}-${dd}`,
+            time: `${hours}:${minutes}`
+        };
+    } catch (err) {
+        console.error("Error parsing date:", err);
+        return {
+            date: "-",
+            time: "-"
+        };
+    }
+}
+
+// Helper untuk escape HTML (prevent XSS)
+function escapeHtml(s) {
+    if (!s) return "";
+    return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// ============================================
 // EVENT DELEGATION: LIHAT PENYELESAIAN (PERBAIKAN)
 // ============================================
 document.addEventListener("click", async function (e) {
@@ -453,16 +496,23 @@ document.addEventListener("click", async function (e) {
             });
             return;
         }
-        const html = res.data.map(mhs => `
-            <div class="submission-modul-card">
-                <div class="submission-modul-header">
-                    <div>
-                        <div class="submission-modul-name">${mhs.name || '-'}</div>
-                        <div class="submission-modul-npm">NPM : ${mhs.nidn || '-'}</div>
+        const html = res.data.map(mhs => {
+            const dateInfo = parseCompletedDate(mhs.completed_at);
+            return `
+                <div class="submission-modul-card">
+                    <div class="submission-modul-header">
+                        <div>
+                            <div class="submission-modul-name">${escapeHtml(mhs.name || '-')}</div>
+                            <div class="submission-modul-npm">NPM : ${escapeHtml(String(mhs.nidn || '-'))}</div>
+                        </div>
+                        <div class="submission-modul-date">
+                            <div class="submission-modul-date-day">${dateInfo.date}</div>
+                            <div class="submission-modul-time">${dateInfo.time} WIT</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join("");
+            `;
+        }).join("");
         Modal.show({
             title: "Penyelesaian Modul Mahasiswa",
             size: "medium",
@@ -541,14 +591,10 @@ document.addEventListener("click", function (e) {
         return;
     }
 
-    Modal.show({
-        title: "Konfirmasi Hapus Modul",
-        size: "small",
-        content: `
-            <p>Apakah Anda yakin ingin menghapus modul ini?</p>
-            <button id="confirmDeleteModul" class="modal-submit-btn">Hapus</button>
-        `
-    });
+    // Gunakan template dari main.js
+    Modal.confirmDelete(
+        "Apakah Anda yakin ingin menghapus modul ini?"
+    );
 
     // Handler konfirmasi hapus
     const handler = async function (ev) {
