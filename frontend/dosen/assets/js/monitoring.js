@@ -83,6 +83,11 @@ async function renderMonitoringTable(token) {
                         <span class="percentage">${progressPercent}%</span>
                     </div>
                 </td>
+                <td class="middle-td">
+                    <p class="step-two-btn" id="btnLihatHasilStep">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </p>
+                </td>
             `;
             tbody.appendChild(row);
         });
