@@ -407,8 +407,8 @@ document.addEventListener("click", function (e) {
                             <div class="submission-modul-npm">NPM : 07352211097</div>
                         </div>
                         <div class="submission-modul-date">
-                            <div class="submission-modul-date-day"></div>
-                            <div class="submission-modul-time"></div>
+                            <div class="submission-modul-date-day">19-03-2026</div>
+                            <div class="submission-modul-time">00.34 WIT</div>
                         </div>
                     </div>
                 </div>
@@ -420,8 +420,8 @@ document.addEventListener("click", function (e) {
                             <div class="submission-modul-npm">NPM : 07352211062</div>
                         </div>
                         <div class="submission-modul-date">
-                            <div class="submission-modul-date-day"></div>
-                            <div class="submission-modul-time"></div>
+                            <div class="submission-modul-date-day">19-03-2026</div>
+                            <div class="submission-modul-time">00.34 WIT</div>
                         </div>
                     </div>
                 </div>
@@ -433,8 +433,8 @@ document.addEventListener("click", function (e) {
                             <div class="submission-modul-npm">NPM : 07352211092</div>
                         </div>
                         <div class="submission-modul-date">
-                            <div class="submission-modul-date-day"></div>
-                            <div class="submission-modul-time"></div>
+                            <div class="submission-modul-date-day">19-03-2026</div>
+                            <div class="submission-modul-time">00.34 WIT</div>
                         </div>
                     </div>
                 </div>
@@ -458,3 +458,33 @@ document.addEventListener("click", function(e){
 
 });
 // Akhir Modal Konfirmasi hapus modul
+
+// Awal lihat penyelesaian step 2
+document.addEventListener("click", function (e) {
+    const btnSubmisi = e.target.closest("#btnLihatHasilStep");
+
+    if (!btnSubmisi) return;
+
+    Modal.show({
+        title: "Penyelesaian Step Dua Mahasiswa",
+        size: "medium",
+        content: `
+            <div class="submission-step-two-wrapper">
+                <div class="submission-step-two-card">
+                    <div class="submission-step-two-header">
+                        <p class="hasil-step-two">
+                            Rangkuman (ringkasan) adalah pemadatan isi suatu bacaan, berita, atau pembahasan dengan mengambil poin-poin penting tanpa menghilangkan urutan dasar atau pesan aslinya. Ini merupakan penyajian singkat dari karangan panjang dalam bentuk yang lebih efektif. 
+                        </p>
+                    </div>
+                    <div class="submission-step-two-footer">
+                    </div>
+                    <div class="submission-step-two-date">
+                        <div class="submission-step-two-date-day">19/03/2026</div>
+                        <div class="submission-step-two-time">00.49 WIT</div>
+                    </div>
+                </div>
+            </div>
+        `
+    });
+});
+// Akhir lihat penyelesaian step 2
