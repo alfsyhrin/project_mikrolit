@@ -288,4 +288,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-export { fetchAndRenderUsersWithListeners as fetchAndRenderUsers, initManajemenPengguna };
+/**
+ * Helper untuk mendapatkan total user yang sudah diterima
+ * @returns {number} - Jumlah user dengan status diterima/approved
+ */
+function getTotalAcceptedUsers() {
+    return allUsers.filter(user => 
+        user.status === "diterima" || user.status === "approved"
+    ).length;
+}
+
+export { 
+    fetchAndRenderUsersWithListeners as fetchAndRenderUsers, 
+    initManajemenPengguna,
+    getTotalAcceptedUsers
+};

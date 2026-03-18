@@ -574,6 +574,145 @@ document.addEventListener("click", function (e) {
     document.addEventListener("click", handler);
 });
 
+/**
+ * Helper untuk mengisi card "Modul Aktiv" di monitoring page
+ * @param {Array} modulesData - Array data modul dari getModuleListRequest
+ */
+function updateModulAktifCard(modulesData) {
+    if (!Array.isArray(modulesData) || modulesData.length === 0) {
+        return;
+    }
+
+    // Hitung modul yang aktif (is_active = 1)
+    const activeModulesCount = modulesData.filter(modul => modul.is_active === 1).length;
+
+    // Hitung modul yang selesai (completion_percent = 100)
+    const completedModulesCount = modulesData.filter(modul => {
+        const completionPercent = modul.completion_percent;
+        // Jika null atau di bawah 100, anggap 0
+        if (completionPercent === null || completionPercent === undefined) {
+            return false;
+        }
+        // Convert string ke number jika perlu
+        const percent = typeof completionPercent === 'string' 
+            ? parseInt(completionPercent, 10) 
+            : completionPercent;
+        return percent === 100;
+    }).length;
+
+    // Update h2 dengan jumlah modul aktif
+    const h2Element = document.querySelector('.card-monitoring:nth-child(3) h2');
+    if (h2Element) {
+        h2Element.textContent = activeModulesCount;
+    }
+
+    // Update h4 dengan jumlah modul selesai
+    const h5Element = document.querySelector('.card-monitoring:nth-child(3) h5:not([class])');
+    if (h5Element) {
+        h5Element.textContent = `${completedModulesCount} Selesai`;
+    }
+}
+
+/**
+ * Helper untuk menghitung total modul
+ * @param {Array} modulesData - Array data modul dari getModuleListRequest
+ * @returns {number} - Jumlah total modul
+ */
+function getTotalModulCount(modulesData) {
+    if (!Array.isArray(modulesData)) {
+        return 0;
+    }
+    return modulesData.length;
+}
+
+/**
+ * Helper untuk mengisi card "Total Modul" di beranda page
+ * @param {Array} modulesData - Array data modul dari getModuleListRequest
+ */
+function updateTotalModulCard(modulesData) {
+    const totalCount = getTotalModulCount(modulesData);
+    
+    // Update h2 pertama di card-beranda-wrapper dengan jumlah total modul
+    const h2Element = document.querySelector('.card-beranda-wrapper .card-beranda:first-child h2');
+    if (h2Element) {
+        h2Element.textContent = totalCount;
+    }
+}
+
+/**
+ * Helper untuk mengisi card "Penyelesaian" di beranda page dengan jumlah modul yang selesai
+ * @param {Array} modulesData - Array data modul dari getModuleListRequest
+ */
+function updateCompletedModulCard(modulesData) {
+    if (!Array.isArray(modulesData) || modulesData.length === 0) {
+        return;
+    }
+
+    // Hitung modul yang selesai (completion_percent = 100)
+    const completedModulesCount = modulesData.filter(modul => {
+        const completionPercent = modul.completion_percent;
+        // Jika null atau di bawah 100, anggap 0
+        if (completionPercent === null || completionPercent === undefined) {
+            return false;
+        }
+        // Convert string ke number jika perlu
+        const percent = typeof completionPercent === 'string' 
+            ? parseInt(completionPercent, 10) 
+            : completionPercent;
+        return percent === 100;
+    }).length;
+
+    // Update h2 di card Penyelesaian (card ke-4)
+    const h2Element = document.querySelector('.card-beranda-wrapper .card-beranda:nth-child(4) h2');
+    if (h2Element) {
+        h2Element.textContent = completedModulesCount;
+    }
+}
+
+/**
+ * Helper untuk prepare data chart dari modules data
+ * @param {Array} modulesData - Array data modul
+ * @param {number} [totalUsers=0] - Total mahasiswa aktif untuk perhitungan incomplete
+ */
+function prepareChartDataFromModules(modulesData, totalUsers = 0) {
+    if (!Array.isArray(modulesData) || modulesData.length === 0) {
+        return {
+            categories: [],
+            completedData: [],
+            incompleteData: []
+        };
+    }
+
+    const sortedModules = [...modulesData].sort((a, b) => 
+        (a.module_id || a.id) - (b.module_id || b.id)
+    );
+
+    const categories = sortedModules.map((_, idx) => `Modul ${idx + 1}`);
+    
+    const completedData = sortedModules.map(m => 
+        parseInt(m.students_completed) || 0
+    );
+    
+    // Incomplete = totalUsers (mahasiswa aktif) - students_completed
+    const incompleteData = sortedModules.map(m => {
+        const completed = parseInt(m.students_completed) || 0;
+        return Math.max(0, totalUsers - completed);
+    });
+
+    console.log("[prepareChartDataFromModules] totalUsers:", totalUsers, "incomplete:", incompleteData);
+
+    return {
+        categories,
+        completedData,
+        incompleteData
+    };
+}
+
 export {
-    renderModuleList
+    renderModuleList,
+    updateModulAktifCard,
+    getTotalModulCount,
+    updateTotalModulCard,
+    updateCompletedModulCard,
+    prepareChartDataFromModules
 };

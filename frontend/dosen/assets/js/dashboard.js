@@ -105,4 +105,29 @@ async function updateMahasiswaStatsCards() {
     }
 }
 
-export { fetchMahasiswa, updateMahasiswaStatsCards };
+/**
+ * Helper untuk mendapatkan total mahasiswa aktif (diterima/approved)
+ * @returns {number} - Jumlah mahasiswa aktif
+ */
+function getTotalActiveMahasiswa() {
+    // Hitung dari allUsers atau fetch baru jika perlu
+    const token = localStorage.getItem("token");
+    
+    // Jika perlu real-time dari fetch
+    return new Promise(async (resolve) => {
+        try {
+            const users = await getUsersRequest(token);
+            const acceptedStatuses = ['diterima', 'disetujui', 'approved'];
+            const aktivCount = (users || []).filter(user =>
+                (user.role || '').toLowerCase() === 'mahasiswa' &&
+                acceptedStatuses.includes((user.status || '').toLowerCase())
+            ).length;
+            resolve(aktivCount);
+        } catch (error) {
+            console.error('Error getTotalActiveMahasiswa:', error);
+            resolve(0);
+        }
+    });
+}
+
+export { fetchMahasiswa, updateMahasiswaStatsCards, getTotalActiveMahasiswa };

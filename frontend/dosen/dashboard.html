@@ -143,16 +143,22 @@
 
         <!-- Link untuk dashboard.js -->
     <script type="module">
-        import { fetchMahasiswa, updateMahasiswaStatsCards } from "./assets/js/dashboard.js";
+        import { fetchMahasiswa, updateMahasiswaStatsCards, getTotalActiveMahasiswa } from "./assets/js/dashboard.js";
 
         window.fetchMahasiswa = fetchMahasiswa;
         window.updateMahasiswaStatsCards = updateMahasiswaStatsCards;
-
+        window.getTotalActiveMahasiswa = getTotalActiveMahasiswa;
     </script>
 
     <script type="module">
-        import { renderModuleList } from "./assets/js/micro-learning.js";
+        import { renderModuleList, updateModulAktifCard, updateTotalModulCard, updateCompletedModulCard, prepareChartDataFromModules } from "./assets/js/micro-learning.js";
+        import { getTotalAcceptedUsers } from "./assets/js/manajemen-pengguna.js";
+        
         window.renderModuleList = renderModuleList;
+        window.updateModulAktifCard = updateModulAktifCard;
+        window.updateTotalModulCard = updateTotalModulCard;
+        window.updateCompletedModulCard = updateCompletedModulCard;
+        window.getTotalAcceptedUsers = getTotalAcceptedUsers;
     </script>
 
     <script type="module">
@@ -167,6 +173,12 @@
         window.renderProgressMingguanChart = renderProgressMingguanChart;
         window.renderKemampuanLiterasiChart = renderKemampuanLiterasiChart;
         window.destroyAllCharts = destroyAllCharts;
+    </script>
+
+    <script type="module">
+        import { renderMonitoringTable } from "./assets/js/monitoring.js";
+        
+        window.renderMonitoringTable = renderMonitoringTable;
     </script>
     
     <script>
@@ -284,13 +296,42 @@
                     // 🔥 Render chart jika halaman beranda
                     if (page === "beranda") {
                         setTimeout(async () => {
-                            await renderChart();
-                            await updateMahasiswaStatsCards(); // Update kartu statistik mahasiswa
-                            await fetchMahasiswa(); // Panggil fungsi untuk fetch data mahasiswa dan render tabel
+                            const token = localStorage.getItem("token");
+                            const api = await import('../../../assets/api.js');
+                            
+                            // Fetch total mahasiswa aktif
+                            const totalActiveMahasiswa = await window.getTotalActiveMahasiswa();
+                            console.log("[beranda] totalActiveMahasiswa:", totalActiveMahasiswa);
+                            
+                            // Fetch data modul
+                            const response = await api.getModuleListRequest(token);
+                            if (response.success && Array.isArray(response.data)) {
+                                window.updateTotalModulCard(response.data);
+                                window.updateCompletedModulCard(response.data);
+                                await renderChart(response.data, totalActiveMahasiswa); // Pass total aktif
+                            } else {
+                                await renderChart();
+                            }
+                            
+                            await updateMahasiswaStatsCards();
+                            await fetchMahasiswa();
                         }, 50);
                     }
                     else if (page === "monitoring") {
-                        setTimeout(() => {
+                        setTimeout(async () => {
+                            const token = localStorage.getItem("token");
+                            const api = await import('../../../assets/api.js');
+                            
+                            // Fetch data modul dan update card
+                            const response = await api.getModuleListRequest(token);
+                            if (response.success && Array.isArray(response.data)) {
+                                window.updateModulAktifCard(response.data);
+                            }
+                            
+                            // Render monitoring table
+                            await window.renderMonitoringTable(token);
+                            
+                            // Render charts
                             renderProgressMingguanChart();
                             renderKemampuanLiterasiChart();
                         }, 50);

@@ -344,6 +344,18 @@ export async function getModuleById(moduleId, token){
     return response.json();
 }
 
+export async function monitoringRequest(token){
+    const response = await fetch(API_BASE + "/monitoring/students", { 
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}
 
 //MODULES & TASK (MAHASISWA)=========================================================
 export async function getTaskForMahasiswaRequest(token){

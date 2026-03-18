@@ -1,3 +1,5 @@
+import { prepareChartDataFromModules } from "./micro-learning.js";
+
 let progressChartInstance = null;
 let mahasiswaChartInstance = null;
 
@@ -13,22 +15,22 @@ export function destroyAllCharts() {
   }
 }
 
-export async function renderChart() {
-
+export async function renderChart(modulesData = [], totalUsers = 0) {
     const chartContainer = document.querySelector("#progressChart");
 
-    // Jika container tidak ada, jangan jalankan
     if (!chartContainer) return;
 
-    // ✅ Destroy instance lama jika ada
     if (progressChartInstance) {
         progressChartInstance.destroy();
     }
 
+    // Prepare data dari modules
+    const chartData = prepareChartDataFromModules(modulesData, totalUsers);
+
     const options = {
         series: [
-            { name: "Selesai", data: [85, 72, 60, 45, 30] },
-            { name: "Belum", data: [15, 28, 40, 55, 70] }
+            { name: "Selesai", data: chartData.completedData },
+            { name: "Belum", data: chartData.incompleteData }
         ],
         chart: {
             type: "bar",
@@ -43,8 +45,8 @@ export async function renderChart() {
                 borderRadius: 5,
                 borderRadiusApplication: 'end'
             }
-            },
-            chart: {
+        },
+        chart: {
             type: "bar",
             height: 350,
             width: "100%",
@@ -67,7 +69,7 @@ export async function renderChart() {
             }
         ],
         xaxis: {
-            categories: ["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5"]
+            categories: chartData.categories
         },
         yaxis: {
             max: 100
@@ -75,7 +77,6 @@ export async function renderChart() {
         colors: ["#088395", "#dce4e6"]
     };
 
-    // ✅ Buat instance baru
     progressChartInstance = new ApexCharts(chartContainer, options);
     await progressChartInstance.render();
 }
