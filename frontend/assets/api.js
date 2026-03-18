@@ -405,7 +405,7 @@ export async function submitWritingRequest(taskId, answerText, file, token){
 }
 
 export async function getNotificationsRequest(token){
-    const response = await fetch(API_BASE + "/notifications/allnotif", {
+    const response = await fetch(API_BASE + "/notifications/students", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -414,5 +414,7 @@ export async function getNotificationsRequest(token){
         }
     });
 
-    return response.json();
+    const result = await response.json();
+    // Extract data dari response {success, data}
+    return result.data || [];
 }

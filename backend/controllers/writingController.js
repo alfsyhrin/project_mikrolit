@@ -84,18 +84,27 @@ exports.getAllTasks = (req, res) => {
     });
 };
 
+// Di method submitWriting
 exports.submitWriting = (req, res) => {
-    const data = {
-        task_id: req.body.task_id,
-        student_id: req.user.id,
-        file_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
-        answer_text: req.body.answer_text
-    };
+  const data = {
+    task_id: req.body.task_id,
+    student_id: req.user.id,
+    file_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
+    answer_text: req.body.answer_text
+  };
 
-    Writing.submitWriting(data, (err) => {
-        if (err) return res.status(500).json({ error: err });
-        res.json({ message: "Submission recorded" });
-    });
+  Writing.submitWriting(data, (err, result) => {
+    if (err) return res.status(500).json({ error: err });
+    
+    // Emit event untuk notifikasi dosen
+    const submission = {
+      id: result.insertId,
+      ...data
+    };
+    eventBus.emit("task_submitted", submission);
+    
+    res.json({ message: "Submission recorded" });
+  });
 };
 
 exports.gradeSubmission = (req, res) => {

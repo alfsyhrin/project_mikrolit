@@ -2,9 +2,13 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authMiddleware");
 
-const { getNotifications } = require("../controllers/notificationController");
+const { getStudentNotifications, getTeacherNotifications } = 
+  require("../controllers/notificationController");
 
-router.get("/", auth, getNotifications);
-router.get("/allnotif", auth, getNotifications);
+// Endpoint untuk mahasiswa
+router.get("/students", auth, getStudentNotifications);
+
+// Endpoint untuk dosen
+router.get("/teacher", auth, getTeacherNotifications);
 
 module.exports = router;

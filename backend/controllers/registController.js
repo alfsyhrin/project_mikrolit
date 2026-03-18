@@ -1,5 +1,6 @@
 const userModel = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
+const eventBus = require("../events/eventBus");
 
 exports.register = (req, res) => {
     console.log("Data yang diterima:", req.body); // Debugging: cek data yang diterima
@@ -41,6 +42,15 @@ exports.register = (req, res) => {
                     console.log("Error saat membuat user:", err);
                     return res.status(500).json({ message: "Server error" });
                 }
+
+                eventBus.emit("user_registered", {
+                id: result.insertId,
+                name,
+                email,
+                role: "mahasiswa",
+                status: "pending",
+                nidn
+                });
 
                 res.json({ message: "Registrasi berhasil" });
             });
