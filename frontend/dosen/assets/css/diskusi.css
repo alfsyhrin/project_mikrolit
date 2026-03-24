@@ -1,4 +1,4 @@
-.container-micro-learning {
+.container-micro-learning-diskusi {
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -269,7 +269,7 @@
 /* Responsivitas */
 @media (max-width: 1024px){
 
-.container-micro-learning{
+.container-micro-learning-diskusi{
     gap: 0.7rem;
 }
 
@@ -293,7 +293,7 @@
 
 @media (max-width: 768px){
 
-.container-micro-learning{
+.container-micro-learning-diskusi{
     flex-direction: column;
 }
 
