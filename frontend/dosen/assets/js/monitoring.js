@@ -182,4 +182,72 @@ function getStepTwoData(monitoringData, userId, moduleId) {
     };
 }
 
-export { renderMonitoringTable, getStepTwoData, getDiscussionPoint };
+/**
+ * Helper: Hitung rata-rata durasi belajar dari semua mahasiswa dan format ke jam/menit/detik
+ * @param {Array} monitoringData - Array dari monitoringRequest response
+ * @returns {string} - Format "X jam Y menit Z detik" atau lebih ringkas tergantung nilai
+ * Contoh: "3 jam 45 menit", "2 menit 30 detik", "45 detik"
+ */
+function calculateAverageDuration(monitoringData) {
+    if (!Array.isArray(monitoringData) || monitoringData.length === 0) {
+        return "0 detik";
+    }
+    
+    const totalSeconds = monitoringData.reduce((sum, item) => {
+        return sum + (parseInt(item.total_duration_seconds) || 0);
+    }, 0);
+    
+    const averageSeconds = totalSeconds / monitoringData.length;
+    
+    // Convert ke jam, menit, detik
+    const hours = Math.floor(averageSeconds / 3600);
+    const minutes = Math.floor((averageSeconds % 3600) / 60);
+    const seconds = Math.round(averageSeconds % 60);
+    
+    // Build format string yang dinamis
+    const parts = [];
+    if (hours > 0) parts.push(`${hours} jam`);
+    if (minutes > 0) parts.push(`${minutes} menit`);
+    if (seconds > 0) parts.push(`${seconds} detik`);
+    
+    // Jika semuanya kosong, return 0 detik
+    return parts.length > 0 ? parts.join(" ") : "0 detik";
+}
+
+/**
+ * Helper: Hitung delta/pertambahan progress dari mahasiswa yang sudah complete
+ * @param {Array} monitoringData - Array dari monitoringRequest response
+ * @returns {number} - Persentase mahasiswa yang sudah mencapai 100% progress
+ */
+function calculateProgressDelta(monitoringData) {
+    if (!Array.isArray(monitoringData) || monitoringData.length === 0) {
+        return 0;
+    }
+    
+    const completedStudents = monitoringData.filter(item => {
+        return parseInt(item.progress_percent) === 100;
+    }).length;
+    
+    const deltaPercent = Math.round((completedStudents / monitoringData.length) * 100);
+    return deltaPercent;
+}
+
+/**
+ * Helper: Hitung rata-rata penyelesaian modul dari semua mahasiswa
+ * @param {Array} monitoringData - Array dari monitoringRequest response
+ * @returns {number} - Rata-rata progress dalam persen (0-100)
+ */
+function calculateAverageProgress(monitoringData) {
+    if (!Array.isArray(monitoringData) || monitoringData.length === 0) {
+        return 0;
+    }
+    
+    const totalProgress = monitoringData.reduce((sum, item) => {
+        return sum + (parseInt(item.progress_percent) || 0);
+    }, 0);
+    
+    const average = Math.round(totalProgress / monitoringData.length);
+    return average;
+}
+
+export { renderMonitoringTable, getStepTwoData, getDiscussionPoint, calculateAverageDuration, calculateAverageProgress, calculateProgressDelta };

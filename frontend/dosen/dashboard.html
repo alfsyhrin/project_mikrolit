@@ -196,11 +196,14 @@
         window.destroyAllCharts = destroyAllCharts;
     </script>
 
-    <script type="module">
-        import { renderMonitoringTable } from "./assets/js/monitoring.js";
-        
-        window.renderMonitoringTable = renderMonitoringTable;
-    </script>
+<script type="module">
+    import { renderMonitoringTable, calculateAverageProgress, calculateAverageDuration, calculateProgressDelta } from "./assets/js/monitoring.js";
+    
+    window.renderMonitoringTable = renderMonitoringTable;
+    window.calculateAverageProgress = calculateAverageProgress;
+    window.calculateAverageDuration = calculateAverageDuration;
+    window.calculateProgressDelta = calculateProgressDelta;  // ← Pastikan ini ada
+</script>
     
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
@@ -342,25 +345,49 @@
                             await window.fetchAndRenderModuleNotifications(token, '.card-pembelajaran-terakhir-wrapper', 10);
                         }, 50);
                     }
-                    else if (page === "monitoring") {
-                        setTimeout(async () => {
-                            const token = localStorage.getItem("token");
-                            const api = await import('../../../assets/api.js');
-                            
-                            // Fetch data modul dan update card
-                            const response = await api.getModuleListRequest(token);
-                            if (response.success && Array.isArray(response.data)) {
-                                window.updateModulAktifCard(response.data);
-                            }
-                            
-                            // Render monitoring table
-                            await window.renderMonitoringTable(token);
-                            
-                            // Render charts
-                            renderProgressMingguanChart();
-                            renderKemampuanLiterasiChart();
-                        }, 50);
-                    }
+else if (page === "monitoring") {
+    setTimeout(async () => {
+        const token = localStorage.getItem("token");
+        const api = await import('../../../assets/api.js');
+        
+        try {
+            // ✅ Fetch data monitoring untuk progress & durasi
+            const monitoringResponse = await api.monitoringRequest(token);
+            
+            if (monitoringResponse.success && Array.isArray(monitoringResponse.data)) {
+                // Update card Rata-rata Penyelesaian & Durasi Belajar
+                const avgProgress = window.calculateAverageProgress(monitoringResponse.data);
+                const progressDelta = window.calculateProgressDelta(monitoringResponse.data);
+                const avgDuration = window.calculateAverageDuration(monitoringResponse.data);
+                
+                const cards = document.querySelectorAll('.card-monitoring-wrapper .card-monitoring');
+                if (cards[0]) {
+                    cards[0].querySelector('h2').textContent = avgProgress + '%';
+                    cards[0].querySelector('h5').textContent = '+' + progressDelta + '%';
+                }
+                if (cards[1]) {
+                    cards[1].querySelector('h2').textContent = avgDuration;
+                }
+            }
+            
+            // ✅ Fetch data modul untuk update modul aktif
+            const moduleResponse = await api.getModuleListRequest(token);
+            if (moduleResponse.success && Array.isArray(moduleResponse.data)) {
+                window.updateModulAktifCard(moduleResponse.data);
+            }
+            
+            // ✅ Render tabel monitoring
+            await window.renderMonitoringTable(token);
+            
+            // ✅ Render charts
+            window.renderProgressMingguanChart();
+            window.renderKemampuanLiterasiChart();
+            
+        } catch (error) {
+            console.error('[monitoring] Error:', error);
+        }
+    }, 50);
+}
                 })
                 .catch(() => {
                     content.innerHTML = "<h2>Halaman tidak ditemukan</h2>";
