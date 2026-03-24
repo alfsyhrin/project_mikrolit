@@ -224,22 +224,24 @@
   padding: 1rem;
   height: 400px;
   width: 100%;
+  min-width: 0;
 }
 
 .card-pembelajaran-terakhir-wrapper {
   height: 350px;
   overflow-y: auto;
+  width: 100%;
 }
 
 .card-modul-terakhir {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* gap: 1rem; */
   border-radius: 10px;
   padding: 0.9rem;
   margin-bottom: 0.35rem;
   transition: background-color 0.3s ease;
+  width: 100%;
 }
 
 .icon-info-wrapper {
@@ -247,6 +249,14 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
+}
+
+.icon-info-wrapper-pembelajaran {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
 }
 
 .card-modul-terakhir:hover {
@@ -273,15 +283,17 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  min-width: 0; /* cegah overflow aneh */
+  width: 100%;
+  min-width: 0;
+  /* border: 1px solid red; */
 }
 
 .info-modul h5 {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
+  width: 100%;
   overflow-x: hidden;
-  width: 150px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -319,6 +331,7 @@
   padding: 1rem;
   height: 400px;
   /* margin-bottom: 1rem; */
+  min-width: 0;
 }
 
 .card-notifikasi-wrapper {
@@ -351,6 +364,8 @@
   font-size: 1.5rem;
 }
 
+
+
 .card-notifikasi-terbaru .icon-notifikasi.tugas {
   background-color: #37b7c327;
   color: var(--secondary-color);
@@ -375,6 +390,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  min-width: 0;
 }
 
 .info-notifikasi h5 {
@@ -408,6 +424,9 @@
   .container-list-data {
     grid-template-columns: 1fr; /* 🔥 1 kolom */
   }
+  .card-modul-terakhir {
+    width: 100%;
+  }
 }
 
 .daftar-mahasiswa-wrapper {
@@ -423,11 +442,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
-    min-width: 50px;
-    margin-right: 12px;
+    /* min-width: 50px; */
+    /* margin-right: 12px; */
 }
 
 .icon-notifikasi.tugas {
