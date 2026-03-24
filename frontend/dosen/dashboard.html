@@ -147,14 +147,16 @@
         fetchMahasiswa, 
         updateMahasiswaStatsCards, 
         getTotalActiveMahasiswa,
-        fetchAndRenderTeacherNotifications 
+        fetchAndRenderTeacherNotifications,
+        fetchAndRenderModuleNotifications 
     } from "./assets/js/dashboard.js";
 
     window.fetchMahasiswa = fetchMahasiswa;
     window.updateMahasiswaStatsCards = updateMahasiswaStatsCards;
     window.getTotalActiveMahasiswa = getTotalActiveMahasiswa;
     window.fetchAndRenderTeacherNotifications = fetchAndRenderTeacherNotifications;
-    
+    window.fetchAndRenderModuleNotifications = fetchAndRenderModuleNotifications;
+
     console.log('[dashboard.html] Functions exported:', {
         fetchMahasiswa: typeof window.fetchMahasiswa,
         updateMahasiswaStatsCards: typeof window.updateMahasiswaStatsCards,
@@ -331,6 +333,7 @@
                             
                             // 🔥 TAMBAHKAN BARIS INI
                             await window.fetchAndRenderTeacherNotifications(token, '.card-notifikasi-wrapper', 10);
+                            await window.fetchAndRenderModuleNotifications(token, '.card-pembelajaran-terakhir-wrapper', 10);
                         }, 50);
                     }
                     else if (page === "monitoring") {

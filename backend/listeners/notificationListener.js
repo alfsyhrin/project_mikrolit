@@ -11,7 +11,7 @@ eventBus.on("module_created", async (module) => {
     await NotificationService.createNotification({
       title: "Modul Baru",
       message: `Modul '${module.title}' telah tersedia`,
-      type: "module",
+      type: "module_created",
       reference_id: module.id,
       reference_type: "module"
     });
@@ -156,5 +156,39 @@ eventBus.on("user_registered", async (user) => {
     }
   } catch (error) {
     console.error("Error in user_registered listener:", error);
+  }
+});
+
+// 5. Modul diupdate oleh dosen
+eventBus.on("module_updated", async (module) => {
+  try {
+    await NotificationService.createNotification({
+      title: "Modul Diupdate",
+      message: `Modul '${module.title}' telah diupdate`,
+      type: "module_updated",
+      reference_id: module.id,
+      reference_type: "module"
+    });
+
+    console.log("Notification created for module update");
+  } catch (error) {
+    console.error("Error in module_updated listener:", error);
+  }
+});
+
+// 6. Modul dihapus oleh dosen
+eventBus.on("module_deleted", async (module) => {
+  try {
+    await NotificationService.createNotification({
+      title: "Modul Dihapus",
+      message: `Modul '${module.title}' telah dihapus`,
+      type: "module_deleted",
+      reference_id: module.id,
+      reference_type: "module"
+    });
+
+    console.log("Notification created for module deletion");
+  } catch (error) {
+    console.error("Error in module_deleted listener:", error);
   }
 });

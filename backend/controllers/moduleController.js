@@ -85,6 +85,12 @@ exports.updateModule = async (req, res) => {
         await ModuleService.updateModule(req.params.id, req.body);
         console.log("✅ Module updated:", req.params.id);
 
+        eventBus.emit("module_updated", {
+            id: req.params.id,
+            title: req.body.title || "Module",
+            ...req.body
+        });
+
         res.json({
         success: true,
         message: "Module updated successfully"
@@ -102,18 +108,40 @@ exports.deleteModule = async (req, res) => {
     console.log("🔍 deleteModule called for id:", req.params.id)
     
     try {
-        await Module.deleteModule(req.params.id);
-        console.log("✅ Module deleted:", req.params.id);
+        const moduleId = req.params.id;
+
+        // Fetch module data SEBELUM delete (untuk notifikasi)
+        let moduleData = null;
+        try {
+            moduleData = await ModuleService.getModuleDetail(moduleId);
+        } catch (err) {
+            console.warn("⚠️ Could not fetch module detail:", err.message);
+            moduleData = { id: moduleId, title: "Module" };
+        }
+
+        // Lakukan cascade delete
+        await ModuleService.deleteModule(moduleId);
+        console.log("✅ Module deleted successfully:", moduleId);
+
+        // Emit event dengan data module yang lengkap
+        eventBus.emit("module_deleted", {
+            id: moduleId,
+            title: moduleData?.title || "Module"
+        });
 
         res.json({
-        success: true,
-        message: "Module deleted successfully"
+            success: true,
+            message: "Module deleted successfully"
         });
+
     } catch (err) {
         console.error("❌ deleteModule error:", err);
+        
+        // Return error detail ke client
         res.status(500).json({
-        success: false,
-        message: err.message
+            success: false,
+            message: err.message || "Failed to delete module",
+            code: err.code || "UNKNOWN_ERROR"
         });
     }
 };

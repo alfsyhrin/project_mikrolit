@@ -1,4 +1,4 @@
-import { getUsersRequest, getNotificationForTeacher } from '../../../assets/api.js'
+import { getUsersRequest, getNotificationForTeacher, getNotificationsRequest } from '../../../assets/api.js'
 import { renderMahasiswaChart } from './chart.js';
 
 // ============ FUNGSI NOTIFIKASI DOSEN ============
@@ -163,6 +163,159 @@ function escapeHtml(str) {
         .replace(/'/g, '&#39;');
 }
 
+// ============ FUNGSI NOTIFIKASI MODULE UNTUK DOSEN ============
+
+/**
+ * Normalize tipe notifikasi module - handle backward compatibility
+ * Jika dari backend masih kirim tipe 'module', check message untuk determine actual type
+ */
+function normalizeModuleType(notif) {
+    // Jika sudah spesifik, langsung return
+    if (notif.type === 'module_created' || notif.type === 'module_updated' || notif.type === 'module_deleted') {
+        return notif.type;
+    }
+    
+    // Jika masih generic 'module', coba detect dari message
+    if (notif.type === 'module' || !notif.type) {
+        const msg = (notif.message || "").toLowerCase();
+        
+        if (msg.includes('dibuat') || msg.includes('created')) return 'module_created';
+        if (msg.includes('diupdate') || msg.includes('updated')) return 'module_updated';
+        if (msg.includes('dihapus') || msg.includes('deleted')) return 'module_deleted';
+        
+        return 'module';
+    }
+    
+    return notif.type;
+}
+
+/**
+ * Mapping tipe notifikasi module ke icon
+ */
+function getIconByModuleType(type) {
+    const iconMap = {
+        'module_created': 'add_circle',      // Modul dibuat
+        'module_updated': 'edit_note',       // Modul diupdate
+        'module_deleted': 'delete_outline',  // Modul dihapus
+        'module': 'auto_stories'             // Default module icon
+    };
+    return iconMap[type] || 'notifications';
+}
+
+/**
+ * Mapping tipe notifikasi module ke CSS class untuk styling
+ */
+function getIconClassByModuleType(type) {
+    const classMap = {
+        'module_created': 'buat',     // Warna biru/hijau
+        'module_updated': 'revisi',   // Warna kuning/orange
+        'module_deleted': 'hapus'     // Warna merah
+    };
+    return classMap[type] || 'modul';
+}
+
+/**
+ * Build HTML markup untuk satu notifikasi module
+ */
+function buildModuleNotificationMarkup(notif) {
+    // 🆕 Normalize tipe notifikasi
+    const normalizedType = normalizeModuleType(notif);
+    
+    const type = normalizedType;
+    const icon = getIconByModuleType(type);
+    const iconClass = getIconClassByModuleType(type);
+    const time = timeAgoTeacher(notif.created_at);
+    
+    console.log('[buildModuleNotificationMarkup] notif:', notif, 'normalized type:', type);
+    
+    return `
+    <div class="card-notifikasi-terbaru" data-id="${notif.id}" data-type="${type}">
+        <div class="icon-info-wrapper">
+            <p class="icon-notifikasi ${iconClass}">
+                <span class="material-symbols-outlined">${icon}</span>
+            </p>
+            <div class="info-notifikasi">
+                <h5>${escapeHtml(notif.message)}</h5>
+                <p>${time}</p>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+/**
+ * Fetch dan render notifikasi module (reference_type = 'module')
+ * @param {string} token - Auth token
+ * @param {string} targetSelector - Selector elemen container notifikasi (default: .card-notifikasi-wrapper)
+ * @param {number} limit - Jumlah notifikasi yang ditampilkan (default: 10)
+ */
+async function fetchAndRenderModuleNotifications(token, targetSelector = '.card-pembelajaran-terakhir-wrapper', limit = 10) {
+    const container = document.querySelector(targetSelector);
+    if (!container) {
+        console.warn(`fetchAndRenderModuleNotifications: selector "${targetSelector}" not found`);
+        return;
+    }
+
+    try {
+        // Fetch notifikasi dari endpoint students (untuk dosen: modul notifications)
+        const result = await getNotificationsRequest(token);
+        
+        // Handle response structure
+        let notifications = [];
+        if (result && Array.isArray(result)) {
+            notifications = result;
+        } else if (result && result.data && Array.isArray(result.data)) {
+            notifications = result.data;
+        }
+
+        console.log('[fetchAndRenderModuleNotifications] Total notifikasi diterima:', notifications.length);
+
+        // Filter hanya notifikasi dengan reference_type = 'module'
+        const moduleNotifications = notifications.filter(notif => 
+            notif.reference_type === 'module'
+        );
+
+        console.log('[fetchAndRenderModuleNotifications] Notifikasi module:', moduleNotifications.length);
+
+        if (moduleNotifications.length === 0) {
+            container.innerHTML = `<p style="padding:16px; text-align:center; color:#999;">Tidak ada notifikasi module</p>`;
+            return;
+        }
+
+        // Render hanya limit items
+        const slice = moduleNotifications.slice(0, limit);
+        container.innerHTML = slice.map(buildModuleNotificationMarkup).join("");
+
+        // Attach click handlers
+        container.querySelectorAll('.card-notifikasi-terbaru').forEach(card => {
+            card.addEventListener('click', () => {
+                const type = card.dataset.type;
+                const referenceId = card.dataset.id;
+                
+                // Map notification type ke halaman (untuk expand ke fitur selanjutnya)
+                let page = 'modul';  // Default navigasi ke halaman modul
+                
+                if (type === 'module_created' || type === 'module_updated' || type === 'module_deleted') {
+                    page = 'modul';
+                    console.log('Navigate to modules with reference_id:', referenceId);
+                }
+                
+                // Simulasi click pada sidebar link jika ada
+                const link = document.querySelector(`.sidebar-list a[data-page="${page}"]`);
+                if (link) {
+                    link.click();
+                } else {
+                    console.warn(`Link dengan data-page="${page}" tidak ditemukan`);
+                }
+            });
+        });
+
+    } catch (err) {
+        console.error('[fetchAndRenderModuleNotifications] Error:', err);
+        container.innerHTML = `<p style="padding:16px; text-align:center; color:#999;">Gagal memuat notifikasi</p>`;
+    }
+}
+
 // ============ FUNGSI MAHASISWA (EXISTING) ============
 
 async function fetchMahasiswa() {
@@ -294,9 +447,12 @@ function getTotalActiveMahasiswa() {
     });
 }
 
+
+
 export { 
     fetchMahasiswa, 
     updateMahasiswaStatsCards, 
     getTotalActiveMahasiswa,
-    fetchAndRenderTeacherNotifications  // Export untuk digunakan di dashboard.html
+    fetchAndRenderTeacherNotifications,  // Export untuk digunakan di dashboard.html
+    fetchAndRenderModuleNotifications    // Export untuk digunakan di dashboard.html
 };
