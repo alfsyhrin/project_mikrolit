@@ -61,6 +61,12 @@
   border-radius: 10px;
   text-decoration: none;
   color: #111;
+  border: 1px solid transparent;
+  transition: 0.3s ease all;
+}
+
+.card-modul-mahasiswa-menu:hover {
+  border: 1px solid var(--third-color);
 }
 
 .header-card-modul-mahasiswa {
@@ -207,3 +213,4 @@
 
 }
 /* Akhir container modul mahasiswa */
+
