@@ -395,6 +395,7 @@ tbody tr:last-child td {
   width: 100%;
   transition: 0.3s ease all;
   border: 1px solid transparent;
+  cursor: pointer;
 }
 
 .card-riwayat-pengumpulan-tugas:hover {
