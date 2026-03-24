@@ -41,6 +41,7 @@
     border: none;
     font-size: 0.9rem;
     cursor: pointer;
+    transition: 0.3s ease all;
 }
 
 .container-filter-tugas-mhs button.active {
@@ -69,6 +70,12 @@
     display: flex;
     justify-content: space-between;
     gap: 1rem;
+    transition: 0.3s ease all;
+    border: 1px solid transparent;
+}
+
+.card-tugas-mhs:hover {
+    border: 1px solid var(--third-color);
 }
 
 .wrapper-card {

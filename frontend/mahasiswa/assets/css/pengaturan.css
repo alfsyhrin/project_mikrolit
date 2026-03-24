@@ -62,10 +62,14 @@
 .profile-container {
     width: 100%;
     background-color: #fff;
-    border: 1px solid #ddd;
     padding: 1.5rem;
     border-radius: 10px;
     margin-bottom: 1rem;
+    border: 1px solid transparent;
+}
+
+.profile-container:hover {
+    border: 1px solid var(--third-color);
 }
 
 .profile-container h2 {
@@ -177,10 +181,14 @@ button.simpan-perubahan .material-symbols-outlined {
 .password-container {
     width: 100%;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid transparent;
     padding: 1.5rem;
     border-radius: 10px;
     margin-bottom: 1rem;
+}
+
+.password-container:hover {
+    border: 1px solid var(--third-color);
 }
 
 .password-container h2 {
@@ -231,7 +239,8 @@ button.simpan-perubahan .material-symbols-outlined {
     width: 100%;
     transition: 
         opacity 0.25s ease,
-        transform 0.25s ease;
+        transform 0.25s ease,
+        border 0.3s ease;
 }
 
 /* State tersembunyi */
