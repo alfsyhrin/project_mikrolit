@@ -185,8 +185,8 @@ function renderProgressMingguanChart() {
       x: {
         formatter: function (val, opts) {
           const allLabels = [
-            "Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4",
-            "Minggu 5", "Minggu 6", "Minggu 7", "Minggu 8"
+            "Modul 1", "Modul 2", "Modul 3", "Modul 4",
+            "Modul 5", "Modul 6", "Modul 7", "Modul 8"
           ];
           return allLabels[opts.dataPointIndex] || val;
         }
