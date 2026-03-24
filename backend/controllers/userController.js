@@ -1,4 +1,5 @@
 const userModel = require("../models/UserModel");
+const eventBus = require("../events/eventBus");
 
 exports.getUsers = (req, res) => {
     // req.user sudah diisi oleh authMiddleware

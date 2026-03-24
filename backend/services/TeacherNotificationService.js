@@ -13,7 +13,7 @@ const createTeacherNotification = async (data) => {
   const io = getIO();
   
   // Kirim ke teacher tertentu via socket
-  emit("TeacherNotification", notification);
+  io.emit("TeacherNotification", notification);
 };
 
 module.exports = {

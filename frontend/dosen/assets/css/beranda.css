@@ -374,7 +374,7 @@
 .card-notifikasi-terbaru .icon-notifikasi.revisi {
   background-color: #f0c03727;
   color: #f0c037;
-}
+} */
 
 .card-notifikasi-terbaru .icon-notifikasi.selesai {
   background-color: #37b73727;
@@ -487,4 +487,39 @@
 .icon-notifikasi.diskusi span {
     font-size: 1.5rem;
     color: #9c27b0;
+}
+
+.icon-notifikasi.buat {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.icon-notifikasi.revisi {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.icon-notifikasi.hapus {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* ============ FALLBACK STYLING UNTUK MODULE NOTIFICATIONS ============ */
+
+/* Jika tipe masih generic 'module' (untuk backward compatibility) */
+.icon-notifikasi.modul {
+    background-color: #e8f4f8;
+    color: #00a8cc;
+}
+
+.icon-notifikasi.modul span {
+    font-size: 1.5rem;
+    color: #00a8cc;
+}
+
+/* Ensure all module icon variant spans have proper size */
+.icon-notifikasi.buat span,
+.icon-notifikasi.revisi span,
+.icon-notifikasi.hapus span {
+    font-size: 1.5rem;
 }

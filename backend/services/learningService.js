@@ -122,26 +122,24 @@ const promisify = (fn, context) => (...args) =>
                     FROM student_step_progress
                     WHERE user_id = ? AND module_id = ? AND status = 'completed'
                 `;
-                db.query(countQuery, [userId, moduleId], async (err, rows) => {
+                db.query(query, [userId, moduleId, stepId], async (err, result) => {
                     if (err) return reject(err);
-                    const completed = rows && rows[0] ? Number(rows[0].completed) : 0;
-
-                    // get total steps for module
                     try {
-                        const steps = await StudentProgressModel.getModuleSteps(moduleId);
-                        const total = steps ? steps.length : 0;
-                        const progressPercent = total > 0 ? Math.floor((completed / total) * 100) : 0;
-                        const status = completed === total ? "completed" : "in_progress";
-
-                        await StudentProgressModel.updateModuleProgress(
-                            userId,
-                            moduleId,
-                            completed,
-                            progressPercent,
-                            status
-                        );
-
-                        resolve({ completed, total, progressPercent, status });
+                        const completion = await checkModuleCompletion(userId, moduleId);
+                        
+                        // ✅ BARU: Emit event hanya jika module benar-benar selesai
+                        if (completion.status === "completed") {
+                            const eventBus = require("../events/eventBus");
+                            eventBus.emit("module_completed", {
+                                student_id: userId,
+                                module_id: moduleId,
+                                completed_at: new Date(),
+                                progress_percent: completion.progressPercent
+                            });
+                            console.log(`✅ Module completed event emitted for user ${userId}`);
+                        }
+                        
+                        resolve(result);
                     } catch (e) {
                         reject(e);
                     }

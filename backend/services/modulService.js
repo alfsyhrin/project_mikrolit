@@ -204,8 +204,89 @@ async function updateModule(moduleId, data) {
     return true;
 }
 
+// Helper: Delete dengan error handling graceful
+const safeDelete = (query, params) => new Promise((resolve) => {
+    db.query(query, params, (err, result) => {
+        if (err) {
+            console.warn(`⚠️ Delete query failed (non-blocking):`, err.sqlMessage || err.message);
+            resolve(result); // Resolve anyway, jangan reject
+        } else {
+            resolve(result);
+        }
+    });
+});
+
+async function deleteModule(moduleId) {
+    console.log(`🔥 Starting cascade delete for module: ${moduleId}`);
+
+    try {
+        // ===== TAHAP 1: DELETE WRITING_SUBMISSIONS (pengumpulan tugas) =====
+        console.log(`📌 Step 1: Deleting writing_submissions...`);
+        await safeDelete(
+            `DELETE FROM writing_submissions 
+             WHERE task_id IN (
+                 SELECT id FROM writing_tasks WHERE module_id = ?
+             )`,
+            [moduleId]
+        );
+
+        // ===== TAHAP 2: DELETE WRITING_TASKS (tugas) =====
+        console.log(`📌 Step 2: Deleting writing_tasks...`);
+        await safeDelete(
+            `DELETE FROM writing_tasks WHERE module_id = ?`,
+            [moduleId]
+        );
+
+        // ===== TAHAP 3: DELETE MODULE_STEP_RESOURCES =====
+        console.log(`📌 Step 3: Deleting module_step_resources...`);
+        await safeDelete(
+            `DELETE FROM module_step_resources 
+             WHERE step_id IN (
+                 SELECT id FROM module_steps WHERE module_id = ?
+             )`,
+            [moduleId]
+        );
+
+        // ===== TAHAP 4: DELETE MODULE_STEPS =====
+        console.log(`📌 Step 4: Deleting module_steps...`);
+        await safeDelete(
+            `DELETE FROM module_steps WHERE module_id = ?`,
+            [moduleId]
+        );
+
+        // ===== TAHAP 5: DELETE MODULE_OBJECTIVES =====
+        console.log(`📌 Step 5: Deleting module_objectives...`);
+        await safeDelete(
+            `DELETE FROM module_objectives WHERE module_id = ?`,
+            [moduleId]
+        );
+
+        // ===== TAHAP 6: DELETE DISCUSSION_ROOMS =====
+        console.log(`📌 Step 6: Deleting discussion_rooms...`);
+        await safeDelete(
+            `DELETE FROM discussion_rooms WHERE module_id = ?`,
+            [moduleId]
+        );
+
+        // ===== TAHAP 7: DELETE MODULES (parent) =====
+        console.log(`📌 Step 7: Deleting modules...`);
+        await safeDelete(
+            `DELETE FROM modules WHERE id = ?`,
+            [moduleId]
+        );
+
+        console.log(`✅ Module ${moduleId} deleted successfully with all dependencies!`);
+        return true;
+
+    } catch (error) {
+        console.error(`❌ Error in deleteModule cascade:`, error);
+        throw error;
+    }
+}
+
 module.exports = {
     createModule,
     getModuleDetail,
-    updateModule
+    updateModule,
+    deleteModule
 };

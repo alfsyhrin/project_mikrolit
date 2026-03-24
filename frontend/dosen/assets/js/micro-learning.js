@@ -591,33 +591,27 @@ document.addEventListener("click", function (e) {
         return;
     }
 
-    // Gunakan template dari main.js
-    Modal.confirmDelete(
-        "Apakah Anda yakin ingin menghapus modul ini?"
-    );
+    const token = localStorage.getItem("token");
 
-    // Handler konfirmasi hapus
-    const handler = async function (ev) {
-        if (ev.target.id === "confirmDeleteModul") {
-            ev.preventDefault();
-            const token = localStorage.getItem("token");
+    // 🆕 PERBAIKAN: Pass onConfirm callback ke Modal.confirmDelete
+    Modal.confirmDelete(
+        "Apakah Anda yakin ingin menghapus modul ini?",
+        async () => {
             try {
-                // PERBAIKAN: moduleId dulu, token kedua
                 const res = await deleteModuleRequest(moduleId, token);
                 if (res.success) {
-                    Modal.hide();
                     // Refresh list modul
-                    renderModuleList(token);
+                    await renderModuleList(token);
+                    console.log("✅ Modul berhasil dihapus");
                 } else {
-                    alert("Gagal menghapus modul.");
+                    alert("Gagal menghapus modul: " + (res.message || "Unknown error"));
                 }
             } catch (err) {
-                alert("Gagal menghapus modul.");
+                console.error("❌ Error deleting module:", err);
+                alert("Gagal menghapus modul: " + err.message);
             }
-            document.removeEventListener("click", handler);
         }
-    };
-    document.addEventListener("click", handler);
+    );
 });
 
 /**

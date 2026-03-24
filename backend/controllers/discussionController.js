@@ -1,5 +1,6 @@
 const discussionService = require("../services/discussionService");
 const { getIO } = require('../config/socket');
+const eventBus = require("../events/eventBus");
 
 exports.getRooms = async (req, res) => {
     try {
@@ -36,33 +37,42 @@ exports.getRooms = async (req, res) => {
     };
 
     exports.sendMessage = async (req, res) => {
-    try {
-        const { room_id, message } = req.body;
-        const userId = req.user.id;
+        try {
+            const { room_id, message } = req.body;
+            const userId = req.user.id;
 
-        const messageId = await discussionService.sendMessage(userId, room_id, message);
+            const messageId = await discussionService.sendMessage(userId, room_id, message);
 
-        const io = getIO();
-        const payload = {
-        id: messageId,
-        room_id,
-        user_id: userId,
-        message,
-        created_at: new Date()
-        };
+            const io = getIO();
+            const payload = {
+            id: messageId,
+            room_id,
+            user_id: userId,
+            message,
+            created_at: new Date()
+            };
 
-        io.to(`room_${room_id}`).emit('newMessage', payload);
+            io.to(`room_${room_id}`).emit('newMessage', payload);
 
-        res.json({
-        success: true,
-        data: payload
-        });
-    } catch (err) {
-        res.status(400).json({
-        success: false,
-        message: err.message
-        });
-    }
+            // ✅ BARU: Emit event untuk notifikasi dosen
+            eventBus.emit("discussion_message_sent", {
+                student_id: userId,
+                room_id: room_id,
+                module_id: null,  // Jika perlu dapat dari discussion room
+                message: message,
+                submitted_at: new Date()
+            });
+
+            res.json({
+            success: true,
+            data: payload
+            });
+        } catch (err) {
+            res.status(400).json({
+            success: false,
+            message: err.message
+            });
+        }
     };
 
     exports.markAsRead = async (req, res) => {
