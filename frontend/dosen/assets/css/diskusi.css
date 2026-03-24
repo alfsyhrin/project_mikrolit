@@ -1,0 +1,362 @@
+.container-micro-learning {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+/* Awal container topik diskusi */
+.container-topik-diskusi {
+    flex: 1.2;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.container-topik-diskusi h2 {
+    text-align: left;
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: 650;
+    padding-bottom: 0.8rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.wrapper-card-topik-diskusi {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    height: 456.67px;
+    overflow-y: auto;
+    padding-right: 0.8rem;
+}
+
+.card-topik-diskusi {
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.card-topik-diskusi.active {
+    background-color: #37b7c318;
+    border: 1px solid var(--third-color);
+}
+
+.icon-topik-diskusi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: #37b7c327;
+    color: var(--third-color);
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.info-topik-diskusi {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 100%;
+    min-width: 0;
+}
+
+.info-topik-diskusi h3{
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.info-topik-diskusi span{
+    font-size: 0.8rem;
+    font-weight: 450;
+    color: var(--text-color);
+}
+/* Akhir container topik diskusi */
+
+
+/* Awal container diskusi */
+.container-diskusi {
+    flex: 2.5;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    flex-shrink: 0;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.container-diskusi h2 {
+    text-align: left;
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: 650;
+    padding-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.wrapper-card-pesan-diskusi {
+    display: flex;
+    flex-direction-column;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 400px;
+    overflow-y: auto;
+    padding-right: 0.8rem;
+}
+
+.card-pesan-diskusi {
+    padding: 0.7rem;
+    /* border: 1px solid red; */
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0.8rem;
+}
+
+.icon-pesan-diskusi {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.icon-pesan-diskusi.dosen {
+    background-color: var(--primary-color);
+}
+
+.icon-pesan-diskusi.mahasiswa {
+    color: var(--secondary-color);
+    background-color: #37b7c327;
+}
+
+.info-pesan-diskusi {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+    width: 100%;
+}
+
+.meta-user-diskusi {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.meta-user-diskusi h3 {
+    font-size: 1rem;
+    font-weight: 650;
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.meta-user-diskusi .role {
+    background: #eee;
+    color: var(--text-color);
+    padding: 0.3rem;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 550;
+}
+
+.meta-user-diskusi .waktu-pesan {
+    color: var(--text-color);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.1rem;
+    font-size: 0.7rem;
+    /* margin-left: auto; */
+}
+
+.meta-user-diskusi .waktu-pesan .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.pesan-diskusi {
+    margin-top: 0.2rem;
+    width: 100%;
+}
+
+.pesan-diskusi p {
+    line-height: 1.3;
+    text-align: left;          /* jangan justify */
+    word-break: break-word;    /* memotong kata panjang */
+    overflow-wrap: anywhere;
+}
+
+.footer-container-diskusi {
+    display: flex;
+    /* border: 1px solid red; */
+    width: 100%;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.footer-container-diskusi input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 10px;
+    border: 1px solid var(--primary-color);
+    outline: none;
+}
+
+.footer-container-diskusi button {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 10px;
+    padding: 0.9rem;
+    outline: none;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-container-diskusi button p {
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Akhir container diskusi */
+
+/* Responsivitas */
+@media (max-width: 1024px){
+
+.container-micro-learning{
+    gap: 0.7rem;
+}
+
+.container-topik-diskusi{
+    flex: 1;
+}
+
+.container-diskusi{
+    flex: 2;
+}
+
+.wrapper-card-topik-diskusi{
+    height: 380px;
+}
+
+.wrapper-card-pesan-diskusi{
+    height: 340px;
+}
+
+}
+
+@media (max-width: 768px){
+
+.container-micro-learning{
+    flex-direction: column;
+}
+
+.container-topik-diskusi{
+    width: 100%;
+}
+
+.container-diskusi{
+    width: 100%;
+}
+
+.wrapper-card-topik-diskusi{
+    height: 220px;
+}
+
+.wrapper-card-pesan-diskusi{
+    height: 320px;
+}
+
+}
+
+@media (max-width: 480px){
+
+.container-topik-diskusi h2,
+.container-diskusi h2{
+    font-size: 1rem;
+}
+
+.meta-user-diskusi{
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.meta-user-diskusi h3{
+    font-size: 0.9rem;
+}
+
+.pesan-diskusi p{
+    font-size: 0.9rem;
+}
+
+.icon-pesan-diskusi{
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+}
+
+.footer-container-diskusi input{
+    font-size: 0.9rem;
+}
+
+}
+
+@media (max-width: 600px) {
+
+  .meta-user-diskusi {
+    align-items: flex-start;
+  }
+
+  .meta-user-diskusi .waktu-pesan {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 2px;
+  }
+
+}
