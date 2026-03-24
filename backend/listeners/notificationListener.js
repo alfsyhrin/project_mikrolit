@@ -162,7 +162,7 @@ eventBus.on("user_registered", async (user) => {
 // 5. Modul diupdate oleh dosen
 eventBus.on("module_updated", async (module) => {
   try {
-    await NotificationService.createNotification({
+    await TeacherNotificationService.createTeacherNotification({
       title: "Modul Diupdate",
       message: `Modul '${module.title}' telah diupdate`,
       type: "module_updated",
@@ -170,7 +170,7 @@ eventBus.on("module_updated", async (module) => {
       reference_type: "module"
     });
 
-    console.log("Notification created for module update");
+    console.log("Teacher notification created for module update");
   } catch (error) {
     console.error("Error in module_updated listener:", error);
   }
@@ -179,7 +179,7 @@ eventBus.on("module_updated", async (module) => {
 // 6. Modul dihapus oleh dosen
 eventBus.on("module_deleted", async (module) => {
   try {
-    await NotificationService.createNotification({
+    await TeacherNotificationService.createTeacherNotification({
       title: "Modul Dihapus",
       message: `Modul '${module.title}' telah dihapus`,
       type: "module_deleted",
@@ -187,7 +187,7 @@ eventBus.on("module_deleted", async (module) => {
       reference_type: "module"
     });
 
-    console.log("Notification created for module deletion");
+    console.log("Teacher notification created for module deletion");
   } catch (error) {
     console.error("Error in module_deleted listener:", error);
   }

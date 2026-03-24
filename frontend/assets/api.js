@@ -1,4 +1,4 @@
-const API_BASE = "https://erica-slatier-neoma.ngrok-free.dev/api";
+const API_BASE = "http://localhost:4000/api";
 
 //AUTH===================================================================================
 export async function loginRequest(emailOrNidn, password){

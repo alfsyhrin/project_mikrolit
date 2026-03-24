@@ -3,8 +3,8 @@ const bcrypt = require("bcryptjs");
 const eventBus = require("../events/eventBus");
 
 exports.register = (req, res) => {
-    console.log("Data yang diterima:", req.body); // Debugging: cek data yang diterima
-    const {name, email, password, role, nidn} = req.body;
+    console.log("Data yang diterima:", req.body);
+    const { name, email, password, role, nidn } = req.body;
 
     userModel.findByEmail(email, (err, emailResults) => {
         if (err) {
@@ -13,7 +13,7 @@ exports.register = (req, res) => {
         }
 
         if (emailResults.length > 0) {
-            return res.status(400).json({message: "Email sudah terdaftar"});
+            return res.status(400).json({ message: "Email sudah terdaftar" });
         }
 
         userModel.findByNidn(nidn, (err, nidnResults) => {
@@ -21,10 +21,10 @@ exports.register = (req, res) => {
                 console.log("Error saat mencari NIDN:", err);
                 return res.status(500).json({ message: "Server error" });
             }
-            if (nidnResults.length > 0) {
-                return res.status(400).json({message: "NPM sudah terdaftar"});
-            }
 
+            if (nidnResults.length > 0) {
+                return res.status(400).json({ message: "NPM sudah terdaftar" });
+            }
 
             const hashPassword = bcrypt.hashSync(password, 10);
 
@@ -32,8 +32,8 @@ exports.register = (req, res) => {
                 name,
                 email,
                 password: hashPassword,
-                role : "mahasiswa",
-                status : "pending",
+                role: "mahasiswa",
+                status: "pending",
                 nidn
             };
 
@@ -43,17 +43,20 @@ exports.register = (req, res) => {
                     return res.status(500).json({ message: "Server error" });
                 }
 
+                // ✅ PERBAIKAN: Gunakan newUser + result.insertId untuk emit event
                 eventBus.emit("user_registered", {
-                id: result.insertId,
-                name,
-                email,
-                role: "mahasiswa",
-                status: "pending",
-                nidn
+                    id: result.insertId,  // ← Data dari callback result
+                    name: newUser.name,
+                    email: newUser.email,
+                    nidn: newUser.nidn,
+                    role: newUser.role,
+                    status: newUser.status
                 });
+
+                console.log(`✅ User registered: ${newUser.email} - event emitted`);
 
                 res.json({ message: "Registrasi berhasil" });
             });
         });
     });
-}
+};
