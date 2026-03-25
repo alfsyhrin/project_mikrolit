@@ -46,9 +46,22 @@ const Step = {
     deleteByModule: (moduleId, callback) => {
         const sql = `DELETE FROM module_steps WHERE module_id = ?`;
             db.query(sql, [moduleId], callback);
+    },
+
+    getStepsByModule: (moduleId, callback) => {
+        const sql = `
+            SELECT id, step_number, step_title, step_type, discussion_enabled
+            FROM module_steps
+            WHERE module_id = ?
+            ORDER BY step_number ASC
+        `;
+        db.query(sql, [moduleId], callback);
+    },
+
+    deleteStep: (stepId, callback) => {
+        const sql = `DELETE FROM module_steps WHERE id = ?`;
+        db.query(sql, [stepId], callback);
     }
-
-
 
 };
 

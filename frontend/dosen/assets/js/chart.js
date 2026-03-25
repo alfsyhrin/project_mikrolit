@@ -130,15 +130,30 @@ export async function renderMahasiswaChart(mahasiswaArray = []) {
   await mahasiswaChartInstance.render();
 }
 
-export async function renderProgressMingguanChart() {
+export async function renderProgressMingguanChart(tasksData = []) {
   const chartContainer = document.querySelector("#progressmingguanChart");
   if (!chartContainer) return;
+
+  let tasks = tasksData && tasksData.length > 0 ? tasksData : [];
+  
+  // ✅ Ubah: ambil jumlah submission sebenarnya (bukan persentase)
+  const submissionData = tasks.map((task, index) => {
+    return (task.submissions || []).length || 0;
+  });
+
+  // Jika data kosong, gunakan dummy
+  if (submissionData.length === 0) {
+    submissionData.push(2, 4, 5, 3, 6, 7, 5, 8);
+  }
+
+  // ✅ Generate categories: T1, T2, T3, dst
+  const categories = Array.from({ length: submissionData.length }, (_, i) => `T${i + 1}`);
 
   const options = {
     series: [
       {
         name: "Penyelesaian",
-        data: [25, 40, 55, 48, 65, 72, 68, 80]
+        data: submissionData
       }
     ],
     chart: {
@@ -181,11 +196,7 @@ export async function renderProgressMingguanChart() {
       yaxis: { lines: { show: true } }
     },
     xaxis: {
-      categories: [
-        "M1", "M2", "M3", "M4",
-        "M5", "M6", "M7", "M8"
-    ],
-
+      categories: categories,
       labels: {
         style: { colors: "#999", fontSize: "12px" }
       },
@@ -194,7 +205,6 @@ export async function renderProgressMingguanChart() {
     },
     yaxis: {
       min: 0,
-      max: 100,
       tickAmount: 4,
       labels: { style: { colors: "#999", fontSize: "12px" } }
     },
@@ -203,11 +213,9 @@ export async function renderProgressMingguanChart() {
       marker: { show: true },
       x: {
         formatter: function (val, opts) {
-          const allLabels = [
-            "Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4",
-            "Minggu 5", "Minggu 6", "Minggu 7", "Minggu 8"
-          ];
-          return allLabels[opts.dataPointIndex] || val;
+          // ✅ Hanya tampilkan "Tugas 1", "Tugas 2", dst
+          const index = opts.dataPointIndex;
+          return `Tugas ${index + 1}`;
         }
       }
     },

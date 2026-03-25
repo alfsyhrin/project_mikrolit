@@ -158,10 +158,10 @@ async function updateModule(moduleId, data) {
         });
     }
 
-    // 2. hapus objectives lama
+    // 2. Hapus objectives lama
     await deleteObjectivesPromise(moduleId);
 
-    // 3. insert objectives baru (jika ada)
+    // 3. Insert objectives baru
     if (data.objectives && data.objectives.length > 0) {
         for (let i = 0; i < data.objectives.length; i++) {
             const obj = data.objectives[i];
@@ -173,23 +173,75 @@ async function updateModule(moduleId, data) {
         }
     }
 
-    // 4. hapus semua steps lama
-    await deleteStepsPromise(moduleId);
+    // 4. BACKUP: Simpan discussion points sebelum delete steps
+    const oldSteps = await StepModel.getStepsByModule(moduleId);
+    const discussionBackup = {};
+    
+    for (const oldStep of oldSteps) {
+        const discussions = await new Promise((resolve, reject) => {
+            db.query(
+                `SELECT * FROM student_step_discussions WHERE step_id = ?`,
+                [oldStep.id],
+                (err, rows) => err ? reject(err) : resolve(rows || [])
+            );
+        });
+        if (discussions.length > 0) {
+            discussionBackup[oldStep.step_number] = discussions;
+        }
+    }
 
-    // 5. insert steps baru
+    // 4. UPDATE: Smart step management (bukan delete all)
+    const newStepNumbers = (data.steps || []).map(s => s.step_number);
+    const stepsToDelete = oldSteps.filter(os => !newStepNumbers.includes(os.step_number));
+    
+    // Hapus HANYA resources dari steps yang akan dihapus
+    for (const step of stepsToDelete) {
+        await ResourceModel.deleteByStep(step.id);
+        await StepModel.deleteStep(step.id); // This won't cascade-delete progress
+    }
+
+    // 5. INSERT/UPDATE steps dengan RESTORE discussion jika diperlukan
     if (data.steps && data.steps.length > 0) {
         for (const step of data.steps) {
-            const stepResult = await createStepPromise({
-                module_id: moduleId,
-                step_number: step.step_number,
-                step_title: step.step_title,
-                step_type: step.step_type,
-                discussion_enabled: step.discussion_enabled || false
-            });
-            const stepId = stepResult.insertId;
+            const existingStep = oldSteps.find(
+                os => os.step_number === step.step_number
+            );
 
-            // 6. insert resources (jika ada)
+            let stepId;
+            if (existingStep) {
+                stepId = existingStep.id;
+            } else {
+                const stepResult = await createStepPromise({
+                    module_id: moduleId,
+                    step_number: step.step_number,
+                    step_title: step.step_title,
+                    step_type: step.step_type,
+                    discussion_enabled: step.discussion_enabled || false
+                });
+                stepId = stepResult.insertId;
+
+                // RESTORE discussion dari backup ke new step (di case step direname)
+                if (discussionBackup[step.step_number]) {
+                    const oldDiscussions = discussionBackup[step.step_number];
+                    for (const disc of oldDiscussions) {
+                        await new Promise((resolve, reject) => {
+                            db.query(
+                                `INSERT INTO student_step_discussions 
+                                (step_id, user_id, module_id, discussion_point, created_at)
+                                VALUES (?, ?, ?, ?, ?)`,
+                                [stepId, disc.user_id, moduleId, disc.discussion_point, disc.created_at],
+                                (err, result) => err ? reject(err) : resolve(result)
+                            );
+                        });
+                    }
+                }
+            }
+
+            // Update resources
             if (step.resources && step.resources.length > 0) {
+                // Delete old resources
+                await ResourceModel.deleteByStep(stepId);
+                // Insert new resources
                 for (const res of step.resources) {
                     await createResourcePromise({
                         step_id: stepId,

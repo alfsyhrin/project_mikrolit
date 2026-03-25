@@ -467,6 +467,56 @@ function handleSearch(e){
     renderTugas(filtered, dom.listTugasContainer);
 }
 
+// ==========================================
+// HELPER: Get Total Tasks Count
+// ==========================================
+export async function getTotalTasks() {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) return 0;
+
+        // Fetch semua tasks
+        const allTasks = (typeof getTaskForDosenRequest === "function") 
+            ? (await getTaskForDosenRequest(token) || []) 
+            : [];
+
+        return Array.isArray(allTasks) ? allTasks.length : 0;
+    } catch (err) {
+        console.error("Error getting total tasks:", err);
+        return 0;
+    }
+}
+
+export async function getTasksWithSubmissionCounts() {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) return [];
+        
+        const tasks = (await getTaskForDosenRequest(token)) || [];
+        
+        // Fetch submission count untuk setiap task
+        const tasksWithCounts = await Promise.all(
+            tasks.map(async (task) => {
+                const submissions = await getSubmissionsByTaskRequest(task.id, token);
+                return {
+                    ...task,
+                    submissions: submissions || [],
+                    submission_count: (submissions || []).length
+                };
+            })
+        );
+        
+        return tasksWithCounts;
+    } catch (err) {
+        console.error("Error getting tasks with submission counts:", err);
+        return [];
+    }
+}
+
+window.getTasksWithSubmissionCounts = getTasksWithSubmissionCounts;
+
+// Expose ke global scope
+window.getTotalTasks = getTotalTasks;
 // expose
 window.initManajemenTugas = initManajemenTugas;
 window.showCreateTaskModal = showCreateTaskModal;
