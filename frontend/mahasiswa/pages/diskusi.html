@@ -9,7 +9,9 @@
   <div class="container-micro-learning">
     <div class="container-topik-diskusi">
       
-      <h2>Topik Diskusi</h2>
+      <h2>
+        Topik Diskusi
+      </h2>
       
       <div class="wrapper-card-topik-diskusi">
 
@@ -37,8 +39,14 @@
 
     </div>
 
-    <div class="container-diskusi">
-      <h2>Reflect-Sync</h2>
+    <div class="container-diskusi" id="containerDiskusi">
+      <div style="display:flex; justify-content:space-between; align-items:center; width:100%; justify-content: center;">
+        <h2>Reflect-Sync</h2>
+
+        <button id="btnFullscreenDiskusi">
+          <span class="material-symbols-outlined">open_in_full</span>
+        </button>
+      </div>
       <div class="wrapper-card-pesan-diskusi">
 
         <div class="card-pesan-diskusi">
@@ -131,7 +139,7 @@
       </div>
 
       <div class="footer-container-diskusi">
-        <input type="text" placeholder="Tulis balasan...">
+        <input type="text" placeholder="Tulis balasan..." id="inputDiskusi">
         <button>
           <p>
             <span class="material-symbols-outlined">send</span>

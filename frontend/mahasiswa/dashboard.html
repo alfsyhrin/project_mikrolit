@@ -150,10 +150,15 @@
         window.fetchAndRenderTaskStats = fetchAndRenderTaskStats;
     </script>
 
-<script type="module">
-    import { fetchAndRenderNotifications } from "./assets/js/dashboard.js";
-    window.fetchAndRenderNotifications = fetchAndRenderNotifications;
-</script>
+    <script type="module">
+        import { fetchAndRenderNotifications } from "./assets/js/dashboard.js";
+        window.fetchAndRenderNotifications = fetchAndRenderNotifications;
+    </script>
+    
+    <script type="module">
+        import { initDiskusiFullscreen } from "./assets/js/diskusi.js";
+        window.initDiskusiFullscreen = initDiskusiFullscreen;
+    </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
     <script src="../assets/apexcharts.min.js"></script>
@@ -288,6 +293,11 @@
                     if (page === "pengaturan") {
                         setTimeout(() => {
                             window.initPengaturan();
+                        }, 50);
+                    }
+                    if (page === "diskusi") {
+                        setTimeout(() => {
+                            window.initDiskusiFullscreen();
                         }, 50);
                     }
                     if (page === "beranda") {

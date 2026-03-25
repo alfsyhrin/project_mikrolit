@@ -109,6 +109,7 @@
     flex-shrink: 0;
     flex-direction: column;
     min-width: 0;
+    transition: 0.3s ease all;
 }
 
 .container-diskusi h2 {
@@ -117,7 +118,6 @@
     font-size: 1.1rem;
     font-weight: 650;
     padding-bottom: 0.8rem;
-    margin-bottom: 0.5rem;
     border-bottom: 1px solid #ddd;
 }
 
@@ -359,4 +359,35 @@
     margin-top: 2px;
   }
 
+}
+
+.container-diskusi.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    border-radius: 0;
+    padding: 1rem;
+}
+
+.container-diskusi.fullscreen .wrapper-card-pesan-diskusi {
+    height: calc(100vh - 140px);
+}
+
+.container-diskusi.fullscreen .footer-container-diskusi {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+}
+
+#btnFullscreenDiskusi {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#btnFullscreenDiskusi .material-symbols-outlined {
+    font-size: 1.2rem;
 }
