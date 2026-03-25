@@ -430,3 +430,108 @@ export async function getNotificationsRequest(token){
     // Extract data dari response {success, data}
     return result.data || [];
 }
+
+//STUDENT LEARNING MODULE================================================================
+export async function getModuleLearningRequest(token) {
+    const response = await fetch(API_BASE + `/student/modules`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}
+
+export async function getModuleLearnDetailRequest(moduleId, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/learn`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}
+
+export async function getStepModuleRequest(moduleId, token){
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.json();
+
+}
+
+export async function startModuleRequest(moduleId, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/start`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}
+
+export async function startStepModuleRequest(moduleId, stepId, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepId}/start`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}
+
+export async function completeStepModuleRequest(moduleId, stepId, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepId}/complete`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}
+
+export async function submitDiscussionPointRequest(moduleId, stepId, discussionPoint, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepId}/discussion`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ discussion_point: discussionPoint })
+    });
+
+    return response.json();
+}
+
+export async function downloadResourceFileRequest(moduleId, stepId, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepId}/download`, {
+        method: "GET",
+        headers: {
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.blob();
+}
