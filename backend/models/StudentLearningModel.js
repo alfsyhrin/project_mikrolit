@@ -62,7 +62,54 @@ const StudentLearningModel = {
                 }
             );
         });
-    }
+    },
+
+    async getModuleObjectives(moduleId) {
+        return new Promise((resolve, reject) => {
+            db.query(
+                `SELECT objective_text
+                FROM module_objectives
+                WHERE module_id = ?
+                ORDER BY sort_order ASC`,
+                [moduleId],
+                (err, rows) => {
+                    if (err) return reject(err);
+                    resolve(rows || []);
+                }
+            );
+        });
+    },
+
+async getStepResourcesById(stepId) {
+    return new Promise((resolve, reject) => {
+        db.query(
+            `SELECT id, step_id, resource_type, resource_path
+             FROM module_step_resources
+             WHERE step_id = ?
+             ORDER BY id ASC`,
+            [stepId],
+            (err, rows) => {
+                if (err) return reject(err);
+                resolve(rows || []);
+            }
+        );
+    });
+},
+
+async getStepByNumber(moduleId, stepNumber) {
+    return new Promise((resolve, reject) => {
+        db.query(
+            `SELECT id, module_id, step_number, step_title, step_type, discussion_enabled
+             FROM module_steps
+             WHERE module_id = ? AND step_number = ?`,
+            [moduleId, stepNumber],
+            (err, rows) => {
+                if (err) return reject(err);
+                resolve(rows && rows[0] ? rows[0] : null);
+            }
+        );
+    });
+}
 
 };
 

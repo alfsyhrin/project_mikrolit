@@ -45,16 +45,25 @@ router.get(
     studentLearningController.getModuleSteps
 );
 
-router.get(
-    "/modules/:moduleId/steps/:stepNumber/download",
-    authMiddleware,
-    studentLearningController.downloadResource
-);
 
 router.post(
 '/modules/:moduleId/steps/:stepNumber/discussion',
 authMiddleware,
 DiscussionController.submitDiscussion
+);
+
+// Tambah route baru ini
+router.get(
+    "/modules/:moduleId/steps/:stepNumber/detail",
+    authMiddleware,
+    studentLearningController.getStepDetail
+);
+
+// ✅ Endpoint untuk actual file download
+router.get(
+    "/modules/:moduleId/steps/:stepNumber/download/:resourceType",
+    authMiddleware,
+    studentLearningController.downloadFile
 );
 
 module.exports = router;

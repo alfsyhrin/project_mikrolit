@@ -12,6 +12,10 @@ const promisify = (fn, context) => (...args) =>
 
 async function createModule(data) {
     const createModulePromise = promisify(ModuleModel.createModule, ModuleModel);
+    const createObjectivePromise = promisify(ObjectiveModel.createObjective, ObjectiveModel);
+    const createStepPromise = promisify(StepModel.createStep, StepModel);
+    const createResourcePromise = promisify(ResourceModel.createResource, ResourceModel); // ✅ TAMBAH INI!
+
     const moduleResult = await createModulePromise(data);
     const moduleId = moduleResult.insertId;
 
@@ -19,9 +23,9 @@ async function createModule(data) {
     if (data.discussion_enabled) {
         await new Promise((resolve, reject) => {
             db.query(
-                `INSERT INTO discussion_rooms (module_id, title) VALUES (?, ?)`,
-                [moduleId, data.title],
-                (err, result) => err ? reject(err) : resolve(result)
+                `INSERT INTO discussion_rooms (module_id, title) VALUES (?, 'module')`,
+                [moduleId],
+                (err) => err ? reject(err) : resolve()
             );
         });
     }
@@ -29,34 +33,32 @@ async function createModule(data) {
     if (data.objectives && data.objectives.length > 0) {
         let order = 1;
         for (const obj of data.objectives) {
-            const createObjPromise = promisify(ObjectiveModel.createObjective, ObjectiveModel);
-            await createObjPromise({
+            await createObjectivePromise({
                 module_id: moduleId,
-                objective_text: obj.objective_text || obj,
-                sort_order: order
+                objective_text: obj,
+                sort_order: order++
             });
-            order++;
         }
     }
 
     if (data.steps && data.steps.length > 0) {
         for (const step of data.steps) {
-            const createStepPromise = promisify(StepModel.createStep, StepModel);
-            const stepId = (await createStepPromise({
+            const stepResult = await createStepPromise({
                 module_id: moduleId,
                 step_number: step.step_number,
                 step_title: step.step_title,
                 step_type: step.step_type,
                 discussion_enabled: step.discussion_enabled || false
-            })).insertId;
+            });
+            const stepId = stepResult.insertId;
 
+            // ✅ Insert resources untuk step ini
             if (step.resources && step.resources.length > 0) {
-                for (const res of step.resources) {
-                    const createResPromise = promisify(ResourceModel.createResource, ResourceModel);
-                    await createResPromise({
+                for (const resource of step.resources) {
+                    await createResourcePromise({
                         step_id: stepId,
-                        resource_type: res.type,
-                        resource_value: res.value
+                        resource_type: resource.type,
+                        resource_path: resource.value  // ← dari upload response
                     });
                 }
             }

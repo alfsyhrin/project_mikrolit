@@ -159,6 +159,11 @@
         import { initDiskusiFullscreen } from "./assets/js/diskusi.js";
         window.initDiskusiFullscreen = initDiskusiFullscreen;
     </script>
+
+    <script type="module">
+        import { renderDaftarModul } from "./assets/js/daftar-modul.js";
+        window.renderDaftarModul = renderDaftarModul;
+    </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
     <script src="../assets/apexcharts.min.js"></script>
@@ -247,6 +252,9 @@
                 .then(data => {
                     content.innerHTML = data;
 
+                    // Render modul detail jika halaman modul dengan moduleId
+
+
                     // --- init/attach behavior pada halaman yg di-load ---
                     const modulCards = document.querySelectorAll(".card-modul-mahasiswa-menu");
                     const linkCards = document.querySelectorAll(".lanjut-belajar-modul");
@@ -283,6 +291,11 @@
                         setTimeout(() => {
                             window.initManajemenPengguna();
                             window.fetchAndRenderUsers();
+                        }, 50);
+                    }
+                    if (page === "daftar-modul") {
+                        setTimeout(async () => {
+                            await window.renderDaftarModul?.();
                         }, 50);
                     }
                     if (page === "tugas-mahasiswa") {
@@ -356,11 +369,13 @@
 
         // Intercept any link that uses data-page (except sidebar links which already have handlers)
         document.addEventListener('click', function(e){
-        const a = e.target.closest('a[data-page]');
-        if (!a) return;
-        if (a.closest('.sidebar-list')) return; // biarkan handler sidebar berjalan
-        e.preventDefault();
-        loadPage(a.getAttribute('data-page'));
+            const a = e.target.closest('a[data-page]');
+            if (!a) return;
+            if (a.closest('.sidebar-list')) return;
+            e.preventDefault();
+            const page = a.getAttribute('data-page');
+            const moduleId = a.getAttribute('data-module-id');
+            loadPage(page, { moduleId });
         });
         // ==============================
         // SIDEBAR LINK CLICK
