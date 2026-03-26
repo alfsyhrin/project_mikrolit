@@ -119,6 +119,7 @@ async function updateModule(moduleId, data) {
     const deleteStepsPromise = promisify(StepModel.deleteByModule, StepModel);
     const createStepPromise = promisify(StepModel.createStep, StepModel);
     const createResourcePromise = promisify(ResourceModel.createResource, ResourceModel);
+    const getStepsByModulePromise = promisify(StepModel.getStepsByModule, StepModel);
 
     // 1. update module utama
     await updateModulePromise(moduleId, data);
@@ -176,9 +177,9 @@ async function updateModule(moduleId, data) {
     }
 
     // 4. BACKUP: Simpan discussion points sebelum delete steps
-    const oldSteps = await StepModel.getStepsByModule(moduleId);
+    const oldSteps = await getStepsByModulePromise(moduleId) || []; // Fallback ke array kosong
     const discussionBackup = {};
-    
+
     for (const oldStep of oldSteps) {
         const discussions = await new Promise((resolve, reject) => {
             db.query(

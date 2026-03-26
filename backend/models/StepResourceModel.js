@@ -26,17 +26,25 @@ getResourcesByStep: (stepId, callback) => {
     db.query(sql, [stepId], callback);
 },
 
-getResourcesByModule: (moduleId, callback) => {
-    const query = `
-        SELECT r.*, s.step_number
-        FROM module_step_resources r
-        JOIN module_steps s
-        ON r.step_id = s.id
-        WHERE s.module_id = ?
-        ORDER BY s.step_number
+    getResourcesByModule: (moduleId, callback) => {
+        const query = `
+            SELECT r.*, s.step_number
+            FROM module_step_resources r
+            JOIN module_steps s
+            ON r.step_id = s.id
+            WHERE s.module_id = ?
+            ORDER BY s.step_number
         `;
-    db.query(query, [moduleId], callback);
-}
+        db.query(query, [moduleId], callback);
+    },
+
+    deleteByStep: (stepId, callback) => {
+        const sql = `
+            DELETE FROM module_step_resources
+            WHERE step_id = ?
+        `;
+        db.query(sql, [stepId], callback);
+    }
 };
 
 module.exports = StepResource;

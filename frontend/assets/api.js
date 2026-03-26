@@ -484,8 +484,21 @@ export async function startModuleRequest(moduleId, token) {
     return response.json();
 }
 
-export async function startStepModuleRequest(moduleId, stepId, token) {
-    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepId}/start`, {
+export async function getStepDetailRequest(moduleId, stepNumber, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepNumber}/detail`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    return response.json();
+}
+
+export async function startStepModuleRequest(moduleId, stepNumber, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepNumber}/start`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -497,8 +510,8 @@ export async function startStepModuleRequest(moduleId, stepId, token) {
     return response.json();
 }
 
-export async function completeStepModuleRequest(moduleId, stepId, token) {
-    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepId}/complete`, {
+export async function completeStepModuleRequest(moduleId, stepNumber, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepNumber}/complete`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -510,8 +523,8 @@ export async function completeStepModuleRequest(moduleId, stepId, token) {
     return response.json();
 }
 
-export async function submitDiscussionPointRequest(moduleId, stepId, discussionPoint, token) {
-    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepId}/discussion`, {
+export async function submitDiscussionPointRequest(moduleId, stepNumber, discussionPoint, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepNumber}/discussion`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -524,8 +537,8 @@ export async function submitDiscussionPointRequest(moduleId, stepId, discussionP
     return response.json();
 }
 
-export async function downloadResourceFileRequest(moduleId, stepId, token) {
-    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepId}/download`, {
+export async function downloadStepResourceRequest(moduleId, stepNumber, resourceType, token) {
+    const response = await fetch(API_BASE + `/student/modules/${moduleId}/steps/${stepNumber}/download/${resourceType}`, {
         method: "GET",
         headers: {
             "ngrok-skip-browser-warning": "true",
@@ -533,5 +546,23 @@ export async function downloadResourceFileRequest(moduleId, stepId, token) {
         }
     });
 
-    return response.blob();
+    // ✅ Check response status before converting to blob
+    if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.message || `Download failed: ${response.status}`);
+    }
+
+    // ✅ Check Content-Type - should be file type, not JSON
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+        const errData = await response.json();
+        throw new Error(errData.message || 'Invalid response format');
+    }
+
+    // ✅ Return both blob and content-type for accurate extension detection
+    const blob = await response.blob();
+    return {
+        blob: blob,
+        contentType: contentType || blob.type
+    };
 }

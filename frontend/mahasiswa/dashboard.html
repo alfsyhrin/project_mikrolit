@@ -161,8 +161,10 @@
     </script>
 
     <script type="module">
-        import { renderDaftarModul } from "./assets/js/daftar-modul.js";
+        import { renderDaftarModul, renderModuleDetail, renderStepDetail } from "./assets/js/daftar-modul.js";
         window.renderDaftarModul = renderDaftarModul;
+        window.renderModuleDetail = renderModuleDetail;
+        window.renderStepDetail = renderStepDetail;
     </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
@@ -244,6 +246,15 @@
         // LOAD PAGE FUNCTION
         // ==============================
         function loadPage(page, options = { pushState: true }) {
+            // ✅ Handle 'modul-step' page (render step detail tanpa fetch HTML)
+            if (page === 'modul-step' && options.moduleId && options.stepNumber) {
+                console.log("[loadPage] Rendering step detail:", options.moduleId, options.stepNumber);
+                setTimeout(() => {
+                    window.renderStepDetail?.(options.moduleId, options.stepNumber);
+                }, 50);
+                return;  // Return - jangan lanjut ke fetch HTML
+            }
+
             fetch(`./pages/${page}.html`)
                 .then(response => {
                     if (!response.ok) throw new Error("404");
@@ -253,6 +264,11 @@
                     content.innerHTML = data;
 
                     // Render modul detail jika halaman modul dengan moduleId
+                    if (page === "modul" && options.moduleId) {
+                        setTimeout(() => {
+                            window.renderModuleDetail?.(options.moduleId);
+                        }, 50);
+                    }
 
 
                     // --- init/attach behavior pada halaman yg di-load ---
@@ -369,6 +385,26 @@
 
         // Intercept any link that uses data-page (except sidebar links which already have handlers)
         document.addEventListener('click', function(e){
+            
+            // ✅ TAMBAH INI DI AWAL: Handle step-item clicks (prioritas tinggi)
+            const stepItem = e.target.closest('.step-item');
+            if (stepItem) {
+                e.preventDefault();
+                const moduleId = stepItem.getAttribute('data-module-id');
+                const stepNumber = stepItem.getAttribute('data-step-number');
+                const status = stepItem.getAttribute('data-status');
+                
+                if (moduleId && stepNumber) {
+                    if (status === 'locked' || status === 'terkunci') {
+                        alert('Step ini masih terkunci. Selesaikan langkah sebelumnya terlebih dahulu.');
+                        return;
+                    }
+                    loadPage('modul-step', { moduleId, stepNumber });
+                }
+                return;
+            }
+
+            // ✅ EXISTING CODE TETAP: original a[data-page] handler (jangan diubah)
             const a = e.target.closest('a[data-page]');
             if (!a) return;
             if (a.closest('.sidebar-list')) return;
@@ -459,7 +495,10 @@
             defaultLink.classList.add("active");
         }
 
-        });
+        // ✅ Expose loadPage ke global scope (supaya daftar-modul.js bisa pakai)
+        window.loadPage = loadPage;
+
+        });  // closing of DOMContentLoaded
     </script>
 
 
