@@ -126,8 +126,10 @@
     </script>
 
     <script type="module">
-        import { initDiskusiFullscreen } from "./assets/js/diskusi.js";
+        import { initDiskusiFullscreen, renderDiskusiTopics } from "./assets/js/diskusi.js";
         window.initDiskusiFullscreen = initDiskusiFullscreen;
+        window.renderDiskusiTopics = renderDiskusiTopics;
+
     </script>
 
     <script type="module">
@@ -307,8 +309,10 @@
                         }, 50);
                     }
                     if (page === "diskusi") {
-                        setTimeout(() => {
+                        setTimeout(async () => {
                             window.initDiskusiFullscreen();
+                            // ✅ Render list room diskusi dari API
+                            await window.renderDiskusiTopics?.();
                         }, 50);
                     }
 

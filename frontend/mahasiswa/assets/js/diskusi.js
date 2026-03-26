@@ -8,7 +8,7 @@ let chatHandlerInitialized = false;
 
 // ✅ BARU: Global state untuk auto-refresh polling
 let pollIntervalId = null;
-const POLL_INTERVAL = 3000; // 3 detik
+const POLL_INTERVAL = 5000; // ✅ DIUBAH dari 3000 menjadi 5000 (5 detik)
 let isPolling = false;
 
 // ✅ BARU: Track scroll-based refresh untuk prevent spam
@@ -89,8 +89,16 @@ function stopPollingChat() {
 }
 
 // ✅ BARU: Detect scroll ke bottom dan auto-refresh messages
+// ✅ BARU: Detect scroll ke bottom dan auto-refresh messages
+// ✅ BARU: Detect scroll ke bottom dan auto-refresh messages
 function attachScrollDetection(container) {
     if (!container) return;
+    
+    // ✅ Cegah duplicate scroll listener (poin 1)
+    if (container._scrollDetectionAttached) {
+        console.log("✅ Scroll detection already attached");
+        return;
+    }
     
     container.addEventListener('scroll', () => {
         // Cek apakah sudah scroll ke bottom
@@ -114,7 +122,11 @@ function attachScrollDetection(container) {
                 }
             }
         }
-    });
+    }, { passive: true }); // ✅ Tambahkan passive: true (poin 3)
+    
+    // Mark container sebagai sudah di-attach
+    container._scrollDetectionAttached = true;
+    console.log("✅ Scroll detection attached");
 }
 
 // ✅ Render list room diskusi dari API
@@ -196,18 +208,14 @@ export async function renderDiskusiTopics() {
             });
         });
 
-        // ✅ BARU: Setup chat input handler SEKALI SAJA
-        if (!chatHandlerInitialized) {
-            console.log("🔌 Initializing chat handler...");
-            initDiskusiChatInputHandlerOnce();
-            chatHandlerInitialized = true;
-        }
+        initDiskusiChatInputHandlerOnce();
 
     } catch (error) {
         console.error("❌ Error rendering diskusi topics:", error);
     }
 }
 
+// ✅ Render chat messages untuk selected room
 // ✅ Render chat messages untuk selected room
 export async function renderDiskusiChat(roomId) {
     try {
@@ -230,6 +238,18 @@ export async function renderDiskusiChat(roomId) {
         try {
             const readResponse = await markDiscussionAsReadRequest(token, roomId);
             console.log("✅ Messages marked as read:", readResponse);
+
+            // === PARTIAL REFRESH UNREAD BADGE ===
+            const activeCard = document.querySelector(`.card-topik-diskusi.active`);
+            if (activeCard) {
+                const infoSpan = activeCard.querySelector('.info-topik-diskusi span');
+                if (infoSpan) {
+                    const match = infoSpan.textContent.match(/^(\d+)\s*Pesan/);
+                    const messageCount = match ? match[1] : "0";
+                    infoSpan.textContent = `${messageCount} Pesan`;
+                }
+            }
+            // === END PARTIAL REFRESH ===
         } catch (readErr) {
             console.warn("⚠️ Error marking as read:", readErr);
         }
@@ -243,17 +263,16 @@ export async function renderDiskusiChat(roomId) {
             return;
         }
 
-        // ✅ BARU: Update title di sebelah kanan dengan nama room
+        // ✅ Update title di sebelah kanan dengan nama room
         const roomTitleEl = document.getElementById("roomTitle");
         if (roomTitleEl) {
-            // Ambil title dari data yang sudah di-render di kiri
             const activeCard = document.querySelector(".card-topik-diskusi.active h3");
             if (activeCard) {
                 roomTitleEl.textContent = activeCard.textContent;
             }
         }
 
-        // ✅ BARU: Track apakah user sudah di bottom sebelum render
+        // ✅ Track apakah user sudah di bottom sebelum render
         const wasAtBottom = chatContainer && (
             Math.abs(chatContainer.scrollHeight - chatContainer.clientHeight - chatContainer.scrollTop) < 50
         );
@@ -271,10 +290,7 @@ export async function renderDiskusiChat(roomId) {
             // Render setiap pesan
             response.data.forEach(message => {
                 const roleClass = message.role === 'dosen' ? 'dosen' : 'mahasiswa';
-                // ✅ Ambil inisial dari nama (2 karakter pertama)
                 const initials = message.user_name.substring(0, 2).toUpperCase();
-                
-                // ✅ Format waktu relatif
                 const timeAgo = formatTimeAgo(new Date(message.created_at));
                 
                 const messageHtml = `
@@ -303,12 +319,11 @@ export async function renderDiskusiChat(roomId) {
 
         console.log("✅ Chat rendered for room:", roomId);
 
-        // ✅ BARU: Attach scroll detection ke chat container
+        // ✅ Attach scroll detection ke chat container
         if (chatContainer) {
             attachScrollDetection(chatContainer);
-            
+
             // ✅ Auto-scroll ke bottom HANYA jika user sudah di bottom sebelumnya
-            // Ini preserve scroll position jika user scroll ke atas (untuk lihat history)
             if (wasAtBottom) {
                 setTimeout(() => {
                     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -317,7 +332,11 @@ export async function renderDiskusiChat(roomId) {
             }
         }
 
-        // ✅ BARU: Start polling untuk auto-refresh messages
+        // ✅ HAPUS BAGIAN INI (yang lama dengan _handlerAttached):
+        // const sendBtn = document.getElementById("btnSendDiskusi");
+        // if (sendBtn && !sendBtn._handlerAttached) { ... }
+
+        // ✅ Start polling untuk auto-refresh messages
         stopPollingChat(); // Stop polling lama dulu
         startPollingChat(); // Start polling untuk room baru
         
@@ -344,31 +363,36 @@ function formatTimeAgo(date) {
 
 // ✅ BARU: Initialize chat input handler - setup SEKALI SAJA saat diskusi page load
 function initDiskusiChatInputHandlerOnce() {
-    const inputEl = document.getElementById("inputDiskusi");
-    const sendBtn = document.getElementById("btnSendDiskusi");
+    // Ambil elemen lama
+    let inputEl = document.getElementById("inputDiskusi");
+    let sendBtn = document.getElementById("btnSendDiskusi");
 
     if (!inputEl || !sendBtn) {
         console.warn("⚠️ Input atau button tidak ditemukan");
         return;
     }
 
-    console.log("✅ Setting up chat input handler (one-time)");
+    // Clone node untuk hapus semua event listener lama
+    const newInputEl = inputEl.cloneNode(true);
+    const newSendBtn = sendBtn.cloneNode(true);
 
-    // ✅ FIX: Jangan clone, langsung attach event listener
-    // Click handler
-    sendBtn.addEventListener("click", async () => {
-        await handleSendMessage(inputEl, sendBtn);
+    // Replace di DOM
+    inputEl.parentNode.replaceChild(newInputEl, inputEl);
+    sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
+
+    // Pasang event listener baru (hanya satu kali per pemanggilan)
+    newSendBtn.addEventListener("click", async () => {
+        await handleSendMessage(newInputEl, newSendBtn);
     });
 
-    // ✅ Enter key support
-    inputEl.addEventListener("keypress", async (e) => {
+    newInputEl.addEventListener("keypress", async (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            await handleSendMessage(inputEl, sendBtn);
+            await handleSendMessage(newInputEl, newSendBtn);
         }
     });
 
-    console.log("🔌 Chat input handler ready");
+    console.log("🔌 Chat input handler ready (event listener clean)");
 }
 
 // ✅ BARU: Handle send message logic dengan roomId validation
