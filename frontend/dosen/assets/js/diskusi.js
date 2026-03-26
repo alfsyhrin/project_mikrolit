@@ -1,19 +1,31 @@
-document.addEventListener("click", function (e) {
+export function initDiskusiFullscreen() {
+    const btn = document.getElementById("btnFullscreenDiskusi");
+    const container = document.getElementById("containerDiskusi");
 
-    const btn = e.target.closest("#btnFullscreenDiskusi");
-    if (!btn) return;
+    if (!btn || !container) return;
 
-    const container = document.querySelector(".container-diskusi");
+    let isFullscreen = false;
 
-    container.classList.toggle("fullscreen");
+    btn.addEventListener("click", () => {
+        isFullscreen = !isFullscreen;
 
-    // ganti icon
-    const icon = btn.querySelector("span");
+        if (isFullscreen) {
+            container.classList.add("fullscreen");
 
-    if (container.classList.contains("fullscreen")) {
-        icon.innerText = "close_fullscreen";
-    } else {
-        icon.innerText = "fullscreen";
-    }
+            btn.innerHTML = `
+                <span class="material-symbols-outlined">close_fullscreen</span>
+            `;
 
-});
+            // Optional: disable scroll body
+            document.body.style.overflow = "hidden";
+        } else {
+            container.classList.remove("fullscreen");
+
+            btn.innerHTML = `
+                <span class="material-symbols-outlined">open_in_full</span>
+            `;
+
+            document.body.style.overflow = "auto";
+        }
+    });
+}

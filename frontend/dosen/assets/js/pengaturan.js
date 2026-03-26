@@ -1,6 +1,6 @@
-import { getProfileRequest, updateProfileRequest, updatePasswordRequest, deletePhotoRequest } from "../../../assets/api.js";
-import Toast from "../../../assets/toast.js";
 import Modal from "../../../assets/modal.js";
+import Toast from "../../../assets/toast.js";
+import { getProfileRequest, updateProfileRequest, updatePasswordRequest, deletePhotoRequest } from "../../../assets/api.js";
 
 function initPengaturan() {
     const filters = document.querySelectorAll(".filter-pengaturan");
@@ -37,31 +37,31 @@ function initPengaturan() {
     let selectedPhotoFile = null;
     const token = localStorage.getItem("token");
 
-    hapusFotoBtn.addEventListener("click", async function () {
-        Modal.show({
-            title: "Konfirmasi Hapus Foto",
-            content: `<p>Apakah Anda yakin ingin menghapus foto profil?</p>`,
-            size: "small",
-            confirmText: "Hapus",
-            cancelText: "Batal",
-            onConfirm: async () => {
+    hapusFotoBtn.addEventListener("click", function () {
+
+        Modal.confirmDelete(
+            "Apakah Anda yakin ingin menghapus foto profil?",
+            
+            async () => {
                 try {
                     const result = await deletePhotoRequest(token);
-                    console.log("✅ Delete photo response:", result);
+
                     Toast.success(result.message || "Foto berhasil dihapus");
+
                     await loadProfile();
+
                 } catch (error) {
                     console.error("❌ Gagal hapus foto:", error);
                     Toast.error("Gagal menghapus foto");
                 } finally {
                     selectedPhotoFile = null;
-                    photoInput.value = ""; // Reset file input
+                    photoInput.value = "";
                 }
             }
-        });
+
+        );
+
     });
-
-
     // Load profile saat halaman dibuka
     async function loadProfile() {
         try {
@@ -109,7 +109,7 @@ function initPengaturan() {
             return data;
         } catch (error) {
             console.error("❌ Gagal load profile:", error);
-            Toast.error("Gagal memuat profil");
+            alert("Gagal memuat profil");
             throw error;
         }
     }
@@ -133,31 +133,42 @@ function initPengaturan() {
     });
 
     // Klik "Simpan Perubahan"
-    simpanBtn.addEventListener("click", async function () {
+    simpanBtn.addEventListener("click", function () {
+
         const name = namaInput.value.trim();
         const email = emailInput.value.trim();
         const nidn = nidnInput.value.trim();
 
         if (!name || !email || !nidn) {
-            Toast.error("Semua field harus diisi");
+            Modal.alert("Semua field harus diisi");
             return;
         }
 
-        try {
-            simpanBtn.disabled = true;
-            const result = await updateProfileRequest(name, email, nidn, selectedPhotoFile, token);
-            console.log("✅ Update response:", result);
-            
-            Toast.success(result.message || "Profile berhasil diperbarui");
-            selectedPhotoFile = null;
-            photoInput.value = ""; // Reset file input
-            await loadProfile();
-        } catch (error) {
-            console.error("❌ Gagal update profil:", error);
-            Toast.error("Gagal update profil: " + error.message);
-        } finally {
-            simpanBtn.disabled = false;
-        }
+        Modal.confirmAction("Simpan perubahan profil?", async () => {
+
+            try {
+                simpanBtn.disabled = true;
+
+                const result = await updateProfileRequest(
+                    name, email, nidn, selectedPhotoFile, token
+                );
+
+                Toast.success(result.message || "Profil berhasil diperbarui");
+
+                selectedPhotoFile = null;
+                photoInput.value = "";
+
+                await loadProfile();
+
+            } catch (error) {
+                console.error("❌ Gagal update profil:", error);
+                Toast.error("Gagal update profil");
+            } finally {
+                simpanBtn.disabled = false;
+            }
+
+        });
+
     });
 
     // Inisialisasi elemen untuk tab Password
@@ -167,47 +178,54 @@ function initPengaturan() {
     const ubahPasswordBtn = document.getElementById("ubahPasswordBtn");
 
     // Handler klik "Ubah Password"
-    ubahPasswordBtn.addEventListener("click", async function () {
-        const currentPassword = (passwordLamaInput.value || "").trim();
-        const newPassword = (passwordBaruInput.value || "").trim();
-        const confirm = (konfirmasiPasswordInput.value || "").trim();
+    ubahPasswordBtn.addEventListener("click", function () {
+
+        const currentPassword = passwordLamaInput.value.trim();
+        const newPassword = passwordBaruInput.value.trim();
+        const confirm = konfirmasiPasswordInput.value.trim();
 
         if (!currentPassword || !newPassword || !confirm) {
-            Toast.error("Semua field password harus diisi");
+            Modal.alert("Semua field password harus diisi");
             return;
         }
 
         if (newPassword.length < 6) {
-            Toast.error("Password baru minimal 6 karakter");
+            Modal.alert("Password baru minimal 6 karakter");
             return;
         }
 
         if (newPassword !== confirm) {
-            Toast.error("Password baru dan konfirmasi tidak cocok");
+            Modal.alert("Password baru dan konfirmasi tidak cocok");
             return;
         }
 
-        try {
-            ubahPasswordBtn.disabled = true;
-            const result = await updatePasswordRequest(currentPassword, newPassword, token);
-            console.log("✅ Update password response:", result);
+        Modal.confirmAction("Apakah Anda yakin ingin mengubah password?", async () => {
 
-            if (result && (result.message || result.error)) {
-                Toast.error(result.message || result.error);
-            } else {
-                Toast.success("Password berhasil diperbarui");
+            try {
+                ubahPasswordBtn.disabled = true;
+
+                const result = await updatePasswordRequest(
+                    currentPassword,
+                    newPassword,
+                    token
+                );
+
+                Toast.success(result.message || "Password berhasil diperbarui");
+
+                // reset form
+                passwordLamaInput.value = "";
+                passwordBaruInput.value = "";
+                konfirmasiPasswordInput.value = "";
+
+            } catch (err) {
+                console.error("❌ Gagal update password:", err);
+                Toast.error("Gagal mengubah password");
+            } finally {
+                ubahPasswordBtn.disabled = false;
             }
 
-            // reset form
-            passwordLamaInput.value = "";
-            passwordBaruInput.value = "";
-            konfirmasiPasswordInput.value = "";
-        } catch (err) {
-            console.error("❌ Gagal update password:", err);
-            Toast.error ("Gagal mengubah password");
-        } finally {
-            ubahPasswordBtn.disabled = false;
-        }
+        });
+
     });
 
     // Inisialisasi pertama

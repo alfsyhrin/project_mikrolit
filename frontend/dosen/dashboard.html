@@ -126,6 +126,11 @@
     </script>
 
     <script type="module">
+        import { initDiskusiFullscreen } from "./assets/js/diskusi.js";
+        window.initDiskusiFullscreen = initDiskusiFullscreen;
+    </script>
+
+    <script type="module">
         import { initManajemenTugas } from "./assets/js/manajemen-tugas.js";
 
         window.initManajemenTugas = initManajemenTugas;
@@ -196,16 +201,16 @@
         window.destroyAllCharts = destroyAllCharts;
     </script>
 
-<script type="module">
-    import { renderMonitoringTable, calculateAverageProgress, calculateAverageDuration, calculateProgressDelta } from "./assets/js/monitoring.js";
-    import { getTotalTasks } from "./assets/js/manajemen-tugas.js";
-    window.getTotalTasks = getTotalTasks;
-    window.renderMonitoringTable = renderMonitoringTable;
-    window.calculateAverageProgress = calculateAverageProgress;
-    window.calculateAverageDuration = calculateAverageDuration;
-    window.calculateProgressDelta = calculateProgressDelta;  // ← Pastikan ini ada
-</script>
-    
+    <script type="module">
+        import { renderMonitoringTable, calculateAverageProgress, calculateAverageDuration, calculateProgressDelta } from "./assets/js/monitoring.js";
+        import { getTotalTasks } from "./assets/js/manajemen-tugas.js";
+        window.getTotalTasks = getTotalTasks;
+        window.renderMonitoringTable = renderMonitoringTable;
+        window.calculateAverageProgress = calculateAverageProgress;
+        window.calculateAverageDuration = calculateAverageDuration;
+        window.calculateProgressDelta = calculateProgressDelta;  // ← Pastikan ini ada
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
 
@@ -299,6 +304,11 @@
                     if (page === "pengaturan") {
                         setTimeout(() => {
                             window.initPengaturan();
+                        }, 50);
+                    }
+                    if (page === "diskusi") {
+                        setTimeout(() => {
+                            window.initDiskusiFullscreen();
                         }, 50);
                     }
 

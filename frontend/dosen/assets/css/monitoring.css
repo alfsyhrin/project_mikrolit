@@ -8,9 +8,14 @@
 .card-monitoring {
   width: 100%;
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
+  transition: 0.3s ease all;
+}
+
+.card-monitoring:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-monitoring h2 {
@@ -95,18 +100,20 @@
 .card-progres-mingguan {
   flex: 2;
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
+  transition: 0.3s ease all;
+}
+
+.card-progres-mingguan:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-progres-mingguan h4 {
   font-size: 1rem;
   font-weight: 650;
 }
-
-
-
 
 #progressmingguanChart {
   width: 100%;
@@ -129,11 +136,16 @@
 .card-kemampuan-literasi {
   flex: 1;
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
+  transition: 0.3s ease all;
   /* ✅ pastikan card cukup tinggi menampung radar chart */
   /* min-height: 500px; */
+}
+
+.card-kemampuan-literasi:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-kemampuan-literasi h4 {
@@ -177,10 +189,15 @@ p.alert-card {
 
 .card-tabel-mahasiswa {
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 1rem;
+  transition: 0.3s ease all;
+}
+
+.card-tabel-mahasiswa:hover {
+  border: 1px solid var(--third-color);
 }
 
 table {
@@ -411,3 +428,14 @@ tbody tr:last-child td {
     font-size: 14px;
     color: #64748b;
 }
+
+/* Awal sembunyikan scrollbar */
+.wrapper-tabel {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE / Edge lama */
+}
+
+.wrapper-tabel::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Edge */
+}
+/* Akhir Sembunyikan Scrollbar */
