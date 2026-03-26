@@ -55,6 +55,7 @@ function renderChart() {
         colors: ["#088395", "#dce4e6"]
     };
 
+    chartContainer.innerHTML = "";
     const chart = new ApexCharts(chartContainer, options);
     chart.render();
 }
@@ -111,15 +112,18 @@ function renderMahasiswaChart() {
     chart.render();
 }
 
-function renderProgressMingguanChart() {
+function renderProgressMingguanChart(chartData = {}) {
   const chartContainer = document.querySelector("#progressmingguanChart");
+  const categories = chartData.categories || [];
+  const progressSeries = chartData.series || [];
+  const moduleTitles = chartData.moduleTitles || [];
   if (!chartContainer) return;
 
   const options = {
     series: [
       {
         name: "Penyelesaian",
-        data: [25, 40, 55, 48, 65, 72, 68, 80]
+        data: progressSeries
       }
     ],
     chart: {
@@ -162,10 +166,7 @@ function renderProgressMingguanChart() {
       yaxis: { lines: { show: true } }
     },
     xaxis: {
-      categories: [
-        "M1", "M2", "M3", "M4",
-        "M5", "M6", "M7", "M8"
-    ],
+      categories: categories,
 
       labels: {
         style: { colors: "#999", fontSize: "12px" }
@@ -184,11 +185,7 @@ function renderProgressMingguanChart() {
       marker: { show: true },
       x: {
         formatter: function (val, opts) {
-          const allLabels = [
-            "Modul 1", "Modul 2", "Modul 3", "Modul 4",
-            "Modul 5", "Modul 6", "Modul 7", "Modul 8"
-          ];
-          return allLabels[opts.dataPointIndex] || val;
+          return moduleTitles[opts.dataPointIndex] || val;
         }
       }
     },
@@ -244,6 +241,7 @@ function renderProgressMingguanChart() {
     ]
   };
 
+  chartContainer.innerHTML = "";
   const chart = new ApexCharts(chartContainer, options);
   chart.render();
 }
@@ -400,12 +398,16 @@ function renderKemampuanLiterasiChart() {
 }
 
 // Awal chart waktu belajar mahasiswa
-function renderWaktuBelajarChart() {
+function renderWaktuBelajarChart(chartData = {}) {
+  const categories = chartData.categories || [];
+const durationSeries = chartData.series || [];
+const moduleTitles = chartData.moduleTitles || [];
+const yAxisMax = chartData.yAxisMax || 1;
 
   const options = {
     series: [{
       name: "Jam Belajar",
-      data: [2.5, 1.7, 3.2, 0.6, 1.9, 1.5, 1.0]
+      data: durationSeries
     }],
     chart: {
       type: "area",
@@ -436,11 +438,11 @@ function renderWaktuBelajarChart() {
       strokeDashArray: 5
     },
     xaxis: {
-      categories: ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]
+      categories: categories
     },
     yaxis: {
       min: 0,
-      max: 3.2,
+      max: yAxisMax,
       tickAmount: 4,
       labels: {
         formatter: function (value) {
@@ -449,6 +451,11 @@ function renderWaktuBelajarChart() {
       }
     },
     tooltip: {
+      x: {
+        formatter: function (val, opts) {
+          return moduleTitles[opts.dataPointIndex] || val;
+        }
+      },
       y: {
         formatter: function (val) {
           return val + " jam";
@@ -457,6 +464,9 @@ function renderWaktuBelajarChart() {
     }
   };
 
+  const chartContainer = document.querySelector("#waktuBelajarChart");
+  if (!chartContainer) return;
+  chartContainer.innerHTML = "";
   const chart = new ApexCharts(
     document.querySelector("#waktuBelajarChart"),
     options

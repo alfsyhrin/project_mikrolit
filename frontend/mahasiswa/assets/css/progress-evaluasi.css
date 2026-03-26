@@ -170,6 +170,11 @@ p.alert-card {
   color: #b91c1c;
 }
 
+p.alert-card.success-alert {
+  color: var(--hijau);
+  font-weight: 600;
+}
+
 /* Responsivitas */
 @media (max-width: 768px) {
   .container-chart {
@@ -473,3 +478,4 @@ tbody tr:last-child td {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+

@@ -255,26 +255,81 @@ async completeStep(userId, moduleId, stepNumber) {
     }
 },
 
+    async getModuleDurationSeconds(userId, moduleId) {
+        const [stepDuration, moduleDuration] = await Promise.all([
+            this.getStepDurationSeconds(userId, moduleId),
+            this.getModuleLevelDurationSeconds(userId, moduleId)
+        ]);
+
+        // step jadi sumber utama, module jadi fallback
+        if (stepDuration > 0) return stepDuration;
+        if (moduleDuration > 0) return moduleDuration;
+
+        return 0;
+    },
     
+    async getStepDurationSeconds(userId, moduleId) {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT 
+                    COALESCE(SUM(
+                        TIMESTAMPDIFF(SECOND, started_at, completed_at)
+                    ), 0) AS total_duration_seconds
+                FROM student_step_progress
+                WHERE user_id = ?
+                AND module_id = ?
+                AND started_at IS NOT NULL
+                AND completed_at IS NOT NULL
+            `;
+
+            db.query(query, [userId, moduleId], (err, rows) => {
+                if (err) return reject(err);
+                resolve(Number(rows?.[0]?.total_duration_seconds || 0));
+            });
+        });
+    },
+
+    async getModuleLevelDurationSeconds(userId, moduleId) {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT
+                    CASE
+                        WHEN started_at IS NOT NULL AND completed_at IS NOT NULL
+                            THEN TIMESTAMPDIFF(SECOND, started_at, completed_at)
+                        ELSE 0
+                    END AS total_duration_seconds
+                FROM student_module_progress
+                WHERE user_id = ?
+                AND module_id = ?
+                LIMIT 1
+            `;
+
+            db.query(query, [userId, moduleId], (err, rows) => {
+                if (err) return reject(err);
+                resolve(Number(rows?.[0]?.total_duration_seconds || 0));
+            });
+        });
+    },
 
     async getStudentModules(userId) {
-        // 1. Fetch modules dengan progress
         const modules = await StudentProgressModel.getModulesWithProgress(userId);
-        
-        // 2. Untuk setiap module, fetch total steps
-        const modulesWithTotalSteps = await Promise.all(
+
+        const modulesWithMeta = await Promise.all(
             modules.map(async (module) => {
                 const totalSteps = await this.countModuleSteps(module.id);
+                const totalDurationSeconds = await this.getModuleDurationSeconds(userId, module.id);
+
                 return {
                     ...module,
                     total_steps: totalSteps,
                     completed_steps: module.completed_steps,
-                    progress_percent: module.progress_percent
+                    progress_percent: module.progress_percent,
+                    total_duration_seconds: totalDurationSeconds
                 };
             })
         );
-        
-        return modulesWithTotalSteps;
+
+        return modulesWithMeta;
     },
 
     // Helper function untuk hitung total steps di module

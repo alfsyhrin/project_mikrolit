@@ -174,6 +174,16 @@
         window.renderModuleDetail = renderModuleDetail;
         window.renderStepDetail = renderStepDetail;
     </script>
+
+    <script type="module">
+        import { renderBerandaModul } from "./assets/js/beranda-modul.js";
+        window.renderBerandaModul = renderBerandaModul;
+    </script>
+
+    <script type="module">
+        import { renderProgressEvaluasiPage } from "./assets/js/progress-evaluasi.js";
+        window.renderProgressEvaluasiPage = renderProgressEvaluasiPage;
+    </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
     <script src="../assets/apexcharts.min.js"></script>
@@ -285,28 +295,32 @@
                     const linkModul = document.querySelectorAll(".step-item");
 
                     modulCards.forEach(card => {
-                        card.addEventListener("click", function(e){
+                        card.addEventListener("click", function(e) {
                             e.preventDefault();
-                            const p = this.getAttribute("data-page");
-                            if(p) loadPage(p);
-                        });
-                    });
-                    linkCards.forEach(card => {
-                        card.addEventListener("click", function(e){
-                            e.preventDefault();
-                            const p = this.getAttribute("data-page");
-                            if(p) loadPage(p);
+                            const page = this.getAttribute("data-page");
+                            const moduleId = this.getAttribute("data-module-id");
+
+                            if (page) {
+                                loadPage(page, { moduleId });
+                            }
                         });
                     });
 
                     linkModul.forEach(card => {
-                        card.addEventListener("click", function(e){
+                        card.addEventListener("click", function(e) {
                             e.preventDefault();
 
                             const page = this.getAttribute("data-page");
+                            const moduleId = this.getAttribute("data-module-id");
+                            const stepNumber = this.getAttribute("data-step-number");
 
-                            if(page){
-                                loadPage(page);
+                            if (page === "modul-step" && moduleId && stepNumber) {
+                                loadPage("modul-step", { moduleId, stepNumber });
+                                return;
+                            }
+
+                            if (page) {
+                                loadPage(page, { moduleId });
                             }
                         });
                     });
@@ -343,7 +357,11 @@
                         setTimeout(() => {
                             renderChart();
                             renderMahasiswaChart();
-                            // render deadline tasks pada beranda
+
+                            if (window.renderBerandaModul) {
+                                window.renderBerandaModul(3); // tampilkan 3 modul di beranda
+                            }
+
                             if (window.fetchAndRenderDeadlineCards) {
                                 window.fetchAndRenderDeadlineCards(token, '.wrapper-card-deadline-mhs', 4);
                             }
@@ -358,10 +376,15 @@
                         }, 50);
                     } else if (page === "progress-evaluasi") {
                         setTimeout(() => {
-                            renderProgressMingguanChart();
                             renderKemampuanLiterasiChart();
-                            renderWaktuBelajarChart();
-                            window.fetchAndRenderTaskStats(token); // Fetch dan render statistik tugas pada halaman progress-evaluasi
+
+                            if (window.renderProgressEvaluasiPage) {
+                                window.renderProgressEvaluasiPage();
+                            }
+
+                            if (window.fetchAndRenderTaskStats) {
+                                window.fetchAndRenderTaskStats(token);
+                            }
                         }, 50);
                     }
                     // --- akhir init ---
