@@ -5,33 +5,43 @@ const eventBus = require("../events/eventBus");
 exports.getRooms = async (req, res) => {
     try {
         const userId = req.user.id;
+        console.log("🔍 getRooms called for userId:", userId);
+        
         const rooms = await discussionService.getDiscussionRooms(userId);
+        console.log("✅ Rooms fetched:", rooms.length, "rooms");
+        console.log("📊 Rooms data:", JSON.stringify(rooms, null, 2));
 
         res.json({
-        success: true,
-        data: rooms
+            success: true,
+            data: rooms
         });
     } catch (err) {
+        console.error("❌ getRooms error:", err);
         res.status(500).json({
-        success: false,
-        message: err.message
+            success: false,
+            message: err.message
         });
     }
-    };
+};
 
     exports.getMessages = async (req, res) => {
     try {
         const { roomId } = req.params;
+        console.log("🔍 getMessages called for roomId:", roomId);
+        
         const messages = await discussionService.getRoomMessages(roomId);
+        console.log("✅ Messages fetched:", messages.length, "messages");
+        console.log("📊 Messages data:", JSON.stringify(messages, null, 2));
 
         res.json({
-        success: true,
-        data: messages
+            success: true,
+            data: messages
         });
     } catch (err) {
+        console.error("❌ getMessages error:", err);
         res.status(500).json({
-        success: false,
-        message: err.message
+            success: false,
+            message: err.message
         });
     }
     };

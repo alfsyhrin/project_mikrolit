@@ -135,10 +135,11 @@
     </script>
 
     <script type="module">
-        import { initPengaturan } from "./assets/js/pengaturan.js";
+        import { initDiskusiFullscreen, renderDiskusiTopics } from "./assets/js/diskusi.js";
         
         // Expose ke global scope agar bisa dipanggil dari inline script lain
-        window.initPengaturan = initPengaturan;
+        window.initDiskusiFullscreen = initDiskusiFullscreen;
+        window.renderDiskusiTopics = renderDiskusiTopics;
     </script>
 
     <script type="module">
@@ -325,8 +326,10 @@
                         }, 50);
                     }
                     if (page === "diskusi") {
-                        setTimeout(() => {
+                        setTimeout(async () => {
                             window.initDiskusiFullscreen();
+                            // ✅ Render list room diskusi dari API
+                            await window.renderDiskusiTopics?.();
                         }, 50);
                     }
                     if (page === "beranda") {

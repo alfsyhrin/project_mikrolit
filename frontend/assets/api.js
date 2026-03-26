@@ -566,3 +566,52 @@ export async function downloadStepResourceRequest(moduleId, stepNumber, resource
         contentType: contentType || blob.type
     };
 }
+
+export async function getAllDiscussionRequest(token){
+    const response = await fetch(API_BASE + `/discussion/all`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.json();
+}
+
+export async function getDiscussionChatRequest(token, roomId){
+    const response = await fetch(API_BASE + `/discussion/rooms/${roomId}/messages`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.json();
+}
+
+export async function sendDiscussionMessageRequest(token, roomId, message){
+    const response = await fetch(API_BASE + `/discussion/messages`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ room_id: roomId, message })
+    });
+    return response.json();
+}
+
+export async function markDiscussionAsReadRequest(token, roomId){
+    const response = await fetch(API_BASE + `/discussion/${roomId}/read`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.json();
+}

@@ -7,12 +7,15 @@ const Discussion = {
         `
         SELECT 
           dr.id AS room_id,
-          dr.title,
-          COUNT(dm.id) AS message_count
+          m.title,
+          COUNT(DISTINCT dm.id) AS message_count
         FROM discussion_rooms dr
+        LEFT JOIN modules m ON dr.module_id = m.id
         LEFT JOIN discussion_messages dm
           ON dr.id = dm.room_id
+        WHERE dr.is_active = 1
         GROUP BY dr.id
+        ORDER BY dr.created_at DESC
         `,
         (err, rows) => {
           if (err) return reject(err);
@@ -28,9 +31,9 @@ const Discussion = {
         `
         SELECT
           dm.id,
-          dm.message,
+          dm.message as message_text,
           dm.created_at,
-          u.name,
+          u.name as user_name,
           u.role
         FROM discussion_messages dm
         JOIN users u ON dm.user_id = u.id
@@ -81,15 +84,17 @@ const Discussion = {
     });
   },
 
-  getDiscussionRoomWithUnread(userId) {
+  getDiscussionRoomWithUnread: async (userId) => {
     return new Promise((resolve, reject) => {
-      db.query( `
+      db.query(
+        `
         SELECT
           dr.id as room_id,
-          dr.title,
-          COUNT(dm.id) as message_count,
-          COUNT(dm.id) - COUNT(dmr.id) as unread_count
+          m.title,
+          COUNT(DISTINCT dm.id) as message_count,
+          COUNT(DISTINCT dm.id) - COUNT(DISTINCT dmr.message_id) as unread_count
         FROM discussion_rooms dr
+        LEFT JOIN modules m ON dr.module_id = m.id
         LEFT JOIN discussion_messages dm
           ON dr.id = dm.room_id
         LEFT JOIN discussion_message_reads dmr
