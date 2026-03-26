@@ -188,7 +188,12 @@ header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ddd;
+  border: 1px solid transparent;
+  transition: 0.3s ease all;
+}
+
+.card-list-modul:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-list-modul .header-modul {
