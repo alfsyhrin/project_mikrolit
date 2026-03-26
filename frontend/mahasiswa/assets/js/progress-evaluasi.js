@@ -1,4 +1,4 @@
-import { getModuleLearningRequest } from "../../../assets/api.js";
+import { getModuleLearningRequest, getTaskForMahasiswaRequest } from "../../../assets/api.js";
 
 /**
  * Orchestrator halaman progress-evaluasi
@@ -11,18 +11,23 @@ export async function renderProgressEvaluasiPage() {
             return;
         }
 
-        const response = await getModuleLearningRequest(token);
+        const [moduleResponse, tasksResponse] = await Promise.all([
+            getModuleLearningRequest(token),
+            getTaskForMahasiswaRequest(token)
+        ]);
 
-        if (!response?.success || !Array.isArray(response.data)) {
-            console.error("[renderProgressEvaluasiPage] Response tidak valid:", response);
+        if (!moduleResponse?.success || !Array.isArray(moduleResponse.data)) {
+            console.error("[renderProgressEvaluasiPage] Response modul tidak valid:", moduleResponse);
             return;
         }
 
-        const modules = response.data;
+        const modules = moduleResponse.data;
+        const tasks = Array.isArray(tasksResponse) ? tasksResponse : [];
 
         renderProgressEvaluasiSummary(modules);
         renderRekapitulasiModul(modules);
         renderProgressEvaluasiCharts(modules);
+        renderRiwayatPengumpulanTugas(tasks);
 
         console.log("[renderProgressEvaluasiPage] Render berhasil");
     } catch (error) {
@@ -163,6 +168,113 @@ function createRekapitulasiRow(module) {
 function getStepCompletionStatus(stepIndex, completedSteps) {
     const completed = Number(completedSteps || 0);
     return stepIndex <= completed ? "Selesai" : "Belum Selesai";
+}
+
+//helper filter tugas yang sudah dikumpulkan
+function getSubmittedTasks(tasks) {
+    if (!Array.isArray(tasks)) return [];
+
+    return tasks.filter(task =>
+        task &&
+        task.status === "sudah dikumpulkan" &&
+        task.submitted_at
+    );
+}
+
+//helper data duplikat
+function deduplicateSubmittedTasks(tasks) {
+    const seen = new Set();
+
+    return tasks.filter(task => {
+        const key = `${task.id}-${task.submitted_at}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+}
+
+//helper format tanggal dan waktu terpisah
+function formatSubmittedAt(submittedAt) {
+    if (!submittedAt) return "-";
+
+    const date = new Date(submittedAt);
+
+    const tanggal = date.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
+
+    const waktu = date.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    });
+
+    return {
+        tanggal,
+        waktu,
+        merged: `${tanggal}, ${waktu}`
+    };
+}
+
+//render card riwayat tugas
+function renderRiwayatPengumpulanTugas(tasks) {
+    const container = document.querySelector(".pengumpulan-wrapper");
+
+    if (!container) {
+        console.warn("[renderRiwayatPengumpulanTugas] Container .pengumpulan-wrapper tidak ditemukan");
+        return;
+    }
+
+    const submittedTasks = deduplicateSubmittedTasks(getSubmittedTasks(tasks))
+        .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+
+    container.innerHTML = "";
+
+    if (submittedTasks.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state-riwayat">
+                <p>Belum ada riwayat pengumpulan tugas.</p>
+            </div>
+        `;
+        return;
+    }
+
+    submittedTasks.forEach(task => {
+        const card = createRiwayatPengumpulanCard(task);
+        container.appendChild(card);
+    });
+}
+
+function createRiwayatPengumpulanCard(task) {
+    const {
+        task_title,
+        submitted_at
+    } = task;
+
+    const waktu = formatSubmittedAt(submitted_at);
+
+    const card = document.createElement("div");
+    card.className = "card-riwayat-pengumpulan-tugas";
+
+    card.innerHTML = `
+        <div class="wrapper-icon-info-riwayat-tugas">
+            <p class="icon-riwayat-tugas">
+                <span class="material-symbols-outlined">assignment</span>
+            </p>
+            <div class="info-riwayat-tugas">
+                <h3 class="judul-file">${escapeHtml(task_title || "Tugas Tanpa Judul")}</h3>
+                <span class="waktu-file">${waktu.merged} WIT</span>
+            </div>
+        </div>
+        <p class="action-card-riwayat-pengumpulan">
+            <span class="material-symbols-outlined">check_circle</span>
+        </p>
+    `;
+
+    return card;
 }
 
 /**
