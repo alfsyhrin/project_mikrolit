@@ -361,48 +361,33 @@
 
 }
 
-/* HEADER FLEX */
-.header-diskusi {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* BUTTON FULLSCREEN */
-.btn-fullscreen {
-    border: none;
-    background: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-fullscreen .material-symbols-outlined {
-    font-size: 1.4rem;
-    color: var(--text-color);
-}
-
-/* MODE FULLSCREEN */
 .container-diskusi.fullscreen {
     position: fixed;
-    inset: 0;
-    width: 100%;
+    top: 0;
+    left: 0;
+    width: 100vw;
     height: 100vh;
     z-index: 9999;
     border-radius: 0;
     padding: 1rem;
 }
 
-/* PESAN IKUT MEMBESAR */
 .container-diskusi.fullscreen .wrapper-card-pesan-diskusi {
     height: calc(100vh - 140px);
 }
 
-/* INPUT DI BAWAH FIX */
 .container-diskusi.fullscreen .footer-container-diskusi {
     position: sticky;
     bottom: 0;
     background: #fff;
-    padding-top: 0.7rem;
+}
+
+#btnFullscreenDiskusi {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#btnFullscreenDiskusi .material-symbols-outlined {
+    font-size: 1.2rem;
 }

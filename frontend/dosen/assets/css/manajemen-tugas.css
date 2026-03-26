@@ -68,12 +68,17 @@ button.buat-tugas p {
 .card-tugas-dosen {
     padding: 1.5rem;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid transparent;
     border-radius: 10px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     gap: 1rem;
+    transition: 0.3s ease all;
+}
+
+.card-tugas-dosen:hover {
+    border: 1px solid var(--third-color);
 }
 
 .wrapper-card {
