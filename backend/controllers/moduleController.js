@@ -1,29 +1,147 @@
 const Module = require("../models/Module");
+const eventBus = require("../events/eventBus");
+const ModuleService = require("../services/modulService");
 
-exports.createModule = (req, res) => {
-    const data = {
-        title: req.body.title,
-        description: req.body.description,
-        learning_outcomes: req.body.learning_outcomes,
-        created_by: req.user.id
-    };
+exports.createModule = async (req, res) => {
+    try {
+        const moduleId = await ModuleService.createModule(req.body);
 
-    Module.create(data, (err, result) => {
-        if (err) return res.status(500).json({ error: err });
-        res.json({ message: "Module created", moduleId: result.insertId });
-    });
+                // Validasi role dosen
+        if (!req.user || req.user.role !== "dosen") {
+            return res.status(403).json({
+                success: false,
+                message: "Akses ditolak. Hanya dosen yang dapat membuat modul."
+            });
+        }
+
+        // ✅ Gunakan req.body atau moduleData yang didefinisikan
+        eventBus.emit("module_created", {
+            id: moduleId,
+            ...req.body
+        });
+
+        res.json({
+            success: true,
+            module_id: moduleId
+        });
+
+    } catch (error) {
+        console.error('Error creating module:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
 };
 
 exports.getModules = (req, res) => {
-    Module.getByDosen(req.user.id, (err, rows) => {
-        if (err) return res.status(500).json({ error: err });
+    console.log("🔍 User ID:", req.user.id);
+    
+    Module.getModules(req.user.id, (err, rows) => {
+        console.log("🔍 Callback err:", err);
+        console.log("🔍 Callback rows:", rows);
+        console.log("🔍 Rows type:", typeof rows, "Is array?", Array.isArray(rows));
+        
+        if (err) {
+            console.error("❌ DB Error:", err);
+            return res.status(500).json({ error: err.message });
+        }
+        
+        // Jika rows undefined, kirim array kosong
+        if (!rows) {
+            console.warn("⚠️ Rows is null/undefined, sending empty array");
+            return res.json([]);
+        }
+        
+        console.log("✅ Response sent, count:", rows.length);
         res.json(rows);
     });
 };
 
-exports.getModuleDetail = (req, res) => {
-    Module.getDetail(req.params.id, (err, rows) => {
-        if (err) return res.status(500).json({ error: err });
-        res.json(rows[0]);
-    });
+exports.getModuleDetail = async (req, res) => {
+    console.log("🔍 getModuleDetail called for id:", req.params.id);
+
+    try {
+        const module = await ModuleService.getModuleDetail(req.params.id);
+        console.log("✅ getModuleDetail result:", module);
+
+        res.json({
+        success: true,
+        data: module
+        });
+    } catch (err) {
+        console.error("❌ getModuleDetail error:", err);
+        res.status(500).json({
+        success: false,
+        message: err.message
+        });
+    }
+};
+
+exports.updateModule = async (req, res) => {
+    console.log("🔍 updateModule called for id:", req.params.id);
+
+    try {
+        await ModuleService.updateModule(req.params.id, req.body);
+        console.log("✅ Module updated:", req.params.id);
+
+        eventBus.emit("module_updated", {
+            id: req.params.id,
+            title: req.body.title || "Module",
+            ...req.body
+        });
+
+        res.json({
+        success: true,
+        message: "Module updated successfully"
+        });
+    } catch (err) {
+        console.error("❌ updateModule error:", err);
+        res.status(500).json({
+        success: false,
+        message: err.message
+        });
+    }
+};
+
+exports.deleteModule = async (req, res) => {
+    console.log("🔍 deleteModule called for id:", req.params.id)
+    
+    try {
+        const moduleId = req.params.id;
+
+        // Fetch module data SEBELUM delete (untuk notifikasi)
+        let moduleData = null;
+        try {
+            moduleData = await ModuleService.getModuleDetail(moduleId);
+        } catch (err) {
+            console.warn("⚠️ Could not fetch module detail:", err.message);
+            moduleData = { id: moduleId, title: "Module" };
+        }
+
+        // Lakukan cascade delete
+        await ModuleService.deleteModule(moduleId);
+        console.log("✅ Module deleted successfully:", moduleId);
+
+        // Emit event dengan data module yang lengkap
+        eventBus.emit("module_deleted", {
+            id: moduleId,
+            title: moduleData?.title || "Module"
+        });
+
+        res.json({
+            success: true,
+            message: "Module deleted successfully"
+        });
+
+    } catch (err) {
+        console.error("❌ deleteModule error:", err);
+        
+        // Return error detail ke client
+        res.status(500).json({
+            success: false,
+            message: err.message || "Failed to delete module",
+            code: err.code || "UNKNOWN_ERROR"
+        });
+    }
 };

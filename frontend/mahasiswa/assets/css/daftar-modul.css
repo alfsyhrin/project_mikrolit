@@ -59,6 +59,14 @@
   background-color: #fff;
   padding: 1rem;
   border-radius: 10px;
+  text-decoration: none;
+  color: #111;
+  border: 1px solid transparent;
+  transition: 0.3s ease all;
+}
+
+.card-modul-mahasiswa-menu:hover {
+  border: 1px solid var(--third-color);
 }
 
 .header-card-modul-mahasiswa {
@@ -172,7 +180,7 @@
   color: #111;
 }
 
-a.lanjut-belajar-modul {
+.footer-card-modul-mahasiswa a.lanjut-belajar-modul {
   margin-top: 0.5rem;
   text-decoration: none;
   display: flex;
@@ -184,7 +192,7 @@ a.lanjut-belajar-modul {
   gap: 0.3rem;
 }
 
-a.lanjut-belajar-modul .material-symbols-outlined {
+.footer-card-modul-mahasiswa a.lanjut-belajar-modul .material-symbols-outlined {
   font-size: 1.3rem;
 }
 
@@ -205,3 +213,4 @@ a.lanjut-belajar-modul .material-symbols-outlined {
 
 }
 /* Akhir container modul mahasiswa */
+

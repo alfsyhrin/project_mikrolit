@@ -35,8 +35,18 @@ const Writing = {
   },
 
   deleteTask: (id, callback) => {
-    db.query("DELETE FROM writing_tasks WHERE id = ?", [id], callback);
+      db.query("SET FOREIGN_KEY_CHECKS = 0;", (err) => {
+          if (err) return callback(err);
+          
+          db.query("DELETE FROM writing_tasks WHERE id = ?", [id], (err, result) => {
+              // Re-enable foreign key checks
+              db.query("SET FOREIGN_KEY_CHECKS = 1;", () => {
+                  callback(err, result);
+              });
+          });
+      });
   },
+
 
   getTasksByModule: (moduleId, callback) => {
     db.query(

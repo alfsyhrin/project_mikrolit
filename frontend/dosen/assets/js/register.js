@@ -1,4 +1,5 @@
-import { registerRequest } from "./api.js";
+import { registerRequest } from "../../../assets/api.js";
+import { Toast } from "../../../assets/toast.js";
 const registerForm = document.getElementById("registrasiForm");
 
 if (registerForm) {
@@ -19,7 +20,7 @@ if (registerForm) {
 
         try {
             await registerRequest(name, email, password, nidn);
-            messageElement.innerText = "Registrasi berhasil. Silakan tunggu konfirmasi dari Dosen";
+            Toast("Registrasi berhasil. Silakan tunggu konfirmasi dari Dosen");
             setTimeout(() => {
                 window.location.href = "../index.html";
             }, 3000);

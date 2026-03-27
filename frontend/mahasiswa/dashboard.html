@@ -29,6 +29,18 @@
     <!-- Link ke CSS pengaturan.css -->
     <link rel="stylesheet" href="./assets/css/pengaturan.css">
 
+    <!-- Link ke CSS modul.css -->
+    <link rel="stylesheet" href="./assets/css/modul.css">
+
+    <!-- Link ke CSS modul-stepone.css -->
+    <link rel="stylesheet" href="./assets/css/modul-stepone.css">
+
+    <!-- Link ke CSS modul-steptwo.css -->
+    <link rel="stylesheet" href="./assets/css/modul-steptwo.css">
+
+    <!-- Link ke CSS modul-stepthree.css -->
+    <link rel="stylesheet" href="./assets/css/modul-stepthree.css">
+
     <!-- Link ke CSS global -->
     <link rel="stylesheet" href="../assets/main.css">
 
@@ -123,16 +135,54 @@
     </script>
 
     <script type="module">
-        import { initPengaturan } from "./assets/js/pengaturan.js";
+        import { initDiskusiFullscreen, renderDiskusiTopics } from "./assets/js/diskusi.js";
         
         // Expose ke global scope agar bisa dipanggil dari inline script lain
+        window.initDiskusiFullscreen = initDiskusiFullscreen;
+        window.renderDiskusiTopics = renderDiskusiTopics;
+    </script>
+
+    <script type="module">
+        import { initManajemenTugasMhs, fetchAndRenderDeadlineCards, fetchAndRenderTaskSummary, fetchAndRenderTaskStats } from "./assets/js/tugas-mahasiswa.js";
+
+        window.initManajemenTugasMhs = initManajemenTugasMhs;
+        window.fetchAndRenderDeadlineCards = fetchAndRenderDeadlineCards;
+        window.fetchAndRenderTaskSummary = fetchAndRenderTaskSummary;
+        window.fetchAndRenderTaskStats = fetchAndRenderTaskStats;
+    </script>
+
+    <script type="module">
+        import { fetchAndRenderNotifications } from "./assets/js/dashboard.js";
+        window.fetchAndRenderNotifications = fetchAndRenderNotifications;
+    </script>
+    
+    <script type="module">
+        import { initDiskusiFullscreen } from "./assets/js/diskusi.js";
+        window.initDiskusiFullscreen = initDiskusiFullscreen;
+    </script>
+
+        <!-- Link untuk pengaturan.js -->
+    <script type="module">
+        import { initPengaturan } from "./assets/js/pengaturan.js";
+
         window.initPengaturan = initPengaturan;
     </script>
 
     <script type="module">
-        import { initManajemenTugasMhs } from "./assets/js/tugas-mahasiswa.js";
+        import { renderDaftarModul, renderModuleDetail, renderStepDetail } from "./assets/js/daftar-modul.js";
+        window.renderDaftarModul = renderDaftarModul;
+        window.renderModuleDetail = renderModuleDetail;
+        window.renderStepDetail = renderStepDetail;
+    </script>
 
-        window.initManajemenTugasMhs = initManajemenTugasMhs;
+    <script type="module">
+        import { renderBerandaModul } from "./assets/js/beranda-modul.js";
+        window.renderBerandaModul = renderBerandaModul;
+    </script>
+
+    <script type="module">
+        import { renderProgressEvaluasiPage } from "./assets/js/progress-evaluasi.js";
+        window.renderProgressEvaluasiPage = renderProgressEvaluasiPage;
     </script>
     
     <!-- Link untuk mengakses Apex chart lokal -->
@@ -157,6 +207,7 @@
         const collapseBtn = document.getElementById("collapseBtn");
         const content = document.querySelector(".content");
         const sidebarLinks = document.querySelectorAll(".sidebar-list a");
+        const modulLinks = document.querySelectorAll(".container-modul-mahasiswa a");
 
         // ==============================
         // AUTH CHECK
@@ -212,7 +263,16 @@
         // ==============================
         // LOAD PAGE FUNCTION
         // ==============================
-        function loadPage(page) {
+        function loadPage(page, options = { pushState: true }) {
+            // ✅ Handle 'modul-step' page (render step detail tanpa fetch HTML)
+            if (page === 'modul-step' && options.moduleId && options.stepNumber) {
+                console.log("[loadPage] Rendering step detail:", options.moduleId, options.stepNumber);
+                setTimeout(() => {
+                    window.renderStepDetail?.(options.moduleId, options.stepNumber);
+                }, 50);
+                return;  // Return - jangan lanjut ke fetch HTML
+            }
+
             fetch(`./pages/${page}.html`)
                 .then(response => {
                     if (!response.ok) throw new Error("404");
@@ -221,39 +281,129 @@
                 .then(data => {
                     content.innerHTML = data;
 
-                    // 🔥 INIT FILTER jika halaman manajemen pengguna
+                    // Render modul detail jika halaman modul dengan moduleId
+                    if (page === "modul" && options.moduleId) {
+                        setTimeout(() => {
+                            window.renderModuleDetail?.(options.moduleId);
+                        }, 50);
+                    }
+
+
+                    // --- init/attach behavior pada halaman yg di-load ---
+                    const modulCards = document.querySelectorAll(".card-modul-mahasiswa-menu");
+                    const linkCards = document.querySelectorAll(".lanjut-belajar-modul");
+                    const linkModul = document.querySelectorAll(".step-item");
+
+                    modulCards.forEach(card => {
+                        card.addEventListener("click", function(e) {
+                            e.preventDefault();
+                            const page = this.getAttribute("data-page");
+                            const moduleId = this.getAttribute("data-module-id");
+
+                            if (page) {
+                                loadPage(page, { moduleId });
+                            }
+                        });
+                    });
+
+                    linkModul.forEach(card => {
+                        card.addEventListener("click", function(e) {
+                            e.preventDefault();
+
+                            const page = this.getAttribute("data-page");
+                            const moduleId = this.getAttribute("data-module-id");
+                            const stepNumber = this.getAttribute("data-step-number");
+
+                            if (page === "modul-step" && moduleId && stepNumber) {
+                                loadPage("modul-step", { moduleId, stepNumber });
+                                return;
+                            }
+
+                            if (page) {
+                                loadPage(page, { moduleId });
+                            }
+                        });
+                    });
+
                     if (page === "manajemen-pengguna") {
                         setTimeout(() => {
                             window.initManajemenPengguna();
                             window.fetchAndRenderUsers();
                         }, 50);
                     }
-
+                    if (page === "daftar-modul") {
+                        setTimeout(async () => {
+                            await window.renderDaftarModul?.();
+                        }, 50);
+                    }
                     if (page === "tugas-mahasiswa") {
                         setTimeout(() => {
                             window.initManajemenTugasMhs();
                         }, 50);
                     }
-
                     if (page === "pengaturan") {
                         setTimeout(() => {
                             window.initPengaturan();
                         }, 50);
                     }
-                    
-                    // 🔥 Render chart jika halaman beranda
+                    if (page === "diskusi") {
+                        setTimeout(async () => {
+                            window.initDiskusiFullscreen();
+                            // ✅ Render list room diskusi dari API
+                            await window.renderDiskusiTopics?.();
+                        }, 50);
+                    }
                     if (page === "beranda") {
                         setTimeout(() => {
                             renderChart();
                             renderMahasiswaChart();
+
+                            if (window.renderBerandaModul) {
+                                window.renderBerandaModul(3); // tampilkan 3 modul di beranda
+                            }
+
+                            if (window.fetchAndRenderDeadlineCards) {
+                                window.fetchAndRenderDeadlineCards(token, '.wrapper-card-deadline-mhs', 4);
+                            }
+
+                            if (window.fetchAndRenderTaskSummary) {
+                                window.fetchAndRenderTaskSummary(token);
+                            }
+
+                            if (window.fetchAndRenderNotifications) {
+                                window.fetchAndRenderNotifications(token, '.wrapper-card-notifikasi-mhs', 5);
+                            }
+                        }, 50);
+                    } else if (page === "progress-evaluasi") {
+                        setTimeout(() => {
+                            renderKemampuanLiterasiChart();
+
+                            if (window.renderProgressEvaluasiPage) {
+                                window.renderProgressEvaluasiPage();
+                            }
+
+                            if (window.fetchAndRenderTaskStats) {
+                                window.fetchAndRenderTaskStats(token);
+                            }
                         }, 50);
                     }
-                    else if (page === "progress-evaluasi") {
-                        setTimeout(() => {
-                            renderProgressMingguanChart();
-                            renderKemampuanLiterasiChart();
-                            renderWaktuBelajarChart();
-                        }, 50);
+                    // --- akhir init ---
+
+                    // Update sidebar active link
+                    sidebarLinks.forEach(item => item.classList.remove("active"));
+                    const sidebarLink = document.querySelector(`.sidebar-list a[data-page="${page}"]`);
+                    if (sidebarLink) sidebarLink.classList.add("active");
+
+                    // Optional: update navbar title if you want
+                    const navTitle = document.querySelector('.navbar-kiri h2');
+                    if (navTitle) {
+                        // simple mapping or just show page name
+                        navTitle.textContent = page.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase());
+                    }
+
+                    // Push history state so back/forward works
+                    if (options.pushState && history && history.pushState) {
+                        history.pushState({ page }, '', `#${page}`);
                     }
                 })
                 .catch(() => {
@@ -261,7 +411,41 @@
                 });
         }
 
+        window.addEventListener('popstate', function(e) {
+            const page = (e.state && e.state.page) || 'beranda';
+            loadPage(page, { pushState: false });
+        });
 
+        // Intercept any link that uses data-page (except sidebar links which already have handlers)
+        document.addEventListener('click', function(e){
+            
+            // ✅ TAMBAH INI DI AWAL: Handle step-item clicks (prioritas tinggi)
+            const stepItem = e.target.closest('.step-item');
+            if (stepItem) {
+                e.preventDefault();
+                const moduleId = stepItem.getAttribute('data-module-id');
+                const stepNumber = stepItem.getAttribute('data-step-number');
+                const status = stepItem.getAttribute('data-status');
+                
+                if (moduleId && stepNumber) {
+                    if (status === 'locked' || status === 'terkunci') {
+                        alert('Step ini masih terkunci. Selesaikan langkah sebelumnya terlebih dahulu.');
+                        return;
+                    }
+                    loadPage('modul-step', { moduleId, stepNumber });
+                }
+                return;
+            }
+
+            // ✅ EXISTING CODE TETAP: original a[data-page] handler (jangan diubah)
+            const a = e.target.closest('a[data-page]');
+            if (!a) return;
+            if (a.closest('.sidebar-list')) return;
+            e.preventDefault();
+            const page = a.getAttribute('data-page');
+            const moduleId = a.getAttribute('data-module-id');
+            loadPage(page, { moduleId });
+        });
         // ==============================
         // SIDEBAR LINK CLICK
         // ==============================
@@ -344,7 +528,10 @@
             defaultLink.classList.add("active");
         }
 
-        });
+        // ✅ Expose loadPage ke global scope (supaya daftar-modul.js bisa pakai)
+        window.loadPage = loadPage;
+
+        });  // closing of DOMContentLoaded
     </script>
 
 

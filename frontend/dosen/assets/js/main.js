@@ -91,6 +91,8 @@ document.addEventListener("submit", function (e) {
         Modal.hide();
     }
 });
+
+
 // Akhir modal edit tugas di halaman manajemen tugas (Dosen)
 
 // Awal modal list mahasiswa yang mengumpulkan tugas (Mahasiswa)
@@ -113,3 +115,404 @@ document.addEventListener("click", function (e) {
     });
 });
 // Akhir modal list mahasiswa yang mengumpulkan tugas (Mahasiswa)
+
+// Awal modal buat modul
+document.addEventListener("click", function (e) {
+
+    const btnBuatModul = e.target.closest("#btnBuatModul");
+
+    if (!btnBuatModul) return;
+
+    Modal.show({
+        title: "Buat Modul Pembelajaran",
+        size: "large",
+        content: `
+        <form id="formBuatModul" class="modal-form">
+
+            <!-- JUDUL -->
+            <div class="modal-form-group">
+                <label>Judul Modul</label>
+                <input type="text" name="judul_modul" required>
+            </div>
+
+            <!-- DESKRIPSI -->
+            <div class="modal-form-group">
+                <label>Deskripsi Modul</label>
+                <textarea name="deskripsi_modul" rows="3"></textarea>
+            </div>
+
+            <!-- TUJUAN -->
+            <div class="modal-form-group">
+
+                <label>Tujuan Pembelajaran</label>
+
+                <div id="tujuanContainer">
+
+                    <div class="tujuan-item">
+                        <input type="text" name="tujuan[]" placeholder="Tujuan pembelajaran 1">
+                    </div>
+
+                    <div class="tujuan-item">
+                        <input type="text" name="tujuan[]" placeholder="Tujuan pembelajaran 2">
+                    </div>
+
+                    <div class="tujuan-item">
+                        <input type="text" name="tujuan[]" placeholder="Tujuan pembelajaran 3">
+                    </div>
+
+                </div>
+
+                <button type="button" id="btnTambahTujuan" class="btn-tambah-tujuan">
+                    <span class="material-symbols-outlined">add</span>
+                    Tambah Tujuan
+                </button>
+
+            </div>
+
+            <!-- ================= PENGATURAN MODUL ================= -->
+
+            <div class="step-modul">
+
+                <h3>Pengaturan Modul</h3>
+
+                <div class="modal-form-group">
+                    <label>Fitur Modul</label>
+
+                    <label class="diskusi-card">
+
+                        <input type="checkbox" name="gunakan_forum" id="gunakanForum">
+
+                        <div class="diskusi-card-content">
+
+                            <span class="material-symbols-outlined icon-diskusi">
+                                forum
+                            </span>
+
+                            <div class="diskusi-info">
+                                <h4>Aktifkan Forum Diskusi</h4>
+                                <p>Mahasiswa dapat berdiskusi pada modul ini</p>
+                            </div>
+
+                            <span class="material-symbols-outlined check-icon">
+                                check_circle
+                            </span>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+            </div>
+            
+            <!-- ================= STEP 1 ================= -->
+
+            <div class="step-modul">
+                <h3>STEP 1 — Microlearning</h3>
+
+                <div class="modal-form-group">
+                    <label>Link Video Microlearning (±5 menit)</label>
+                    <input type="url" name="video_microlearning" placeholder="https://youtube.com/...">
+                </div>
+
+                <div class="modal-form-group">
+                    <label>Dokumen Contoh Penelitian</label>
+                    <input type="file" name="dokumen_penelitian">
+                </div>
+            </div>
+
+            <!-- ================= STEP 2 ================= -->
+
+            <div class="step-modul">
+                <h3>STEP 2 — Diskusi</h3>
+
+                <div class="modal-form-group">
+                    <label>Upload File PPT</label>
+                    <input type="file" name="file_ppt">
+                </div>
+
+                <div class="modal-form-group">
+                <label>Aktivitas Diskusi</label>
+
+                <label class="diskusi-card">
+
+                    <input type="checkbox" name="diskusi_rangkuman">
+
+                    <div class="diskusi-card-content">
+
+                        <span class="material-symbols-outlined icon-diskusi">
+                            forum
+                        </span>
+
+                        <div class="diskusi-info">
+                            <h4>Catat Poin Penting</h4>
+                            <p>Buat rangkuman atau poin penting dari materi PPT</p>
+                        </div>
+
+                        <span class="material-symbols-outlined check-icon">
+                            check_circle
+                        </span>
+
+                    </div>
+
+                </label>
+
+            </div>
+
+            </div>
+
+            <!-- ================= STEP 3 ================= -->
+
+            <div class="step-modul">
+                <h3>STEP 3 — Infografis</h3>
+
+                <div class="modal-form-group">
+                    <label>Upload Infografis 1</label>
+                    <input type="file" name="infografis1">
+                </div>
+
+                <div class="modal-form-group">
+                    <label>Upload Infografis 2</label>
+                    <input type="file" name="infografis2">
+                </div>
+
+            </div>
+
+            <button type="submit" class="modal-submit-btn">
+                Simpan Modul
+            </button>
+
+        </form>
+        `
+    });
+
+});
+
+
+/* =========================
+   TAMBAH TUJUAN
+========================= */
+
+document.addEventListener("click", function (e) {
+
+    const btnTambah = e.target.closest("#btnTambahTujuan");
+
+    if (!btnTambah) return;
+
+    const container = document.getElementById("tujuanContainer");
+
+    if (!container) return;
+
+    const jumlah = container.children.length + 1;
+
+    const div = document.createElement("div");
+
+    div.className = "tujuan-item";
+
+    div.innerHTML = `
+        <input type="text" name="tujuan[]" placeholder="Tujuan pembelajaran ${jumlah}">
+        <button type="button" class="hapus-tujuan">
+            <span class="material-symbols-outlined">delete</span>
+        </button>
+    `;
+
+    container.appendChild(div);
+
+});
+
+
+/* =========================
+   HAPUS TUJUAN
+========================= */
+
+document.addEventListener("click", function (e) {
+
+    const btnHapus = e.target.closest(".hapus-tujuan");
+
+    if (!btnHapus) return;
+
+    const container = document.getElementById("tujuanContainer");
+
+    if (!container) return;
+
+    if (container.children.length <= 3) {
+        alert("Minimal harus ada 3 tujuan pembelajaran.");
+        return;
+    }
+
+    btnHapus.closest(".tujuan-item").remove();
+
+});
+
+
+/* =========================
+   SUBMIT FORM MODUL
+========================= */
+
+// document.addEventListener("submit", function (e) {
+
+//     if (e.target.id !== "formBuatModul") return;
+
+//     e.preventDefault();
+
+//     const formData = new FormData(e.target);
+
+//     const data = {
+//         judul: formData.get("judul_modul"),
+//         deskripsi: formData.get("deskripsi_modul"),
+//         tujuan: formData.getAll("tujuan[]"),
+
+//         gunakanForum: formData.get("gunakan_forum"),
+
+//         video: formData.get("video_microlearning"),
+//         dokumenPenelitian: formData.get("dokumen_penelitian"),
+
+//         filePPT: formData.get("file_ppt"),
+//         diskusi: formData.get("diskusi_rangkuman"),
+
+//         infografis1: formData.get("infografis1"),
+//         infografis2: formData.get("infografis2")
+//     };
+
+//     console.log("Data Modul:", data);
+
+//     // contoh kirim ke backend
+//     /*
+//     fetch("/api/modul",{
+//         method:"POST",
+//         body:formData
+//     })
+//     */
+
+//     Modal.hide();
+
+// });
+// Akhir modal buat modul
+
+// Awal lihat mahasiswa penyelesaian modul
+// document.addEventListener("click", function (e) {
+//     const btnSubmisi = e.target.closest("#btnLihatPenyelesaian");
+
+//     if (!btnSubmisi) return;
+
+//     Modal.show({
+//         title: "Penyelesaian Modul Mahasiswa",
+//         size: "medium",
+//         content: `
+//             <div class="submission-modul-card-wrapper">
+//                 <div class="submission-modul-card">
+//                     <div class="submission-modul-header">
+//                         <div>
+//                             <div class="submission-modul-name">Cuppa</div>
+//                             <div class="submission-modul-npm">NPM : 07352211097</div>
+//                         </div>
+//                         <div class="submission-modul-date">
+//                             <div class="submission-modul-date-day">19-03-2026</div>
+//                             <div class="submission-modul-time">00.34 WIT</div>
+//                         </div>
+//                     </div>
+//                 </div>
+
+//                 <div class="submission-modul-card">
+//                     <div class="submission-modul-header">
+//                         <div>
+//                             <div class="submission-modul-name">A Ming Lang</div>
+//                             <div class="submission-modul-npm">NPM : 07352211062</div>
+//                         </div>
+//                         <div class="submission-modul-date">
+//                             <div class="submission-modul-date-day">19-03-2026</div>
+//                             <div class="submission-modul-time">00.34 WIT</div>
+//                         </div>
+//                     </div>
+//                 </div>
+
+//                 <div class="submission-modul-card">
+//                     <div class="submission-modul-header">
+//                         <div>
+//                             <div class="submission-modul-name">Manray</div>
+//                             <div class="submission-modul-npm">NPM : 07352211092</div>
+//                         </div>
+//                         <div class="submission-modul-date">
+//                             <div class="submission-modul-date-day">19-03-2026</div>
+//                             <div class="submission-modul-time">00.34 WIT</div>
+//                         </div>
+//                     </div>
+//                 </div>
+
+//             </div>
+//         `
+//     });
+// });
+// Akhir lihat mahasiswa penyelesaian modul
+
+// Awal Modal Konfirmasi hapus modul
+document.addEventListener("click", function(e){
+
+    const btnHapus = e.target.closest("#btnHapusModul");
+
+    if(!btnHapus) return;
+
+    Modal.confirmDelete(
+        "Apakah Anda yakin ingin menghapus modul ini?"
+    );
+
+});
+// Akhir Modal Konfirmasi hapus modul
+
+// Awal lihat penyelesaian step 2
+document.addEventListener("click", async function (e) {
+    const btnSubmisi = e.target.closest("#btnLihatHasilStep");
+
+    if (!btnSubmisi) return;
+
+    try {
+        const token = localStorage.getItem("token");
+        
+        // Ambil userId dan moduleId dari data attribute button
+        const userId = parseInt(btnSubmisi.closest("tr")?.dataset.userId);
+        const moduleId = parseInt(btnSubmisi.closest("tr")?.dataset.moduleId);
+        
+        if (!userId || !moduleId) {
+            console.error("[btnLihatHasilStep] Missing userId or moduleId");
+            return;
+        }
+
+        // Import fungsi dari monitoring.js
+        const { getStepTwoData } = await import("./monitoring.js");
+        
+        // Fetch data monitoring
+        const api = await import("../../../assets/api.js");
+        const response = await api.monitoringRequest(token);
+        
+        if (response.success && Array.isArray(response.data)) {
+            const stepData = getStepTwoData(response.data, userId, moduleId);
+            
+            if (stepData) {
+                Modal.show({
+                    title: "Penyelesaian Step Dua Mahasiswa",
+                    size: "medium",
+                    content: `
+                        <div class="submission-step-two-wrapper">
+                            <div class="submission-step-two-card">
+                                <div class="submission-step-two-header">
+                                    <p class="hasil-step-two">
+                                        ${stepData.discussionPoint}
+                                    </p>
+                                </div>
+                                <div class="submission-step-two-footer">
+                                </div>
+                                <div class="submission-step-two-date">
+                                    <div class="submission-step-two-date-day">${stepData.date}</div>
+                                    <div class="submission-step-two-time">${stepData.time}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                });
+            }
+        }
+    } catch (error) {
+        console.error("[btnLihatHasilStep] Error:", error);
+    }
+});
+// Akhir lihat penyelesaian step 2

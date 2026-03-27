@@ -49,13 +49,13 @@ class ModalComponent {
         const {
             title = "",
             content = "",
-            size = "medium", // small | medium | large
+            size = "medium",
             confirmText = null,
             cancelText = null,
-            onConfirm = null
+            onConfirm = null,
+            type = "default"   // ← tambahan
         } = options;
 
-        // Set size
         this.modalBox.classList.remove("small", "medium", "large");
         this.modalBox.classList.add(size);
 
@@ -80,8 +80,11 @@ class ModalComponent {
 
         if (confirmText) {
             const confirmBtn = document.createElement("button");
-            confirmBtn.className = "modal-btn confirm";
+
+            confirmBtn.className = `modal-btn confirm ${type}`; // ← tambahan
+
             confirmBtn.innerText = confirmText;
+
             confirmBtn.onclick = () => {
                 if (onConfirm) onConfirm();
                 this.hide();
@@ -99,6 +102,69 @@ class ModalComponent {
             content: `<p>${message}</p>`,
             confirmText: "OK"
         });
+    }
+
+    /* ===========================
+    CONFIRM DELETE
+    =========================== */
+
+    confirmDelete(message = "Apakah Anda yakin ingin menghapus data ini?", onConfirm = null) {
+
+        this.show({
+            title: "Konfirmasi Hapus",
+            content: `
+                <p>
+                    ${message}
+                    <br>
+                    <p>Data yang dihapus tidak dapat dikembalikan.</p>
+                </p>
+            `,
+            cancelText: "Tidak",
+            confirmText: "Ya, Hapus",
+            type: "danger",
+            onConfirm
+        });
+
+    }
+
+
+    /* ===========================
+    CONFIRM LOGOUT
+    =========================== */
+
+    confirmLogout(onConfirm = null) {
+
+        this.show({
+            title: "Konfirmasi Logout",
+            content: `
+                <p>
+                    Apakah Anda yakin ingin keluar dari sistem?
+                </p>
+            `,
+            cancelText: "Batal",
+            confirmText: "Logout",
+            type: "warning",
+            onConfirm
+        });
+
+    }
+
+
+    /* ===========================
+    CONFIRM ACTION
+    =========================== */
+
+    confirmAction(message = "Apakah Anda yakin ingin melanjutkan?", onConfirm = null) {
+
+        this.show({
+            title: "Konfirmasi",
+            content: `<p>${message}</p>`,
+            cancelText: "Batal",
+            confirmText: "Ya",
+            type: "default",
+            onConfirm
+        });
+
     }
 
     hide() {

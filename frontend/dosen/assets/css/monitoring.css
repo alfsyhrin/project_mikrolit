@@ -8,9 +8,14 @@
 .card-monitoring {
   width: 100%;
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
+  transition: 0.3s ease all;
+}
+
+.card-monitoring:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-monitoring h2 {
@@ -18,7 +23,7 @@
   margin-bottom: 0.5rem;
 }
 
-.card-monitoring p {
+.card-monitoring h5 {
   color: var(--hijau);
   font-size: 0.9rem;
   font-weight: 500;
@@ -95,18 +100,20 @@
 .card-progres-mingguan {
   flex: 2;
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
+  transition: 0.3s ease all;
+}
+
+.card-progres-mingguan:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-progres-mingguan h4 {
   font-size: 1rem;
   font-weight: 650;
 }
-
-
-
 
 #progressmingguanChart {
   width: 100%;
@@ -129,11 +136,16 @@
 .card-kemampuan-literasi {
   flex: 1;
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
+  transition: 0.3s ease all;
   /* ✅ pastikan card cukup tinggi menampung radar chart */
   /* min-height: 500px; */
+}
+
+.card-kemampuan-literasi:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-kemampuan-literasi h4 {
@@ -177,10 +189,15 @@ p.alert-card {
 
 .card-tabel-mahasiswa {
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 1rem;
+  transition: 0.3s ease all;
+}
+
+.card-tabel-mahasiswa:hover {
+  border: 1px solid var(--third-color);
 }
 
 table {
@@ -326,4 +343,99 @@ tbody tr:last-child td {
   background: linear-gradient(90deg, #f0c037, #f0bf37e2);
   border-radius: 10px;
 }
+
+.middle-td {
+  text-align: center;
+}
+
+.step-two-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.step-two-btn .material-symbols-outlined {
+  font-size: 1.1rem;
+}
 /* Akhir Container Tracking Kesulitan */
+
+.middle-td {
+  text-align: center;
+}
+
+.step-two-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.step-two-btn .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
+.submission-step-two-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    
+}
+
+.submission-step-two-card {
+    background: #f5f7fa;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e3e8ef;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.submission-step-two-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.hasil-step-two {
+  line-height: 1.3;
+  text-align: left;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.submission-step-two-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.submission-step-two-date-day {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.submission-step-two-time {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Awal sembunyikan scrollbar */
+.wrapper-tabel {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE / Edge lama */
+}
+
+.wrapper-tabel::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Edge */
+}
+/* Akhir Sembunyikan Scrollbar */

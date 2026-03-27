@@ -1,14 +1,36 @@
-function renderChart() {
+import { prepareChartDataFromModules } from "./micro-learning.js";
 
+let progressChartInstance = null;
+let mahasiswaChartInstance = null;
+
+// ✅ Function untuk destroy semua chart instances
+export function destroyAllCharts() {
+  if (progressChartInstance) {
+    progressChartInstance.destroy();
+    progressChartInstance = null;
+  }
+  if (mahasiswaChartInstance) {
+    mahasiswaChartInstance.destroy();
+    mahasiswaChartInstance = null;
+  }
+}
+
+export async function renderChart(modulesData = [], totalUsers = 0) {
     const chartContainer = document.querySelector("#progressChart");
 
-    // Jika container tidak ada, jangan jalankan
     if (!chartContainer) return;
+
+    if (progressChartInstance) {
+        progressChartInstance.destroy();
+    }
+
+    // Prepare data dari modules
+    const chartData = prepareChartDataFromModules(modulesData, totalUsers);
 
     const options = {
         series: [
-            { name: "Selesai", data: [85, 72, 60, 45, 30] },
-            { name: "Belum", data: [15, 28, 40, 55, 70] }
+            { name: "Selesai", data: chartData.completedData },
+            { name: "Belum", data: chartData.incompleteData }
         ],
         chart: {
             type: "bar",
@@ -23,8 +45,8 @@ function renderChart() {
                 borderRadius: 5,
                 borderRadiusApplication: 'end'
             }
-            },
-            chart: {
+        },
+        chart: {
             type: "bar",
             height: 350,
             width: "100%",
@@ -47,7 +69,7 @@ function renderChart() {
             }
         ],
         xaxis: {
-            categories: ["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5"]
+            categories: chartData.categories
         },
         yaxis: {
             max: 100
@@ -55,71 +77,83 @@ function renderChart() {
         colors: ["#088395", "#dce4e6"]
     };
 
-    const chart = new ApexCharts(chartContainer, options);
-    chart.render();
+    progressChartInstance = new ApexCharts(chartContainer, options);
+    await progressChartInstance.render();
 }
 
-function renderMahasiswaChart() {
+export async function renderMahasiswaChart(mahasiswaArray = []) {
+  const chartContainer = document.querySelector("#mahasiswaChart");
+  if (!chartContainer) {
+    console.warn('renderMahasiswaChart: #mahasiswaChart container not found');
+    return;
+  }
 
-    const chartContainer = document.querySelector("#mahasiswaChart");
-    if (!chartContainer) return;
+  // ✅ Destroy instance lama jika ada
+  if (mahasiswaChartInstance) {
+    mahasiswaChartInstance.destroy();
+  }
 
-    const options = {
-        series: [34, 8], // Aktif, Pasif
-        chart: {
-            type: "donut",
-            height: 220
-        },
-        labels: ["Aktif", "Pasif"],
-        colors: ["#088395", "#dce4e6"],
-        legend: {
-            position: "bottom",
-            fontSize: "14px",
-            markers: {
-                radius: 12
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        plotOptions: {
-            pie: {
-                donut: {
-                    size: "65%"
-                }
-            }
-        },
-        responsive: [
-            {
-                breakpoint: 768,
-                options: {
-                chart: {
-                    height: 240
-                },
-                legend: {
-                    position: "bottom"
-                }
-                }
-            }
-        ],
-        stroke: {
-            width: 0
+  const aktifCount = (mahasiswaArray || []).filter(m =>
+    (m.status || '').toLowerCase() === 'diterima'
+  ).length;
+
+  const options = {
+    series: [aktifCount],
+    chart: { type: "donut", height: 220 },
+    labels: ["Aktif"],
+    colors: ["#088395"],
+    legend: {
+      position: "bottom",
+      fontSize: "14px",
+      markers: { radius: 12 }
+    },
+    dataLabels: { enabled: false },
+    plotOptions: {
+      pie: {
+        donut: { size: "65%" }
+      }
+    },
+    responsive: [
+      {
+        breakpoint: 768,
+        options: {
+          chart: { height: 240 },
+          legend: { position: "bottom" }
         }
-    };
+      }
+    ],
+    stroke: { width: 0 }
+  };
 
-    const chart = new ApexCharts(chartContainer, options);
-    chart.render();
+  // ✅ Buat instance baru
+  mahasiswaChartInstance = new ApexCharts(chartContainer, options);
+  await mahasiswaChartInstance.render();
 }
 
-function renderProgressMingguanChart() {
+export async function renderProgressMingguanChart(tasksData = []) {
   const chartContainer = document.querySelector("#progressmingguanChart");
   if (!chartContainer) return;
+
+  let tasks = tasksData && tasksData.length > 0 ? tasksData : [];
+  
+  // ✅ Ubah: ambil jumlah submission sebenarnya (bukan persentase)
+  const submissionData = tasks.map((task, index) => {
+    return (task.submissions || []).length || 0;
+  });
+
+  // Jika data kosong, gunakan dummy
+  if (submissionData.length === 0) {
+    submissionData.push(2, 4, 5, 3, 6, 7, 5, 8);
+  }
+
+  // ✅ Generate categories: T1, T2, T3, dst
+  const categories = Array.from({ length: submissionData.length }, (_, i) => `T${i + 1}`);
 
   const options = {
     series: [
       {
         name: "Penyelesaian",
-        data: [25, 40, 55, 48, 65, 72, 68, 80]
+        data: submissionData
       }
     ],
     chart: {
@@ -162,11 +196,7 @@ function renderProgressMingguanChart() {
       yaxis: { lines: { show: true } }
     },
     xaxis: {
-      categories: [
-        "M1", "M2", "M3", "M4",
-        "M5", "M6", "M7", "M8"
-    ],
-
+      categories: categories,
       labels: {
         style: { colors: "#999", fontSize: "12px" }
       },
@@ -175,7 +205,6 @@ function renderProgressMingguanChart() {
     },
     yaxis: {
       min: 0,
-      max: 100,
       tickAmount: 4,
       labels: { style: { colors: "#999", fontSize: "12px" } }
     },
@@ -184,11 +213,9 @@ function renderProgressMingguanChart() {
       marker: { show: true },
       x: {
         formatter: function (val, opts) {
-          const allLabels = [
-            "Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4",
-            "Minggu 5", "Minggu 6", "Minggu 7", "Minggu 8"
-          ];
-          return allLabels[opts.dataPointIndex] || val;
+          // ✅ Hanya tampilkan "Tugas 1", "Tugas 2", dst
+          const index = opts.dataPointIndex;
+          return `Tugas ${index + 1}`;
         }
       }
     },
@@ -254,7 +281,7 @@ function renderProgressMingguanChart() {
 // =============================================
 
 // ✅ Hitung ukuran radar secara dinamis berdasarkan lebar container
-function getRadarSize(containerWidth) {
+export function getRadarSize(containerWidth) {
   if (containerWidth < 300) return 80;
   if (containerWidth < 400) return 100;
   if (containerWidth < 500) return 120;
@@ -262,7 +289,7 @@ function getRadarSize(containerWidth) {
   return 160;
 }
 
-function renderKemampuanLiterasiChart() {
+export async function renderKemampuanLiterasiChart() {
   const chartContainer = document.querySelector("#kemampuanliterasiChart");
   if (!chartContainer) return;
 

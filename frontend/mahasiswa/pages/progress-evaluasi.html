@@ -14,8 +14,8 @@
           <h4>Rata-rata Penyelesaian</h4>
           <p><span class="material-symbols-outlined">analytics</span></p>
         </div>
-        <h2>68%</h2>
-        <p>+5%</p>
+        <h2 class="rata-penyelesaian-count">0%</h2>
+        <p class="rata-penyelesaian-label">Rata-rata Progress</p>
       </div>
 
       <div class="card-monitoring">
@@ -23,7 +23,7 @@
           <h4>Durasi Belajar</h4>
           <p><span class="material-symbols-outlined">avg_time</span></p>
         </div>
-        <h2>3.9 Jam</h2>
+        <h2 class="durasi-belajar-count">0 detik</h2>
         <p>Total Belajar</p>
       </div>
 
@@ -32,8 +32,8 @@
           <h4>Modul</h4>
           <p><span class="material-symbols-outlined">auto_stories</span></p>
         </div>
-        <h2>4/8</h2>
-        <p class="alert-card">4 Modul Belum Selesai</p>
+        <h2 class="modul-summary-count">0/0</h2>
+        <p class="alert-card modul-summary-alert">0 Modul Belum Selesai</p>
       </div>
 
       <div class="card-monitoring">
@@ -41,18 +41,18 @@
           <h4>Tugas</h4>
           <p><span class="material-symbols-outlined">warning</span></p>
         </div>
-        <h2>3/10</h2>
-        <p class="alert-card">7 Tugas Belum Dikumpulkan</p>
+        <h2></h2>
+        <p class="alert-card"></p>
       </div>
     </div>
     
     <div class="container-chart">
       <div class="card-progres-mingguan">
-        <h4>Penyelesaian Mingguan</h4>
+        <h4>Penyelesaian Modul</h4>
         <div id="progressmingguanChart"></div>
       </div>
       <div class="card-waktu-belajar">
-        <h4>Waktu Belajar Harian</h4>
+        <h4>Waktu Belajar Per Modul</h4>
         <div id="waktuBelajarChart"></div>
       </div>
     </div>
@@ -64,9 +64,9 @@
           <thead>
               <tr>
                   <th>Modul</th>
-                  <th class="mid">Quiz</th>
-                  <th class="mid">Diskusi</th>
-                  <th class="mid">Refleksi</th>
+                  <th class="mid">Step 1</th>
+                  <th class="mid">Step 2</th>
+                  <th class="mid">Step 3</th>
               </tr>
           </thead>
           <tbody>
@@ -74,17 +74,17 @@
                   <td class="nama">Pengantar Literasi Digital</td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="quiz">88</p>
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="diskusi-selesai">Selesai</p>
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
                   <td>
-                    <div class="refleksi-selesai">
-                      <span class="material-symbols-outlined">check</span>
+                    <div class="wrapper-flex">
+                      <p class="step-belum-selesai">Belum Selesai</p>
                     </div>
                   </td>
               </tr>
@@ -93,17 +93,17 @@
                   <td class="nama">Teks Argumentasi</td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="quiz">75</p>
+                      <p class="step-belum-selesai">Belum Selesai</p>
                     </div>
                   </td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="diskusi-belum-selesai">Belum Selesai</p>
+                      <p class="step-belum-selesai">Belum Selesai</p>
                     </div>
                   </td>
                   <td>
-                    <div class="refleksi-belum-selesai">
-                      <span class="material-symbols-outlined">close</span>
+                    <div class="wrapper-flex">
+                      <p class="step-belum-selesai">Belum Selesai</p>
                     </div>
                   </td>
               </tr>
@@ -112,17 +112,17 @@
                   <td class="nama">Diskusi Kritis</td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="quiz">-</p>
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="diskusi-belum-selesai">Belum Selesai</p>
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
                   <td>
-                    <div class="refleksi-selesai">
-                      <span class="material-symbols-outlined">check</span>
+                    <div class="wrapper-flex">
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
               </tr>
@@ -131,17 +131,17 @@
                   <td class="nama">Menulis Esai Pendek</td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="quiz">-</p>
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="diskusi-selesai">Selesai</p>
+                      <p class="step-belum-selesai">Belum Selesai</p>
                     </div>
                   </td>
                   <td>
                     <div class="refleksi-belum-selesai">
-                      <span class="material-symbols-outlined">close</span>
+                      <p class="step-belum-selesai">Belum Selesai</p>
                     </div>
                   </td>
               </tr>
@@ -150,17 +150,17 @@
                   <td class="nama">Review Sejawat Esai</td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="quiz">-</p>
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
                   <td>
                     <div class="wrapper-flex">
-                      <p class="diskusi-none">-</p>
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
                   <td>
-                    <div class="refleksi-none">
-                      <span class="material-symbols-outlined">-</span>
+                    <div class="wrapper-flex">
+                      <p class="step-selesai">Selesai</p>
                     </div>
                   </td>
               </tr>
@@ -173,7 +173,7 @@
       <h4>Riwayat Pengumpulan Tugas</h4>
       <div class="pengumpulan-wrapper">
         
-        <div class="card-riwayat-pengumpulan-tugas">
+        <!-- <div class="card-riwayat-pengumpulan-tugas">
           <div class="wrapper-icon-info-riwayat-tugas">
             <p class="icon-riwayat-tugas">
               <span class="material-symbols-outlined">
@@ -247,7 +247,7 @@
               check_circle
             </span>
           </p>
-        </div>
+        </div> -->
         
       </div>
     </div>

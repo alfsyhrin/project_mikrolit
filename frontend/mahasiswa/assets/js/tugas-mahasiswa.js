@@ -51,8 +51,8 @@ function formatDeadlineParts(task) { // ✅ Parameter task, bukan hanya deadline
     // Status untuk time element
     let timeStatus = "";
     const isPastDeadline = deadline < now;
-    if (task.status === "sudah dikumpulkan" && isPastOneDay) {
-        timeStatus = "(sudah berakhir)"; // ✅ Kondisi yang diinginkan
+    if (task.status === "sudah dikumpulkan") {
+        timeStatus = "(dikumpul tepat waktu)"; // ✅ Kondisi yang diinginkan
     } else if (task.status === "belum dikumpulkan" && isPastDeadline) {
         timeStatus = "(sudah berakhir)";
     }
@@ -109,6 +109,8 @@ function renderTugasMahasiswa(tasks) {
     container.innerHTML = tasks.map(task => {
         const isUploadDisabled = shouldDisableUpload(task);
         const deadlineParts = formatDeadlineParts(task);
+        const uploadClass = isUploadDisabled ? "upload-tugas terlambat" : "upload-tugas";
+        const disabledAttr = isUploadDisabled ? "disabled" : "";
         
         return `
         <div class="card-tugas-mhs" data-task-id="${task.id}">
@@ -147,10 +149,10 @@ function renderTugasMahasiswa(tasks) {
                         Download
                     </p>
                 </button>
-                <button class="upload-tugas terlambat"  ${isUploadDisabled ? "disabled" : ""}>
+                <button class="${uploadClass}" ${disabledAttr}>
                     <p>
-                        <span class="material-symbols-outlined">upload</span>
-                        Upload
+                    <span class="material-symbols-outlined">upload</span>
+                    Upload
                     </p>
                 </button>
             </div>
@@ -162,6 +164,7 @@ function renderTugasMahasiswa(tasks) {
 // Filter dan search tugas
 function applyFilterAndSearch() {
     filteredTasks = allTasks.filter(task => {
+
         // Filter status
         if (currentFilter === "Belum Dikumpulkan" && task.status !== "belum dikumpulkan") return false;
         if (currentFilter === "Sudah Dikumpulkan" && task.status !== "sudah dikumpulkan") return false;
@@ -284,7 +287,10 @@ function setupEventDelegation() {
 
         // Upload tugas
         if (e.target.closest(".upload-tugas")) {
-            const card = e.target.closest(".card-tugas-mhs");
+            const btn = e.target.closest(".upload-tugas");
+            if (btn.hasAttribute && btn.hasAttribute("disabled")) return; // jangan buka modal jika disabled
+
+            const card = btn.closest(".card-tugas-mhs");
             const taskId = card.getAttribute("data-task-id");
             const task = allTasks.find(t => String(t.id) === String(taskId));
             if (task) showUploadTugasModal(task);
@@ -311,6 +317,122 @@ function setupEventDelegation() {
     });
 }
 
+// Hitung selisih waktu sampai deadline; kembalikan null jika sudah lewat
+function timeUntil(deadline) {
+    if (!deadline) return null;
+    const now = new Date();
+    const d = new Date(deadline);
+    const diffMs = d - now;
+    if (diffMs <= 0) return null; // sudah lewat
+
+    const diffHours = diffMs / (1000 * 60 * 60);
+    const diffDays = diffHours / 24;
+
+    if (diffHours < 1) {
+        const diffMinutes = Math.ceil(diffMs / (1000 * 60));
+        return { type: 'minutes', value: diffMinutes, label: `sisa ${diffMinutes} menit lagi` };
+    } else if (diffHours < 24) {
+        const hours = Math.ceil(diffHours);
+        return { type: 'hours', value: hours, label: `sisa ${hours} jam lagi` };
+    } else {
+        const days = Math.ceil(diffDays);
+        return { type: 'days', value: days, label: `sisa ${days} hari lagi` };
+    }
+}
+
+// Render deadline cards khusus beranda — hanya tugas yang belum dikumpulkan dan deadline belum lewat
+async function fetchAndRenderDeadlineCards(token, targetSelector = ".wrapper-card-deadline-mhs", limit = 4) {
+    const container = document.querySelector(targetSelector);
+    if (!container) return;
+    try {
+        const tasks = await getTaskForMahasiswaRequest(token);
+        if (!tasks || tasks.length === 0) {
+            container.innerHTML = "<p>Tidak ada tugas</p>";
+            return;
+        }
+
+        const now = new Date();
+
+        // Filter: punya deadline, deadline masih di masa depan, dan belum dikumpulkan
+        const upcoming = tasks
+            .filter(t => t.deadline)
+            .map(t => ({ ...t, _deadlineDate: new Date(t.deadline) }))
+            .filter(t => t._deadlineDate > now && t.status !== "sudah dikumpulkan")
+            .sort((a, b) => a._deadlineDate - b._deadlineDate);
+
+        if (upcoming.length === 0) {
+            container.innerHTML = "<p>Tidak ada tugas mendekati deadline</p>";
+            return;
+        }
+
+        const slice = upcoming.slice(0, limit);
+
+        container.innerHTML = slice.map(t => {
+            const timeInfo = timeUntil(t.deadline);
+            const label = timeInfo ? timeInfo.label : "Sudah berakhir";
+            return `
+                <div class="card-deadline-mhs">
+                    <p class="icon-deadline">
+                        <span class="material-symbols-outlined">assignment</span>
+                    </p>
+                    <div class="wrapper-info-card-deadline">
+                        <h2>${escapeHtml(t.task_title)}</h2>
+                        <p>${label}</p>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    } catch (err) {
+        console.error("Gagal fetch tasks for beranda:", err);
+        container.innerHTML = "<p>Tidak bisa memuat tugas</p>";
+    }
+}
+
+// Render jumlah tugas: "submitted/total" ke element H2 di beranda
+async function fetchAndRenderTaskSummary(token, targetSelector = '.card-beranda-wrapper .card-beranda:nth-child(4) .info-card-wrapper h2') {
+    const el = document.querySelector(targetSelector);
+    if (!el) return;
+    try {
+        const tasks = await getTaskForMahasiswaRequest(token);
+        const total = Array.isArray(tasks) ? tasks.length : 0;
+        const submitted = Array.isArray(tasks) ? tasks.filter(t => t.status === "sudah dikumpulkan").length : 0;
+        el.textContent = `${submitted}/${total}`;
+    } catch (err) {
+        console.error("Gagal fetch task summary:", err);
+    }
+}
+
+// Render task stats di progress-evaluasi: "submitted/total" ke h2 dan jumlah belum dikumpulkan ke p
+async function fetchAndRenderTaskStats(token, targetH2Selector = '.card-monitoring:last-child h2', targetPSelector = '.card-monitoring:last-child p.alert-card') {
+    try {
+        const tasks = await getTaskForMahasiswaRequest(token);
+        
+        const total = Array.isArray(tasks) ? tasks.length : 0;
+        const submitted = Array.isArray(tasks) ? tasks.filter(t => t.status === "sudah dikumpulkan").length : 0;
+        const pending = total - submitted; // Tugas belum dikumpulkan
+
+        // Update h2 dengan format "submitted/total"
+        const h2El = document.querySelector(targetH2Selector);
+        if (h2El) {
+            h2El.textContent = `${submitted}/${total}`;
+        }
+
+        // Update p dengan pesan jumlah belum dikumpulkan
+        const pEl = document.querySelector(targetPSelector);
+        if (pEl) {
+            if (pending > 0) {
+                pEl.textContent = `${pending} Tugas Belum Dikumpulkan`;
+            } else {
+                pEl.textContent = "Semua Tugas Sudah Dikumpulkan";
+            }
+        }
+
+        console.log('[fetchAndRenderTaskStats] Total:', total, 'Submitted:', submitted, 'Pending:', pending);
+    } catch (err) {
+        console.error('Gagal fetch task stats:', err);
+    }
+}
+
 // Inisialisasi SPA
 function initManajemenTugasMhs() {
     loadTugasMahasiswa();
@@ -322,5 +444,8 @@ function initManajemenTugasMhs() {
 // Export di akhir file
 export {
     initManajemenTugasMhs,
-    showUploadTugasModal
+    showUploadTugasModal,
+    fetchAndRenderDeadlineCards,
+    fetchAndRenderTaskSummary,
+    fetchAndRenderTaskStats
 };

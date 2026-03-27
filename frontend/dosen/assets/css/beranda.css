@@ -12,6 +12,12 @@
   border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 1rem;
+  transition: 0.3s ease all;
+  border: 1px solid transparent;
+}
+
+.card-beranda:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-beranda h2 {
@@ -19,7 +25,7 @@
   margin-bottom: 0.5rem;
 }
 
-.card-beranda p {
+.card-beranda h5 {
   color: var(--hijau);
   font-size: 0.9rem;
   font-weight: 500;
@@ -96,9 +102,14 @@
 .card-progres-modul {
   flex: 2;
   background-color: #fff;
-  border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 1rem;
+  border: 1px solid transparent;
+  transition: 0.3s ease all;
+}
+
+.card-progres-modul:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-progres-modul h4 {
@@ -124,9 +135,14 @@
 .card-mahasiswa-terdaftar {
   flex: 1;
   background-color: #fff;
-  border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 1rem;
+  border: 1px solid transparent;
+  transition: 0.3s ease all;
+}
+
+.card-mahasiswa-terdaftar:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-mahasiswa-terdaftar h4 {
@@ -219,27 +235,34 @@
 .card-pembelajaran-terakhir {
   /* flex: 1; */
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
   height: 400px;
   width: 100%;
+  min-width: 0;
+  transition: 0.3s ease all;
+}
+
+.card-pembelajaran-terakhir:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-pembelajaran-terakhir-wrapper {
   height: 350px;
   overflow-y: auto;
+  width: 100%;
 }
 
 .card-modul-terakhir {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* gap: 1rem; */
   border-radius: 10px;
   padding: 0.9rem;
   margin-bottom: 0.35rem;
   transition: background-color 0.3s ease;
+  width: 100%;
 }
 
 .icon-info-wrapper {
@@ -247,6 +270,14 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
+}
+
+.icon-info-wrapper-pembelajaran {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
 }
 
 .card-modul-terakhir:hover {
@@ -273,15 +304,17 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  min-width: 0; /* cegah overflow aneh */
+  width: 100%;
+  min-width: 0;
+  /* border: 1px solid red; */
 }
 
 .info-modul h5 {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
+  width: 100%;
   overflow-x: hidden;
-  width: 150px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -314,11 +347,17 @@
 .card-notifikasi {
   /* flex: 1; */
   background-color: #fff;
-  border: 1px solid var(--card-border);
+  border: 1px solid transparent;
   border-radius: 10px;
   padding: 1rem;
   height: 400px;
   /* margin-bottom: 1rem; */
+  min-width: 0;
+  transition: 0.3s ease all;
+}
+
+.card-notifikasi:hover {
+  border: 1px solid var(--third-color);
 }
 
 .card-notifikasi-wrapper {
@@ -351,6 +390,8 @@
   font-size: 1.5rem;
 }
 
+
+
 .card-notifikasi-terbaru .icon-notifikasi.tugas {
   background-color: #37b7c327;
   color: var(--secondary-color);
@@ -359,7 +400,7 @@
 .card-notifikasi-terbaru .icon-notifikasi.revisi {
   background-color: #f0c03727;
   color: #f0c037;
-}
+} */
 
 .card-notifikasi-terbaru .icon-notifikasi.selesai {
   background-color: #37b73727;
@@ -375,6 +416,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  min-width: 0;
 }
 
 .info-notifikasi h5 {
@@ -408,6 +450,9 @@
   .container-list-data {
     grid-template-columns: 1fr; /* 🔥 1 kolom */
   }
+  .card-modul-terakhir {
+    width: 100%;
+  }
 }
 
 .daftar-mahasiswa-wrapper {
@@ -416,3 +461,106 @@
   padding-right: 0.8rem;
 }
 /* Akhir card list data */
+
+/* ============ STYLING NOTIFIKASI ICON (BERANDA) ============ */
+
+.icon-notifikasi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    /* min-width: 50px; */
+    /* margin-right: 12px; */
+}
+
+.icon-notifikasi.tugas {
+    background-color: #e8f4f8;
+    color: #00a8cc;
+}
+
+.icon-notifikasi.tugas span {
+    font-size: 1.5rem;
+    color: #00a8cc;
+}
+
+.icon-notifikasi.schedule {
+    background-color: #fff3e0;
+    color: #ff9800;
+}
+
+.icon-notifikasi.schedule span {
+    font-size: 1.5rem;
+    color: #ff9800;
+}
+
+.icon-notifikasi.selesai {
+    background-color: #e8f5e9;
+    color: #4caf50;
+}
+
+.icon-notifikasi.selesai span {
+    font-size: 1.5rem;
+    color: #4caf50;
+}
+
+.icon-notifikasi.diskusi {
+    background-color: #f3e5f5;
+    color: #9c27b0;
+}
+
+.icon-notifikasi.diskusi span {
+    font-size: 1.5rem;
+    color: #9c27b0;
+}
+
+.icon-notifikasi.buat {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.icon-notifikasi.revisi {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.icon-notifikasi.hapus {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* ============ FALLBACK STYLING UNTUK MODULE NOTIFICATIONS ============ */
+
+/* Jika tipe masih generic 'module' (untuk backward compatibility) */
+.icon-notifikasi.modul {
+    background-color: #e8f4f8;
+    color: #00a8cc;
+}
+
+.icon-notifikasi.modul span {
+    font-size: 1.5rem;
+    color: #00a8cc;
+}
+
+/* Ensure all module icon variant spans have proper size */
+.icon-notifikasi.buat span,
+.icon-notifikasi.revisi span,
+.icon-notifikasi.hapus span {
+    font-size: 1.5rem;
+}
+
+/* Awal sembunyikan scrollbar */
+.daftar-mahasiswa-wrapper, 
+.card-pembelajaran-terakhir-wrapper,
+.card-notifikasi-wrapper {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE / Edge lama */
+}
+
+.daftar-mahasiswa-wrapper::-webkit-scrollbar,
+.card-pembelajaran-terakhir-wrapper::-webkit-scrollbar,
+.card-notifikasi-wrapper::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Edge */
+}
+/* Akhir Sembunyikan Scrollbar */
