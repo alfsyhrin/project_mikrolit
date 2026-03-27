@@ -1,5 +1,6 @@
 import { createModuleRequest, uploadFileResourceRequest, getModuleListRequest, updateModuleRequest, deleteModuleRequest, getCompleteStudentByModuleIdRequest, getModuleById } from "../../../assets/api.js";
 import Modal from "../../../assets/modal.js";
+import Toast from "../../../assets/toast.js";
 console.log("micro-learning.js loaded");
 
 // ============================================
@@ -161,11 +162,11 @@ async function handleFileUpload(inputElement, token) {
             const fileNameEl = inputElement.closest(".modal-form-group")?.querySelector(".file-name");
             if (fileNameEl) fileNameEl.textContent = file.name;
         } else {
-            alert(`Gagal upload file: ${response.message}`);
+            Toast.error(`Gagal upload file: ${response.message}`);
         }
     } catch (err) {
         console.error("Upload error:", err);
-        alert("Upload error: " + err.message);
+        Toast.error("Upload error: " + err.message);
     }
 }
 
@@ -188,7 +189,7 @@ async function handleSubmitCreateModule(formElement, token) {
     const infografis2Path = localStorage.getItem("modul_resource_path_infografis2");
 
     if (!dokumenPath || !pptPath || !infografis1Path || !infografis2Path) {
-        alert("Pastikan semua file sudah diupload sebelum submit!");
+        Toast.warning("Pastikan semua file sudah diupload sebelum submit!");
         return;
     }
 
@@ -236,7 +237,7 @@ async function handleSubmitCreateModule(formElement, token) {
         console.log("Create module response:", response);
         
         if (response.success) {
-            alert("Modul berhasil dibuat!");
+            Toast.success("Modul berhasil dibuat!");
             localStorage.removeItem("modul_resource_path_dokumen_penelitian");
             localStorage.removeItem("modul_resource_path_file_ppt");
             localStorage.removeItem("modul_resource_path_infografis1");
@@ -246,11 +247,11 @@ async function handleSubmitCreateModule(formElement, token) {
             // Refresh list modul
             window.renderModuleList(localStorage.getItem("token"));
         } else {
-            alert(`Gagal membuat modul: ${response.message}`);
+            Toast.error(`Gagal membuat modul: ${response.message}`);
         }
     } catch (error) {
         console.error("Error saat membuat modul:", error);
-        alert("Terjadi kesalahan saat membuat modul.");
+        Toast.error("Terjadi kesalahan saat membuat modul.");
     }
 }
 
@@ -295,16 +296,16 @@ async function handleSubmitEditModule(formElement, token, moduleId) {
         console.log("Update module response:", response);
         
         if (response.success) {
-            alert("Modul berhasil diperbarui!");
+            Toast.success("Modul berhasil diperbarui!");
             Modal.hide();
             // Refresh list modul
             window.allModules = await renderModuleList(token) || [];
         } else {
-            alert(`Gagal update modul: ${response.message}`);
+            Toast.error(`Gagal update modul: ${response.message}`);
         }
     } catch (error) {
         console.error("Error saat update modul:", error);
-        alert("Terjadi kesalahan saat update modul.");
+        Toast.error("Terjadi kesalahan saat update modul.");
     }
 }
 
@@ -324,7 +325,7 @@ document.addEventListener("submit", function (e) {
         const token = localStorage.getItem("token");
         const moduleId = e.target.dataset.moduleId;
         if (!moduleId) {
-            alert("Module ID tidak ditemukan.");
+            Toast.warning("Module ID tidak ditemukan.");
             return;
         }
         handleSubmitEditModule(e.target, token, moduleId);
@@ -480,7 +481,7 @@ document.addEventListener("click", async function (e) {
     const card = btn.closest(".card-list-modul");
     const moduleId = card?.dataset?.moduleId;
     if (!moduleId) {
-        alert("Module ID tidak ditemukan.");
+        Toast.warning("Module ID tidak ditemukan.");
         return;
     }
 
@@ -520,7 +521,7 @@ document.addEventListener("click", async function (e) {
         });
     } catch (err) {
         console.error("Error:", err);
-        alert("Gagal mengambil data mahasiswa.");
+        Toast.error("Gagal mengambil data mahasiswa.");
     }
 });
 
@@ -534,7 +535,7 @@ document.addEventListener("click", async function (e) {
     const card = btn.closest(".card-list-modul");
     const moduleId = card?.dataset?.moduleId;
     if (!moduleId) {
-        alert("Module ID tidak ditemukan.");
+        Toast.warning("Module ID tidak ditemukan.");
         return;
     }
 
@@ -547,7 +548,7 @@ document.addEventListener("click", async function (e) {
         const response = await getModuleById(moduleId, token);
         
         if (!response.success || !response.data) {
-            alert("Gagal mengambil data modul.");
+            Toast.error("Gagal mengambil data modul.");
             return;
         }
 
@@ -573,7 +574,7 @@ document.addEventListener("click", async function (e) {
 
     } catch (err) {
         console.error("Error:", err);
-        alert("Gagal mengambil data modul.");
+        Toast.error("Gagal mengambil data modul.");
     }
 });
 
@@ -587,7 +588,7 @@ document.addEventListener("click", function (e) {
     const card = btn.closest(".card-list-modul");
     const moduleId = card?.dataset?.moduleId;
     if (!moduleId) {
-        alert("Module ID tidak ditemukan.");
+        Toast.warning("Module ID tidak ditemukan.");
         return;
     }
 
@@ -604,11 +605,11 @@ document.addEventListener("click", function (e) {
                     await renderModuleList(token);
                     console.log("✅ Modul berhasil dihapus");
                 } else {
-                    alert("Gagal menghapus modul: " + (res.message || "Unknown error"));
+                    Toast.error("Gagal menghapus modul: " + (res.message || "Unknown error"));
                 }
             } catch (err) {
                 console.error("❌ Error deleting module:", err);
-                alert("Gagal menghapus modul: " + err.message);
+                Toast.error("Gagal menghapus modul: " + err.message);
             }
         }
     );
