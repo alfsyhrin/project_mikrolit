@@ -1,4 +1,4 @@
-const DiscussionModel = require('../models/studentDiscussionModel');
+const DiscussionModel = require('../models/StudentDiscussionModel');
 const StepService = require('./learningService');
 const ModuleStepModel = require('../models/StepModel');
 
