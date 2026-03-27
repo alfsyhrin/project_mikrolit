@@ -1,10 +1,23 @@
+process.on("uncaughtException", (err) => {
+    console.error("UNCAUGHT EXCEPTION:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+    console.error("UNHANDLED REJECTION:", err);
+});
+
+console.log("STEP 1: Load env");
 require("dotenv").config();
+
+console.log("STEP 2: Load express");
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
 const cors = require("cors");
 const path = require("path");
 
+
+console.log("STEP 3: Load routes...");
 const authRoute = require("./routes/authRoute");
 const registRoute = require("./routes/registRoute");
 const userRoute = require("./routes/userRoute");
@@ -21,6 +34,7 @@ const monitoringRoute = require("./routes/moduleMonitoringRoute");
 
 const app = express();
 const server = http.createServer(app);
+console.log("APP STARTING...");
 const io = socketIo(server, {
     cors: { origin: "*" }
 });
@@ -75,10 +89,8 @@ app.get("/", (req, res) => {
     res.send("Server berjalan dengan baik!");
 });
 
-socketHandler(io);
-
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0',() => {
     console.log("Backend berjalan di http://localhost:" + PORT);
 });
 
