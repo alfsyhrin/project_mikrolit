@@ -87,7 +87,7 @@ function renderTugas(tasks, container) {
     }
     container.innerHTML = tasks.map(task => {
         const deadlineParts = formatDeadlinePartsForDosen(task);
-        const filename = task.attachment_url ? task.attachment_url.split("/").pop() : "-";
+        const filename = getTaskAttachmentDisplayName(task);
         const moduleName = task.module_title || (task.module_id ? `Module ${task.module_id}` : "Tanpa Modul");
         return `
         <div class="card-tugas-dosen" data-task-id="${task.id}">
@@ -124,6 +124,42 @@ function renderTugas(tasks, container) {
 function escapeHtml(s){ 
     if(!s) return ""; 
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); 
+}
+
+//helper cleanfilename
+function getCleanFileName(filePath = "") {
+    if (!filePath) return "-";
+
+    const rawName = String(filePath).split("/").pop() || filePath;
+
+    let decodedName = rawName;
+    try {
+        decodedName = decodeURIComponent(rawName);
+    } catch (_) {}
+
+    // format lama uploadMiddleware: 1-1774801730375.pptx
+    let cleaned = decodedName.replace(/^\d+-\d{10,}(?=\.)/, "");
+
+    // fallback kalau ada format timestamp lama lain
+    cleaned = cleaned.replace(/^\d{10,}-/, "");
+
+    // format baru nanti: nama_file-a1b2c3d4.ext
+    const extMatch = cleaned.match(/(\.[^.]+)$/);
+    const ext = extMatch ? extMatch[1] : "";
+    const base = ext ? cleaned.slice(0, -ext.length) : cleaned;
+    const withoutUuid = base.replace(/-[a-f0-9]{8}$/i, "");
+
+    return `${withoutUuid || "file"}${ext}`;
+}
+
+function getTaskAttachmentDisplayName(task) {
+    if (!task || !task.attachment_url) return "-";
+    return getCleanFileName(task.attachment_url);
+}
+
+function getSubmissionFileDisplayName(submission) {
+    if (!submission || !submission.file_url) return "-";
+    return getCleanFileName(submission.file_url);
 }
 
 // helper deadline
@@ -312,7 +348,7 @@ function openEditModalWithData(task){
                     <span class="material-symbols-outlined upload-icon">upload</span>
                     <span class="file-label">Klik untuk memilih file</span>
                     <span class="file-types">PDF, DOC, DOCX, PPT, ZIP</span>
-                    <span class="file-name" id="fileName">${task.attachment_url ? escapeHtml(task.attachment_url.split("/").pop()) : ""}</span>
+                    <span class="file-name" id="fileName">${task.attachment_url ? escapeHtml(getTaskAttachmentDisplayName(task)) : ""}</span>
                 </div>
                 <input type="file" name="attachment" id="attachment" 
                         accept=".pdf,.doc,.docx,.ppt,.pptx,.zip" 
@@ -416,7 +452,7 @@ async function handleViewSubmissions(taskId){
                 <div class="submission-file">
                     ${ sub.file_url ? `<a class="file-mhs" href="${sub.file_url}" target="_blank">
                         <span class="material-symbols-outlined">description</span>
-                        ${escapeHtml(sub.file_url.split("/").pop())}
+                        ${escapeHtml(getSubmissionFileDisplayName(sub))}
                     </a>` : "-" }
                 </div>
                 ${sub.answer_text ? `<div class="submission-answer"><strong>Catatan:</strong><p>${escapeHtml(sub.answer_text)}</p></div>` : ""}

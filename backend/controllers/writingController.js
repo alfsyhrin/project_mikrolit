@@ -162,11 +162,118 @@ exports.downloadSubmissionsZip = (req, res) => {
     });
 };
 
+function sanitizeDownloadName(name = "") {
+    return String(name || "")
+        .replace(/[\\/:*?"<>|]/g, "")
+        .replace(/\s+/g, "_")
+        .replace(/_+/g, "_")
+        .trim();
+}
+
+function buildTaskAttachmentDownloadName(taskTitle = "", attachmentUrl = "") {
+    const safeTitle = sanitizeDownloadName(taskTitle) || "lampiran_tugas";
+    const ext = path.extname(attachmentUrl || "");
+    return `${safeTitle}${ext}`;
+}
+
 exports.downloadTaskFile = (req, res) => {
     const taskId = req.params.taskId;
+
+    console.log("[downloadTaskFile] incoming request:", { taskId, userId: req.user?.id });
+
     Writing.getTaskById(taskId, (err, task) => {
-        if (err || !task) return res.status(500).json({ error: err || "Task not found" });
-        if (!task.attachment_url) return res.status(404).json({ error: "No attachment for this task" });
-        res.sendFile(path.join(__dirname, "..", task.attachment_url));
+        if (err) {
+            console.error("[downloadTaskFile] getTaskById error:", err);
+            return res.status(500).json({
+                success: false,
+                message: "Gagal mengambil data tugas"
+            });
+        }
+
+        if (!task) {
+            console.warn("[downloadTaskFile] task not found:", { taskId });
+            return res.status(404).json({
+                success: false,
+                message: "Task tidak ditemukan"
+            });
+        }
+
+        if (!task.attachment_url || !String(task.attachment_url).trim()) {
+            console.warn("[downloadTaskFile] no attachment:", { taskId });
+            return res.status(404).json({
+                success: false,
+                message: "No attachment for this task"
+            });
+        }
+
+        const normalizedAttachmentPath = String(task.attachment_url)
+            .replace(/^\/+/, "")
+            .replace(/\\/g, "/");
+
+        const filePath = path.resolve(__dirname, "..", normalizedAttachmentPath);
+        const uploadsRoot = path.resolve(__dirname, "..", "uploads");
+
+        console.log("[downloadTaskFile] resolved paths:", {
+            attachment_url: task.attachment_url,
+            normalizedAttachmentPath,
+            filePath,
+            uploadsRoot
+        });
+
+        if (!filePath.startsWith(uploadsRoot)) {
+            console.error("[downloadTaskFile] invalid path traversal attempt:", {
+                taskId,
+                attachment_url: task.attachment_url,
+                filePath
+            });
+            return res.status(400).json({
+                success: false,
+                message: "Path file tidak valid"
+            });
+        }
+
+        if (!fs.existsSync(filePath)) {
+            console.warn("[downloadTaskFile] file missing on server:", {
+                taskId,
+                filePath
+            });
+            return res.status(404).json({
+                success: false,
+                message: "Attachment file not found on server"
+            });
+        }
+
+        const downloadName = buildTaskAttachmentDownloadName(
+            task.task_title,
+            normalizedAttachmentPath
+        );
+
+        console.log("[downloadTaskFile] downloading file:", {
+            taskId,
+            filePath,
+            downloadName
+        });
+
+        return res.download(filePath, downloadName, (downloadErr) => {
+            if (!downloadErr) return;
+
+            if (downloadErr.code === "ECONNABORTED") {
+                console.warn("[downloadTaskFile] client aborted download:", {
+                    taskId,
+                    code: downloadErr.code,
+                    message: downloadErr.message
+                });
+                return;
+            }
+
+            console.error("[downloadTaskFile] res.download callback error:", downloadErr);
+
+            if (!res.headersSent) {
+                return res.status(500).json({
+                    success: false,
+                    message: "Gagal mengirim file tugas"
+                });
+            }
+        });
     });
 };

@@ -1,4 +1,8 @@
-const API_BASE = "https://darkgoldenrod-loris-389330.hostingersite.com/api";
+const API_BASE =
+    window.APP_CONFIG?.API_BASE ||
+    (window.location.hostname === "localhost"
+        ? "http://localhost:4000/api"
+        : "https://darkgoldenrod-loris-389330.hostingersite.com/api");
 
 //AUTH===================================================================================
 export async function loginRequest(emailOrNidn, password){
@@ -371,11 +375,33 @@ export async function downloadTaskFileRequest(taskId, token){
     const response = await fetch(API_BASE + `/writing/task/${taskId}/download`, {
         method: "GET",
         headers: {
+            "ngrok-skip-browser-warning": "true",
             "Authorization": `Bearer ${token}`
         }
     });
 
-    return response.blob();
+    const contentType = (response.headers.get("content-type") || "").toLowerCase();
+
+    if (!response.ok) {
+        if (contentType.includes("application/json")) {
+            const errorData = await response.json();
+            throw new Error(errorData?.message || errorData?.error || `Download failed: ${response.status}`);
+        }
+
+        const errorText = await response.text();
+        throw new Error(`Download failed: ${response.status} - ${errorText.slice(0, 150)}`);
+    }
+
+    if (contentType.includes("application/json") || contentType.includes("text/html")) {
+        const errorText = await response.text();
+        throw new Error(`Invalid download response: ${errorText.slice(0, 150)}`);
+    }
+
+    const blob = await response.blob();
+    return {
+        blob,
+        contentType: contentType || blob.type
+    };
 }
 
 export async function submitWritingRequest(taskId, answerText, file, token){
@@ -528,23 +554,26 @@ export async function downloadStepResourceRequest(moduleId, stepNumber, resource
         }
     });
 
-    // ✅ Check response status before converting to blob
+    const contentType = (response.headers.get("content-type") || "").toLowerCase();
+
     if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || `Download failed: ${response.status}`);
+        if (contentType.includes("application/json")) {
+            const errData = await response.json();
+            throw new Error(errData.message || `Download failed: ${response.status}`);
+        }
+
+        const errText = await response.text();
+        throw new Error(`Download failed: ${response.status} - ${errText.slice(0, 150)}`);
     }
 
-    // ✅ Check Content-Type - should be file type, not JSON
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-        const errData = await response.json();
-        throw new Error(errData.message || 'Invalid response format');
+    if (contentType.includes("application/json") || contentType.includes("text/html")) {
+        const errText = await response.text();
+        throw new Error(`Invalid response format: ${errText.slice(0, 150)}`);
     }
 
-    // ✅ Return both blob and content-type for accurate extension detection
     const blob = await response.blob();
     return {
-        blob: blob,
+        blob,
         contentType: contentType || blob.type
     };
 }

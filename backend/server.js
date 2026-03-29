@@ -1,23 +1,10 @@
-process.on("uncaughtException", (err) => {
-    console.error("UNCAUGHT EXCEPTION:", err);
-});
-
-process.on("unhandledRejection", (err) => {
-    console.error("UNHANDLED REJECTION:", err);
-});
-
-console.log("STEP 1: Load env");
 require("dotenv").config();
-
-console.log("STEP 2: Load express");
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
 const cors = require("cors");
 const path = require("path");
 
-
-console.log("STEP 3: Load routes...");
 const authRoute = require("./routes/authRoute");
 const registRoute = require("./routes/registRoute");
 const userRoute = require("./routes/userRoute");
@@ -34,7 +21,6 @@ const monitoringRoute = require("./routes/moduleMonitoringRoute");
 
 const app = express();
 const server = http.createServer(app);
-console.log("APP STARTING...");
 const io = socketIo(server, {
     cors: { origin: "*" }
 });
@@ -69,6 +55,10 @@ app.use("/uploads", (req, res) => {
     res.status(404).json({ message: "File not found" });
 });
 
+app.use((req, res, next) => {
+    console.log("MASUK KE BACKEND:", req.method, req.url);
+    next();
+});
 // ROUTES
 app.use("/api", authRoute);
 app.use("/api", registRoute);
@@ -84,14 +74,27 @@ app.use("/api/student", studentLearningRoute);
 app.use("/api/discussion", discussionRoute);
 app.use("/api/monitoring", monitoringRoute);
 
+app.use((err, req, res, next) => {
+    console.error("❌ ERROR TERJADI:");
+    console.error(err.stack);
+
+    res.status(500).json({
+        message: "Internal Server Error",
+        error: err.message
+    });
+});
 
 app.get("/", (req, res) => {
     res.send("Server berjalan dengan baik!");
 });
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, '0.0.0.0',() => {
+server.listen(PORT, () => {
     console.log("Backend berjalan di http://localhost:" + PORT);
 });
 
-
+app.use((err, req, res, next) => {
+    console.error("❌ GLOBAL ERROR:");
+    console.error(err.stack);
+    res.status(500).json({ message: err.message });
+});

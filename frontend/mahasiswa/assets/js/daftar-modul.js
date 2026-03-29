@@ -1,5 +1,5 @@
 import { getModuleLearningRequest, getModuleLearnDetailRequest } from "../../../assets/api.js";
-
+import Toast from "../../../assets/toast.js";
 
 /**
  * Render semua modul ke card di halaman daftar-modul
@@ -212,7 +212,7 @@ async function handleStartModule(moduleId) {
     try {
         const token = localStorage.getItem("token");
         if (!token) {
-            alert("Token tidak ditemukan. Silakan login kembali.");
+            Toast.warning("Token tidak ditemukan. Silakan login kembali.");
             return;
         }
 
@@ -223,7 +223,7 @@ async function handleStartModule(moduleId) {
 
         if (response && response.success) {
             console.log("[handleStartModule] ✅ Modul berhasil dimulai:", response);
-            alert("Modul berhasil dimulai! 🎉");
+            Toast.success("Modul berhasil dimulai! 🎉");
             
             // Refresh halaman modul dengan memanggil renderModuleDetail kembali
             if (window.renderModuleDetail) {
@@ -232,11 +232,11 @@ async function handleStartModule(moduleId) {
         } else {
             const msg = response?.message || "Gagal memulai modul";
             console.error("[handleStartModule] Error:", msg);
-            alert("Gagal: " + msg);
+            Toast.error("Gagal: " + msg);
         }
     } catch (error) {
         console.error("[handleStartModule] Error:", error);
-        alert("Error: " + error.message);
+        Toast.error("Error: " + error.message);
     }
 }
 
@@ -293,6 +293,25 @@ function createStepElement(step, moduleId) {
     `;
 
     return div;
+}
+
+//helper nama file bersih
+function getCleanFileName(filePath = "") {
+    if (!filePath) return "File";
+
+    // ambil nama file paling belakang
+    const rawName = filePath.split("/").pop() || filePath;
+
+    // decode jika ada karakter URL encoded
+    let decodedName = rawName;
+    try {
+        decodedName = decodeURIComponent(rawName);
+    } catch (_) {}
+
+    // hapus prefix angka timestamp di depan: 1774789829349-
+    const withoutTimestamp = decodedName.replace(/^\d{10,}-/, "");
+
+    return withoutTimestamp;
 }
 
 /**
@@ -406,62 +425,154 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
     if (resources.length === 0) {
         root.innerHTML = `<p>Tidak ada resources untuk step ini.</p>`;
     } else {
-        root.innerHTML = resources.map(r => {
+        root.innerHTML = resources.map((r, index) => {
             const t = (r.type || "").toLowerCase();
+            const cleanName = getCleanFileName(r.value);
+
             if (t.includes("video")) {
-                // render video link / embed
                 return `
                     <div class="section-step">
-                        <h3 class="section-title"><span class="material-symbols-outlined">videocam</span> Video Pembelajaran</h3>
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">videocam</span>
+                            Video Pembelajaran
+                        </h3>
                         <div class="video-wrapper">
                             <div class="video-placeholder">
                                 <a class="video-link" href="${escapeHtml(r.value)}" target="_blank">
                                     <span class="material-symbols-outlined play-icon">play_arrow</span>
-                                    <p class="video-title">Video Pembelajaran</p>
-                                    <span class="video-duration">Durasi: -</span>
+                                    <p class="video-title">${escapeHtml(cleanName || "Video Pembelajaran")}</p>
                                 </a>
                             </div>
-                            <div class="video-note"><span class="material-symbols-outlined">star</span> Link video disediakan dosen</div>
+                            <div class="video-note">
+                                <span class="material-symbols-outlined">star</span>
+                                Link video disediakan dosen
+                            </div>
                         </div>
                     </div>
                 `;
-            } else if (t.includes("document") || t.includes("pdf") || t.includes("doc")) {
-                // render document with download button
+            }
+
+            if (t === "ppt" || t.includes("presentation")) {
                 return `
                     <div class="section-step">
-                        <h3 class="section-title"><span class="material-symbols-outlined">description</span> Dokumen</h3>
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">slideshow</span>
+                            Resource: PPT
+                        </h3>
                         <div class="document-card">
                             <div class="doc-left">
-                                <div class="doc-icon"><span class="material-symbols-outlined">description</span></div>
+                                <div class="doc-icon">
+                                    <span class="material-symbols-outlined">description</span>
+                                </div>
                                 <div class="doc-info">
-                                    <h4>${escapeHtml((r.value || "").split("/").pop() || "Dokumen")}</h4>
-                                    <p>${escapeHtml(r.value)}</p>
+                                    <h4>${escapeHtml(cleanName)}</h4>
                                 </div>
                             </div>
-                            <button class="btn-download btn-download-resource" data-module-id="${moduleId}" data-step-number="${stepNumber}" data-resource-type="${escapeHtml(r.type)}">
-                                <span class="material-symbols-outlined">download</span> Unduh
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else {
-                // generic resource
-                return `
-                    <div class="section-step">
-                        <h3 class="section-title"><span class="material-symbols-outlined">folder</span> Resource: ${escapeHtml(r.type)}</h3>
-                        <div class="document-card">
-                            <div class="doc-left">
-                                <div class="doc-info">
-                                    <h4>${escapeHtml(r.value)}</h4>
-                                </div>
-                            </div>
-                            <button class="btn-download btn-download-resource" data-module-id="${moduleId}" data-step-number="${stepNumber}" data-resource-type="${escapeHtml(r.type)}">
-                                <span class="material-symbols-outlined">download</span> Unduh
+                            <button
+                                class="btn-download btn-download-resource"
+                                data-module-id="${moduleId}"
+                                data-step-number="${stepNumber}"
+                                data-resource-type="${escapeHtml(r.type)}"
+                                data-resource-name="${escapeHtml(cleanName)}"
+                            >
+                                <span class="material-symbols-outlined">download</span>
+                                Unduh
                             </button>
                         </div>
                     </div>
                 `;
             }
+
+            if (t === "image" || t.includes("image")) {
+                return `
+                    <div class="section-step">
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">image</span>
+                            Resource: image
+                        </h3>
+                        <div class="document-card">
+                            <div class="doc-left">
+                                <div class="doc-icon">
+                                    <span class="material-symbols-outlined">image</span>
+                                </div>
+                                <div class="doc-info">
+                                    <h4>${escapeHtml(cleanName)}</h4>
+                                </div>
+                            </div>
+                            <button
+                                class="btn-download btn-download-resource"
+                                data-module-id="${moduleId}"
+                                data-step-number="${stepNumber}"
+                                data-resource-type="${escapeHtml(r.type)}"
+                                data-resource-name="${escapeHtml(cleanName)}"
+                            >
+                                <span class="material-symbols-outlined">download</span>
+                                Unduh
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (t.includes("document") || t.includes("pdf") || t.includes("doc")) {
+                return `
+                    <div class="section-step">
+                        <h3 class="section-title">
+                            <span class="material-symbols-outlined">description</span>
+                            Dokumen
+                        </h3>
+                        <div class="document-card">
+                            <div class="doc-left">
+                                <div class="doc-icon">
+                                    <span class="material-symbols-outlined">description</span>
+                                </div>
+                                <div class="doc-info">
+                                    <h4>${escapeHtml(cleanName)}</h4>
+                                </div>
+                            </div>
+                            <button
+                                class="btn-download btn-download-resource"
+                                data-module-id="${moduleId}"
+                                data-step-number="${stepNumber}"
+                                data-resource-type="${escapeHtml(r.type)}"
+                                data-resource-name="${escapeHtml(cleanName)}"
+                            >
+                                <span class="material-symbols-outlined">download</span>
+                                Unduh
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="section-step">
+                    <h3 class="section-title">
+                        <span class="material-symbols-outlined">folder</span>
+                        Resource: ${escapeHtml(r.type)}
+                    </h3>
+                    <div class="document-card">
+                        <div class="doc-left">
+                            <div class="doc-icon">
+                                <span class="material-symbols-outlined">folder</span>
+                            </div>
+                            <div class="doc-info">
+                                <h4>${escapeHtml(cleanName)}</h4>
+                            </div>
+                        </div>
+                        <button
+                            class="btn-download btn-download-resource"
+                            data-module-id="${moduleId}"
+                            data-step-number="${stepNumber}"
+                            data-resource-type="${escapeHtml(r.type)}"
+                            data-resource-name="${escapeHtml(cleanName)}"
+                        >
+                            <span class="material-symbols-outlined">download</span>
+                            Unduh
+                        </button>
+                    </div>
+                </div>
+            `;
         }).join("");
     }
 
@@ -472,7 +583,8 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
             const mId = btn.getAttribute("data-module-id");
             const sNo = btn.getAttribute("data-step-number");
             const rType = btn.getAttribute("data-resource-type");
-            await downloadResource(mId, sNo, rType, token);
+            const rName = btn.getAttribute("data-resource-name");
+            await downloadResource(mId, sNo, rType, token, rName);
         });
     });
 
@@ -487,7 +599,7 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
             const discussionPoint = textarea ? textarea.value.trim() : "";
             
             if (!discussionPoint) {
-                alert("Tulis poin penting terlebih dahulu!");
+                Toast.warning("Tulis poin penting terlebih dahulu!");
                 return;
             }
             
@@ -498,22 +610,22 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                 // 1. Submit discussion
                 const discRes = await submitDiscussionPointRequest(mId, sNo, discussionPoint, token);
                 if (!discRes?.success) {
-                    alert("Gagal submit diskusi: " + (discRes?.message || "unknown error"));
+                    Toast.error("Gagal submit diskusi: " + (discRes?.message || "unknown error"));
                     return;
                 }
                 
                 // 2. Complete step
                 const compRes = await completeStepModuleRequest(mId, sNo, token);
                 if (compRes?.success) {
-                    alert("Diskusi disubmit dan step diselesaikan!");
+                    Toast.success("Diskusi disubmit dan step diselesaikan!");
                     // 3. Reload module
                     window.renderModuleDetail?.(mId);
                 } else {
-                    alert("Gagal menyelesaikan step: " + (compRes?.message || "unknown error"));
+                    Toast.error("Gagal menyelesaikan step: " + (compRes?.message || "unknown error"));
                 }
             } catch (err) {
                 console.error("[btnCompleteDiscussionClick] Error:", err);
-                alert("Error: " + err.message);
+                Toast.error("Error: " + err.message);
             }
         });
     }
@@ -527,15 +639,15 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                 const { completeStepModuleRequest } = await import("../../../assets/api.js");
                 const res = await completeStepModuleRequest(moduleId, stepNumber, token);
                 if (res && res.success) {
-                    alert("Step diselesaikan.");
+                    Toast.success("Step diselesaikan.");
                     // reload module detail so UI updates
                     window.renderModuleDetail?.(moduleId);
                 } else {
-                    alert("Gagal menyelesaikan step: " + (res.message || "unknown"));
+                    Toast.error("Gagal menyelesaikan step: " + (res.message || "unknown"));
                 }
             } catch (err) {
                 console.error("[completeStep] error", err);
-                alert("Error: " + err.message);
+                Toast.error("Error: " + err.message);
             }
         });
     }
@@ -551,13 +663,13 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
 }
 
 // Helper: download resource via API (downloadStepResourceRequest returns {blob, contentType} via api.js)
-async function downloadResource(moduleId, stepNumber, resourceType, token) {
+async function downloadResource(moduleId, stepNumber, resourceType, token, originalName = "resource"){
     try {
         const { downloadStepResourceRequest } = await import("../../../assets/api.js");
         const result = await downloadStepResourceRequest(moduleId, stepNumber, resourceType, token);
         
         if (!result || !result.blob) {
-            alert("File tidak tersedia");
+            Toast.warning("File tidak tersedia");
             return;
         }
         
@@ -603,7 +715,12 @@ async function downloadResource(moduleId, stepNumber, resourceType, token) {
             extension = "rar";
         }
         
-        const filename = `resource_${moduleId}_step${stepNumber}.${extension}`;
+        const safeBaseName = String(originalName || "resource")
+            .replace(/\.[^/.]+$/, "") // hapus extension lama
+            .replace(/[\\/:*?"<>|]/g, "")
+            .trim() || "resource";
+
+        const filename = `${safeBaseName}.${extension}`;
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -614,7 +731,7 @@ async function downloadResource(moduleId, stepNumber, resourceType, token) {
         window.URL.revokeObjectURL(url);
     } catch (err) {
         console.error("[downloadResource] Error:", err);
-        alert("Gagal mengunduh file: " + (err.message || err));
+        Toast.error("Gagal mengunduh file: " + (err.message || err));
     }
 }
 
@@ -625,18 +742,18 @@ async function submitDiscussionPoint(moduleId, stepNumber, discussionPoint, toke
         const res = await submitDiscussionPointRequest(moduleId, stepNumber, discussionPoint, token);
         
         if (res && res.success) {
-            alert("Diskusi berhasil disubmit!");
+            Toast.success("Diskusi berhasil disubmit!");
             // Clear textarea
             const textarea = document.querySelector("#discussion-textarea");
             if (textarea) textarea.value = "";
             // Reload module detail
             window.renderModuleDetail?.(moduleId);
         } else {
-            alert("Gagal submit diskusi: " + (res?.message || "unknown error"));
+            Toast.error("Gagal submit diskusi: " + (res?.message || "unknown error"));
         }
     } catch (err) {
         console.error("[submitDiscussionPoint] Error:", err);
-        alert("Error: " + err.message);
+        Toast.error("Error: " + err.message);
     }
 }
 

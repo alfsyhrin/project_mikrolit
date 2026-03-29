@@ -9,20 +9,23 @@ exports.uploadResource = (req, res) => {
             });
         }
 
-        // ✅ Simpan RELATIVE PATH dengan separator / yang konsisten di semua OS
+        // simpan relative path yang konsisten
         const relativePath = req.file.path
-            .split(path.sep)           // Split by OS separator (\\ atau /)
-            .slice(-3)                 // Ambil 3 bagian: module_resources/category/filename
-            .join('/');                // Gabung dengan forward slash
+            .split(path.sep)
+            .slice(-3)
+            .join("/");
 
-        res.json({
+        return res.json({
             success: true,
-            file_name: req.file.filename,
-            path: relativePath         // Contoh: module_resources/documents/1774460251834-file.pdf
+            file_name: req.file.filename,                 // nama fisik file di server
+            original_name: req.file.originalname,        // nama asli saat upload
+            display_name: req.file.displayName || req.file.originalname, // nama bersih untuk UI
+            path: relativePath                           // contoh: module_resources/ppt/File-a1b2c3d4.pptx
         });
 
     } catch (err) {
-        res.status(500).json({
+        console.error("[uploadResource] Error:", err);
+        return res.status(500).json({
             success: false,
             message: err.message
         });

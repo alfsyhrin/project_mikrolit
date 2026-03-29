@@ -1,27 +1,43 @@
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 
-// helper buat folder jika belum ada
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-// storage factory
+function sanitizeBaseName(filename = "") {
+  const ext = path.extname(filename);
+  const base = path.basename(filename, ext);
+
+  return base
+    .normalize("NFKD")
+    .replace(/[^\w\s.-]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/_+/g, "_")
+    .replace(/^_+|_+$/g, "") || "file";
+}
+
 function storageFor(subfolder) {
   const uploadPath = path.join(__dirname, "..", "uploads", subfolder);
   ensureDir(uploadPath);
+
   return multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadPath),
     filename: (req, file, cb) => {
       const ext = path.extname(file.originalname).toLowerCase();
-      const unique = (req.user ? req.user.id + "-" : "") + Date.now() + ext;
-      cb(null, unique);
+      const cleanBase = sanitizeBaseName(file.originalname);
+      const uniqueSuffix = crypto.randomUUID().slice(0, 8);
+
+      file.displayName = `${cleanBase}${ext}`;
+      file.cleanBaseName = cleanBase;
+
+      cb(null, `${cleanBase}-${uniqueSuffix}${ext}`);
     }
   });
 }
 
-// fileFilter factory (optional)
 function fileFilterFactory(allowedExt = []) {
   return (req, file, cb) => {
     if (allowedExt.length === 0) return cb(null, true);
@@ -31,24 +47,27 @@ function fileFilterFactory(allowedExt = []) {
   };
 }
 
-// exported middleware instances
 module.exports = {
   profile: multer({
     storage: storageFor("/"),
-    limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+    limits: { fileSize: 2 * 1024 * 1024 },
     fileFilter: fileFilterFactory([".png", ".jpg", ".jpeg"])
   }),
   tasks: multer({
     storage: storageFor("tasks"),
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-    fileFilter: fileFilterFactory([".pdf", ".doc", ".docx", ".png", ".jpg", ".jpeg"])
+    limits: { fileSize: 10 * 1024 * 1024 },
+    fileFilter: fileFilterFactory([
+      ".pdf", ".doc", ".docx",
+      ".ppt", ".pptx",
+      ".zip",
+      ".png", ".jpg", ".jpeg"
+    ])
   }),
   modules: multer({
     storage: storageFor("modules"),
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB for video/pdf
+    limits: { fileSize: 50 * 1024 * 1024 },
     fileFilter: fileFilterFactory([".pdf", ".doc", ".docx", ".mp4", ".mp3", ".png", ".jpg", ".jpeg"])
   }),
-  // or a factory if you prefer
   for: (subfolder, opts = {}) => multer({
     storage: storageFor(subfolder),
     limits: opts.limits || { fileSize: 10 * 1024 * 1024 },
