@@ -34,18 +34,18 @@ require('./listeners/notificationListener');
 
 // Middleware untuk CORS + CORP pada static files di /uploads
 app.use("/uploads", (req, res, next) => {
-    // Izinkan akses lintas-origin untuk resource statis (gambar)
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, OPTIONS, HEAD");
     res.header("Access-Control-Allow-Headers", "Content-Type");
-    // Izinkan resource di-embed lintas origin
     res.header("Cross-Origin-Resource-Policy", "cross-origin");
-    // Jangan set COOP/COEP di sini — ini dapat mengakibatkan resource cross-origin diblokir
-    // Debug kecil untuk melihat path yang diminta
-    console.log(`[uploads] request: ${req.method} ${req.path}`);
     next();
 });
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
+    fallthrough: false,
+    index: false,
+    maxAge: "1d"
+}));
 
 // Middleware
 app.use(express.static('public'));

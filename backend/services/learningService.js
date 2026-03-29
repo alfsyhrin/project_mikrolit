@@ -389,11 +389,18 @@ async getStepDetail(userId, moduleId, stepNumber) {  // ✅ Ganti parameter
     const resources = await StudentLearningModel.getStepResourcesById(step.id);  // ✅ Gunakan step.id yang didapat dari query
 
     // 5. Format resources berdasarkan type
-    const formattedResources = resources.map(res => ({
-        type: res.resource_type,
-        value: res.resource_path,
-        title: res.resource_title || null
-    }));
+    const formattedResources = resources.map(res => {
+        const normalizedPath = String(res.resource_path || "").replace(/^\/+/, "");
+        const publicUrl = `/uploads/${normalizedPath}`;
+
+        return {
+            type: res.resource_type,
+            value: normalizedPath,
+            title: res.resource_title || null,
+            public_url: publicUrl,
+            preview_url: res.resource_type === "image" ? publicUrl : null
+        };
+    });
 
     return {
         step: {

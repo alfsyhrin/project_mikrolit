@@ -152,3 +152,62 @@ font-size:0.75rem;
 }
 
 }
+
+.infografis-card-dynamic {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.infografis-preview-box {
+    width: 100%;
+    min-height: 320px;
+    border: 1px solid #d9e0e7;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f4f8fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infografis-preview-image {
+    width: 100%;
+    height: auto;
+    max-height: 720px;
+    object-fit: contain;
+    display: block;
+    background: #fff;
+    cursor: zoom-in;
+}
+
+.infografis-preview-fallback {
+    min-height: 320px;
+    width: 100%;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    text-align: center;
+    gap: 10px;
+}
+
+.infografis-preview-fallback .preview-icon {
+    font-size: 48px;
+    color: #0f766e;
+}
+
+.infografis-preview-fallback .preview-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0b2c6b;
+    margin: 0;
+}
+
+.infografis-preview-fallback .preview-desc {
+    margin: 0;
+    font-size: 14px;
+}

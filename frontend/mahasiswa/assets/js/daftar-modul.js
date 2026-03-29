@@ -295,6 +295,60 @@ function createStepElement(step, moduleId) {
     return div;
 }
 
+//helper get youtube url id
+function extractYouTubeVideoId(url = "") {
+    if (!url) return null;
+
+    try {
+        const parsed = new URL(url);
+
+        // youtu.be/VIDEO_ID
+        if (parsed.hostname.includes("youtu.be")) {
+            const id = parsed.pathname.replace("/", "").trim();
+            return id || null;
+        }
+
+        // youtube.com/watch?v=VIDEO_ID
+        const v = parsed.searchParams.get("v");
+        if (v) return v;
+
+        // youtube.com/embed/VIDEO_ID
+        const embedMatch = parsed.pathname.match(/\/embed\/([^/?]+)/);
+        if (embedMatch) return embedMatch[1];
+
+        // youtube.com/shorts/VIDEO_ID
+        const shortsMatch = parsed.pathname.match(/\/shorts\/([^/?]+)/);
+        if (shortsMatch) return shortsMatch[1];
+
+        return null;
+    } catch {
+        return null;
+    }
+}
+
+function getYouTubeEmbedUrl(url = "") {
+    const videoId = extractYouTubeVideoId(url);
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+}
+
+function getYouTubeThumbnailUrl(url = "") {
+    const videoId = extractYouTubeVideoId(url);
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+}
+
+//helper untuk preview gambar
+function buildPublicResourceUrl(resourceValue = "") {
+    if (!resourceValue) return "";
+
+    // kalau backend nanti sudah kirim full URL, langsung pakai
+    if (/^https?:\/\//i.test(resourceValue)) {
+        return resourceValue;
+    }
+
+    const normalized = String(resourceValue).replace(/^\/+/, "");
+    return `http://localhost:4000/${normalized}`;
+}
+
 //helper nama file bersih
 function getCleanFileName(filePath = "") {
     if (!filePath) return "File";
@@ -312,6 +366,41 @@ function getCleanFileName(filePath = "") {
     const withoutTimestamp = decodedName.replace(/^\d{10,}-/, "");
 
     return withoutTimestamp;
+}
+
+//helper build preview image dari  url
+function buildResourcePublicUrl(resource = {}) {
+    const candidate = resource.preview_url || resource.public_url || resource.value || "";
+    if (!candidate) return "";
+
+    if (/^https?:\/\//i.test(candidate)) {
+        return candidate;
+    }
+
+    const normalized = String(candidate).replace(/^\/+/, "");
+
+    // Jika backend sudah kirim /uploads/...
+    if (String(candidate).startsWith("/uploads/")) {
+        return `http://localhost:4000${candidate}`;
+    }
+
+    // Jika backend masih kirim module_resources/...
+    if (normalized.startsWith("module_resources/")) {
+        return `http://localhost:4000/uploads/${normalized}`;
+    }
+
+    return `http://localhost:4000/${normalized}`;
+}
+
+function isImageResource(type = "", value = "") {
+    const t = String(type).toLowerCase();
+    const v = String(value).toLowerCase();
+
+    return (
+        t === "image" ||
+        t.includes("image") ||
+        /\.(png|jpe?g|gif|webp|svg)$/i.test(v)
+    );
 }
 
 /**
@@ -429,28 +518,60 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
             const t = (r.type || "").toLowerCase();
             const cleanName = getCleanFileName(r.value);
 
-            if (t.includes("video")) {
-                return `
-                    <div class="section-step">
-                        <h3 class="section-title">
-                            <span class="material-symbols-outlined">videocam</span>
-                            Video Pembelajaran
-                        </h3>
-                        <div class="video-wrapper">
-                            <div class="video-placeholder">
-                                <a class="video-link" href="${escapeHtml(r.value)}" target="_blank">
-                                    <span class="material-symbols-outlined play-icon">play_arrow</span>
-                                    <p class="video-title">${escapeHtml(cleanName || "Video Pembelajaran")}</p>
-                                </a>
-                            </div>
-                            <div class="video-note">
-                                <span class="material-symbols-outlined">star</span>
-                                Link video disediakan dosen
-                            </div>
+        if (t.includes("video")) {
+            const embedUrl = getYouTubeEmbedUrl(r.value);
+            const thumbnailUrl = getYouTubeThumbnailUrl(r.value);
+            const safeVideoUrl = escapeHtml(r.value || "");
+            const safeTitle = escapeHtml(step.step_title || "Video Pembelajaran");
+
+            return `
+                <div class="section-step">
+                    <h3 class="section-title">
+                        <span class="material-symbols-outlined">videocam</span>
+                        Video Pembelajaran
+                    </h3>
+
+                    <div class="video-wrapper">
+                        ${
+                            embedUrl
+                                ? `
+                                    <div class="video-embed-container">
+                                        <iframe
+                                            class="video-embed-frame"
+                                            src="${embedUrl}"
+                                            title="${safeTitle}"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            allowfullscreen
+                                            referrerpolicy="strict-origin-when-cross-origin"
+                                        ></iframe>
+                                    </div>
+                                `
+                                : `
+                                    <div class="video-placeholder video-fallback">
+                                        <a class="video-link video-preview-link" href="${safeVideoUrl}" target="_blank" rel="noopener noreferrer">
+                                            ${
+                                                thumbnailUrl
+                                                    ? `<img class="video-preview-thumb" src="${thumbnailUrl}" alt="${safeTitle}">`
+                                                    : `<span class="material-symbols-outlined play-icon">play_arrow</span>`
+                                            }
+                                            <div class="video-preview-overlay">
+                                                <span class="material-symbols-outlined play-icon">play_arrow</span>
+                                                <p class="video-title">${safeTitle}</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                `
+                        }
+
+                        <div class="video-note">
+                            <span class="material-symbols-outlined">star</span>
+                            Video disediakan dosen
                         </div>
                     </div>
-                `;
-            }
+                </div>
+            `;
+        }
 
             if (t === "ppt" || t.includes("presentation")) {
                 return `
@@ -483,32 +604,56 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                 `;
             }
 
-            if (t === "image" || t.includes("image")) {
+            if (isImageResource(r.type, r.value)) {
+                const imageUrl = buildResourcePublicUrl(r);
+                const title = escapeHtml(cleanName || `Infografis ${index + 1}`);
+
                 return `
                     <div class="section-step">
                         <h3 class="section-title">
                             <span class="material-symbols-outlined">image</span>
-                            Resource: image
+                            Infografis ${index + 1}
                         </h3>
-                        <div class="document-card">
-                            <div class="doc-left">
-                                <div class="doc-icon">
-                                    <span class="material-symbols-outlined">image</span>
-                                </div>
-                                <div class="doc-info">
-                                    <h4>${escapeHtml(cleanName)}</h4>
+
+                        <div class="infografis-card-dynamic">
+                            <div class="infografis-preview-box">
+                                <img
+                                    src="${escapeHtml(imageUrl)}"
+                                    alt="${title}"
+                                    class="infografis-preview-image"
+                                    loading="lazy"
+                                    data-full-image="${escapeHtml(imageUrl)}"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                />
+
+                                <div class="infografis-preview-fallback" style="display:none;">
+                                    <span class="material-symbols-outlined preview-icon">image</span>
+                                    <p class="preview-title">${title}</p>
+                                    <p class="preview-desc">Preview gambar tidak tersedia</p>
                                 </div>
                             </div>
-                            <button
-                                class="btn-download btn-download-resource"
-                                data-module-id="${moduleId}"
-                                data-step-number="${stepNumber}"
-                                data-resource-type="${escapeHtml(r.type)}"
-                                data-resource-name="${escapeHtml(cleanName)}"
-                            >
-                                <span class="material-symbols-outlined">download</span>
-                                Unduh
-                            </button>
+
+                            <div class="document-card">
+                                <div class="doc-left">
+                                    <div class="doc-icon">
+                                        <span class="material-symbols-outlined">image</span>
+                                    </div>
+                                    <div class="doc-info">
+                                        <h4>${title}</h4>
+                                    </div>
+                                </div>
+
+                                <button
+                                    class="btn-download btn-download-resource"
+                                    data-module-id="${moduleId}"
+                                    data-step-number="${stepNumber}"
+                                    data-resource-type="${escapeHtml(r.type)}"
+                                    data-resource-name="${title}"
+                                >
+                                    <span class="material-symbols-outlined">download</span>
+                                    Unduh
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -575,6 +720,15 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
             `;
         }).join("");
     }
+
+    root.querySelectorAll(".infografis-preview-image").forEach((img) => {
+        img.addEventListener("click", () => {
+            const fullImage = img.getAttribute("data-full-image");
+            if (fullImage) {
+                window.open(fullImage, "_blank", "noopener,noreferrer");
+            }
+        });
+    });
 
     // Attach download handlers
     root.querySelectorAll(".btn-download-resource").forEach(btn => {
