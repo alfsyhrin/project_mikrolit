@@ -1,4 +1,4 @@
-import { getModuleLearningRequest, getModuleLearnDetailRequest } from "../../../assets/api.js";
+import { getModuleLearningRequest, getModuleLearnDetailRequest, BACKEND_BASE } from "../../../assets/api.js";
 import Toast from "../../../assets/toast.js";
 
 /**
@@ -302,21 +302,16 @@ function extractYouTubeVideoId(url = "") {
     try {
         const parsed = new URL(url);
 
-        // youtu.be/VIDEO_ID
         if (parsed.hostname.includes("youtu.be")) {
-            const id = parsed.pathname.replace("/", "").trim();
-            return id || null;
+            return parsed.pathname.replace("/", "").trim() || null;
         }
 
-        // youtube.com/watch?v=VIDEO_ID
         const v = parsed.searchParams.get("v");
         if (v) return v;
 
-        // youtube.com/embed/VIDEO_ID
         const embedMatch = parsed.pathname.match(/\/embed\/([^/?]+)/);
         if (embedMatch) return embedMatch[1];
 
-        // youtube.com/shorts/VIDEO_ID
         const shortsMatch = parsed.pathname.match(/\/shorts\/([^/?]+)/);
         if (shortsMatch) return shortsMatch[1];
 
@@ -327,8 +322,8 @@ function extractYouTubeVideoId(url = "") {
 }
 
 function getYouTubeEmbedUrl(url = "") {
-    const videoId = extractYouTubeVideoId(url);
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    const id = extractYouTubeVideoId(url);
+    return id ? `https://www.youtube.com/embed/${id}` : null;
 }
 
 function getYouTubeThumbnailUrl(url = "") {
@@ -336,39 +331,73 @@ function getYouTubeThumbnailUrl(url = "") {
     return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
 }
 
-//helper untuk preview gambar
-function buildPublicResourceUrl(resourceValue = "") {
-    if (!resourceValue) return "";
+// //helper untuk preview gambar
+// function getApiBaseUrl() {
+//     // bisa dioverride global kalau API beda domain/subdomain
+//     if (window.__API_BASE_URL__) {
+//         return String(window.__API_BASE_URL__).replace(/\/+$/, "");
+//     }
 
-    // kalau backend nanti sudah kirim full URL, langsung pakai
-    if (/^https?:\/\//i.test(resourceValue)) {
-        return resourceValue;
-    }
+//     // fallback default: pakai origin website saat ini
+//     return window.location.origin.replace(/\/+$/, "");
+// }
 
-    const normalized = String(resourceValue).replace(/^\/+/, "");
-    return `http://localhost:4000/${normalized}`;
-}
+// function buildPublicResourceUrl(resourceValue = "") {
+//     if (!resourceValue) return "";
+
+//     const value = String(resourceValue).trim();
+
+//     // sudah full url
+//     if (/^https?:\/\//i.test(value)) {
+//         return value;
+//     }
+
+//     const normalized = value.replace(/^\/+/, "");
+//     const apiBase = getApiBaseUrl();
+
+//     // resource path dari backend: module_resources/images/...
+//     return `${apiBase}/uploads/${normalized}`;
+// }
 
 //helper nama file bersih
 function getCleanFileName(filePath = "") {
     if (!filePath) return "File";
 
-    // ambil nama file paling belakang
-    const rawName = filePath.split("/").pop() || filePath;
+    const rawName = String(filePath).split("/").pop() || String(filePath);
 
-    // decode jika ada karakter URL encoded
     let decodedName = rawName;
     try {
         decodedName = decodeURIComponent(rawName);
     } catch (_) {}
 
-    // hapus prefix angka timestamp di depan: 1774789829349-
-    const withoutTimestamp = decodedName.replace(/^\d{10,}-/, "");
+    const dotIndex = decodedName.lastIndexOf(".");
+    const hasExt = dotIndex > 0;
+    const ext = hasExt ? decodedName.slice(dotIndex) : "";
+    let base = hasExt ? decodedName.slice(0, dotIndex) : decodedName;
 
-    return withoutTimestamp;
+    // hapus timestamp di depan
+    base = base.replace(/^\d{10,}[-_]?/, "");
+
+    // hapus suffix hash/unik di belakang
+    base = base.replace(/[-_][a-f0-9]{6,}$/i, "");
+
+    // rapikan separator
+    base = base.replace(/[_-]{2,}/g, "_");
+    base = base.replace(/^[\s_-]+|[\s_-]+$/g, "");
+
+    return `${base || "File"}${ext}`;
 }
 
 //helper build preview image dari  url
+// function getBackendBaseUrl() {
+//     if (window.__API_BASE_URL__) {
+//         return String(window.__API_BASE_URL__).replace(/\/+$/, "");
+//     }
+
+//     // fallback lokal
+//     return "http://localhost:4000";
+// }
+
 function buildResourcePublicUrl(resource = {}) {
     const candidate = resource.preview_url || resource.public_url || resource.value || "";
     if (!candidate) return "";
@@ -377,19 +406,19 @@ function buildResourcePublicUrl(resource = {}) {
         return candidate;
     }
 
-    const normalized = String(candidate).replace(/^\/+/, "");
+    const raw = String(candidate).trim();
 
-    // Jika backend sudah kirim /uploads/...
-    if (String(candidate).startsWith("/uploads/")) {
-        return `http://localhost:4000${candidate}`;
+    if (raw.startsWith("/uploads/")) {
+        return `${BACKEND_BASE}${raw}`;
     }
 
-    // Jika backend masih kirim module_resources/...
+    const normalized = raw.replace(/^\/+/, "");
+
     if (normalized.startsWith("module_resources/")) {
-        return `http://localhost:4000/uploads/${normalized}`;
+        return `${BACKEND_BASE}/uploads/${normalized}`;
     }
 
-    return `http://localhost:4000/${normalized}`;
+    return `${BACKEND_BASE}/${normalized}`;
 }
 
 function isImageResource(type = "", value = "") {
@@ -520,9 +549,8 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
 
         if (t.includes("video")) {
             const embedUrl = getYouTubeEmbedUrl(r.value);
-            const thumbnailUrl = getYouTubeThumbnailUrl(r.value);
             const safeVideoUrl = escapeHtml(r.value || "");
-            const safeTitle = escapeHtml(step.step_title || "Video Pembelajaran");
+            const safeTitle = escapeHtml(cleanName || "Video Pembelajaran");
 
             return `
                 <div class="section-step">
@@ -548,17 +576,10 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                                     </div>
                                 `
                                 : `
-                                    <div class="video-placeholder video-fallback">
-                                        <a class="video-link video-preview-link" href="${safeVideoUrl}" target="_blank" rel="noopener noreferrer">
-                                            ${
-                                                thumbnailUrl
-                                                    ? `<img class="video-preview-thumb" src="${thumbnailUrl}" alt="${safeTitle}">`
-                                                    : `<span class="material-symbols-outlined play-icon">play_arrow</span>`
-                                            }
-                                            <div class="video-preview-overlay">
-                                                <span class="material-symbols-outlined play-icon">play_arrow</span>
-                                                <p class="video-title">${safeTitle}</p>
-                                            </div>
+                                    <div class="video-placeholder">
+                                        <a class="video-link" href="${safeVideoUrl}" target="_blank" rel="noopener noreferrer">
+                                            <span class="material-symbols-outlined play-icon">play_arrow</span>
+                                            <p class="video-title">${safeTitle}</p>
                                         </a>
                                     </div>
                                 `
@@ -566,7 +587,7 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
 
                         <div class="video-note">
                             <span class="material-symbols-outlined">star</span>
-                            Video disediakan dosen
+                            Link video disediakan dosen
                         </div>
                     </div>
                 </div>
@@ -604,7 +625,7 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                 `;
             }
 
-            if (isImageResource(r.type, r.value)) {
+            if (t === "image" || t.includes("image")) {
                 const imageUrl = buildResourcePublicUrl(r);
                 const title = escapeHtml(cleanName || `Infografis ${index + 1}`);
 
@@ -625,7 +646,6 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                                     data-full-image="${escapeHtml(imageUrl)}"
                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                 />
-
                                 <div class="infografis-preview-fallback" style="display:none;">
                                     <span class="material-symbols-outlined preview-icon">image</span>
                                     <p class="preview-title">${title}</p>
@@ -642,7 +662,6 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                                         <h4>${title}</h4>
                                     </div>
                                 </div>
-
                                 <button
                                     class="btn-download btn-download-resource"
                                     data-module-id="${moduleId}"

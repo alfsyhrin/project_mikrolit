@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Dashboard Mahasiswa | Mikrolit LMS</title>
 
     <!-- Link ke CSS Halaman ini (dashboard.css) -->
@@ -126,6 +129,12 @@
                 
             </div>
         </main>
+    <script>
+        window.APP_CONFIG = {
+            API_BASE: "https://darkgoldenrod-loris-389330.hostingersite.com/api"
+        };
+    </script>
+
     <script type="module">
         import { fetchAndRenderUsers, initManajemenPengguna } from "./assets/js/manajemen-pengguna.js";
         
@@ -169,7 +178,7 @@
     </script>
 
     <script type="module">
-        import { renderDaftarModul, renderModuleDetail, renderStepDetail } from "./assets/js/daftar-modul.js";
+        import { renderDaftarModul, renderModuleDetail, renderStepDetail } from "./assets/js/daftar-modul.js?v=20260329-1";
         window.renderDaftarModul = renderDaftarModul;
         window.renderModuleDetail = renderModuleDetail;
         window.renderStepDetail = renderStepDetail;
@@ -273,7 +282,11 @@
                 return;  // Return - jangan lanjut ke fetch HTML
             }
 
-            fetch(`./pages/${page}.html`)
+            const APP_VERSION = "20260329-1";
+
+            fetch(`./pages/${page}.html?v=${APP_VERSION}`, {
+                cache: "no-store"
+            })
                 .then(response => {
                     if (!response.ok) throw new Error("404");
                     return response.text();
