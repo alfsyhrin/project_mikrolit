@@ -1,4 +1,6 @@
-import { getModuleLearningRequest, getModuleLearnDetailRequest, BACKEND_BASE } from "../../../assets/api.js";
+import { getModuleLearningRequest, getModuleLearnDetailRequest, API_BASE } from "../../../assets/api.js?v=20260329-2"
+
+const BACKEND_BASE = String(API_BASE).replace(/\/api\/?$/, "");
 import Toast from "../../../assets/toast.js";
 
 /**
