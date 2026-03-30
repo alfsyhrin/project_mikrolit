@@ -140,7 +140,6 @@ button.buat-tugas p {
     justify-content: flex-start;
     align-items: center;
     gap: 0.8rem;
-    border: 1px solid red;
 
     white-space: nowrap;
     overflow: hidden;
@@ -318,6 +317,7 @@ button.buat-tugas p {
     font-size: 0.9rem;
     font-weight: 500;
     color: #1e2a44;
+    margin-top: 0.5rem;
 }
 
 /* Group */
@@ -450,7 +450,6 @@ button.buat-tugas p {
 =========================== */
 
 @media (max-width: 768px) {
-
     .modal-box .modal-form-row {
         flex-direction: column;
     }
