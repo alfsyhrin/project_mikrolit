@@ -93,7 +93,7 @@ form input {
   border: 1px solid var(--text-color);
   border-radius: 5px;
   background-color: var(--background-color);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   font-size: 0.9rem;
   color: var(--text-color);
 }
