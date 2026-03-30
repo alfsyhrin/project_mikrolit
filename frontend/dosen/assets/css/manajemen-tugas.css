@@ -140,6 +140,11 @@ button.buat-tugas p {
     justify-content: flex-start;
     align-items: center;
     gap: 0.8rem;
+    border: 1px solid red;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .meta-tugas-dosen .jenis-tugas-dosen {
@@ -165,11 +170,16 @@ button.buat-tugas p {
 
 .meta-tugas-dosen .dokumen-tugas-dosen {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 0.2rem;
     font-size: 0.8rem;
     color: var(--text-color);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
 }
 
 .dokumen-tugas-dosen .material-symbols-outlined {
@@ -397,6 +407,11 @@ button.buat-tugas p {
   color: #088395;
   font-weight: 600;
   margin-top: 4px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 /* Submit button */
