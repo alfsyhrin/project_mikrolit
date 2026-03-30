@@ -473,7 +473,7 @@ export async function renderStepDetail(moduleId, stepNumber) {
         }
 
         // ✅ Check if this is a discussion step (step 2 or marked as discussion type)
-        const isDiscussionStep = step.step_type === "discussion" || stepNumber === 2;
+        const isDiscussionStep = step.step_type === "lesson" || stepNumber === 2;
         
         renderStepDetailUI(step, resources || [], moduleId, stepNumber, token, isDiscussionStep);
 
@@ -494,7 +494,7 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
     // Simple mapping for display icon/label per type
     const typeTitle = {
         video: "Video & Dokumen",
-        discussion: "Diskusi",
+        lesson: "PPT & Poin Penting",
         infographic: "Infografis"
     }[step.step_type] || (step.step_type || "Step");
 
@@ -627,13 +627,13 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
 
             if (t === "image" || t.includes("image")) {
                 const imageUrl = buildResourcePublicUrl(r);
-                const title = escapeHtml(cleanName || `Infografis ${index + 1}`);
+                const title = escapeHtml(cleanName || ` Analisis Infografis ${index + 1}`);
 
                 return `
                     <div class="section-step">
                         <h3 class="section-title">
                             <span class="material-symbols-outlined">image</span>
-                            Infografis ${index + 1}
+                            Analisis Infografis ${index + 1}
                         </h3>
 
                         <div class="infografis-card-dynamic">

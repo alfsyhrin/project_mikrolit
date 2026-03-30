@@ -1,4 +1,4 @@
-export const API_BASE = "https://erica-slatier-neoma.ngrok-free.dev/api"
+export const API_BASE = "http://localhost:4000/api"
 
 export const BACKEND_BASE = API_BASE.replace(/\/api\/?$/, "");
 //AUTH===================================================================================

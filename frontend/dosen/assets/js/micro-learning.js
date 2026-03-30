@@ -3,6 +3,40 @@ import Modal from "../../../assets/modal.js";
 import Toast from "../../../assets/toast.js";
 console.log("micro-learning.js loaded");
 
+// Fungsi untuk membersihkan nama file dari nomor dan suffix unik
+// Fungsi untuk membersihkan nama file dari nomor dan suffix unik
+function cleanFileName(filePath = "") {
+    if (!filePath) return "-";
+
+    // Ambil nama file dari path lengkap
+    const rawName = String(filePath).split("/").pop() || filePath;
+
+    // Decode URI untuk menangani karakter khusus
+    let decodedName = rawName;
+    try {
+        decodedName = decodeURIComponent(rawName);
+    } catch (_) {}
+
+    // Hapus timestamp di depan nama file, contoh: "1-1774801730375.pptx"
+    let cleaned = decodedName.replace(/^\d+(-\d+)+(?=\.)/, "");  // Menghapus timestamp dan angka di depan nama file
+
+    // Hapus UUID atau hash yang ada di akhir nama file
+    cleaned = cleaned.replace(/-[a-f0-9]{8,}$/i, "");  // Menghapus UUID atau hash di akhir nama file
+
+    // Hapus angka atau hash yang berada sebelum ekstensi
+    cleaned = cleaned.replace(/-\d{6,}-/, "-");  // Menghapus angka atau hash yang berada di tengah nama file
+
+    // Hapus bagian yang tidak relevan seperti "-<hash>"
+    cleaned = cleaned.replace(/-\w{6,}$/, "");  // Menghapus hash panjang
+
+    // Ambil ekstensi file
+    const extMatch = cleaned.match(/(\.[^.]+)$/);
+    const ext = extMatch ? extMatch[1] : "";
+    const baseName = ext ? cleaned.slice(0, -ext.length) : cleaned;
+
+    return `${baseName}${ext}`;  // Kembalikan nama file yang telah dibersihkan
+}
+
 // ============================================
 // HELPER: Generate Edit Module Form
 // ============================================
@@ -19,6 +53,17 @@ function generateEditModuleForm(modul) {
 
     const videoLink = step1Resources.find(r => r.type === "video_link")?.value || "";
     const pptFile = step2Resources.find(r => r.type === "ppt")?.value || "";
+
+    // Bersihkan nama file menggunakan cleanFileName
+    // Pastikan setiap nama file dibersihkan dengan cleanFileName
+    const cleanedDokumenPenelitian = cleanFileName(step1Resources.find(r => r.type === "document")?.value || '');
+    const cleanedPptFile = cleanFileName(pptFile);  // Memanggil cleanFileName untuk pptFile
+    const cleanedInfografis1 = cleanFileName(step3Resources.find(r => r.type === "image")?.value || '');
+    const cleanedInfografis2 = cleanFileName(step3Resources[1]?.value || '');
+
+// Lanjutkan dengan penggunaan cleanedName ini untuk menampilkan di UI
+
+    // Lanjutkan dengan penggunaan cleanedName ini untuk menampilkan di UI
 
     const objectives = modul.objectives || [];
     const objectivesHtml = objectives.map((obj, idx) => `
@@ -92,22 +137,14 @@ function generateEditModuleForm(modul) {
                 </div>
                 <div class="modal-form-group">
                     <label>Dokumen Contoh Penelitian</label>
-                    
                     <label class="input-file-wrapper">
-
-                        <span class="material-symbols-outlined upload-icon">
-                            upload
-                        </span>
-
+                        <span class="material-symbols-outlined upload-icon">upload</span>
                         <span class="file-label">Klik untuk memilih file</span>
                         <span class="file-types">PDF, DOC, DOCX, PPT DLL</span>
-
-                        <span class="file-name" id="fileNameDokumen"></span>
-
+                        <span class="file-name" id="fileNameDokumen">${cleanedDokumenPenelitian}</span> <!-- Tampilkan nama file yang sudah dibersihkan -->
                         <input type="file" name="dokumen_penelitian" hidden>
-
                     </label>
-                    <small class="file-saat-ini">File saat ini: ${step1Resources.find(r => r.type === "document")?.value || 'Belum ada'}</small>
+                    <small class="file-saat-ini">File saat ini: ${cleanedDokumenPenelitian || 'Belum ada'}</small>
                 </div>
             </div>
 
@@ -116,29 +153,13 @@ function generateEditModuleForm(modul) {
                 <h3>STEP 2 — Materi Utama</h3>
                 <div class="modal-form-group">
                     <label>Upload File PPT</label>
-
                     <label class="input-file-wrapper">
                         <span class="material-symbols-outlined upload-icon">upload</span>
                         <span class="file-label">Klik untuk memilih file</span>
-                        <span class="file-types">PPT, PPTX, PDF</span>
-                        <span class="file-name"></span>
-
+                        <span class="file-name">${cleanedPptFile}</span> <!-- Tampilkan nama file yang sudah dibersihkan -->
                         <input type="file" name="file_ppt" hidden>
                     </label>
-                    <small class="file-saat-ini">File saat ini: ${pptFile || 'Belum ada'}</small>
-                </div>
-                <div class="modal-form-group">
-                    <label class="diskusi-card">
-                        <input type="checkbox" name="diskusi_rangkuman" ${step2.discussion_enabled ? 'checked' : ''}>
-                        <div class="diskusi-card-content">
-                            <span class="material-symbols-outlined icon-diskusi">forum</span>
-                            <div class="diskusi-info">
-                                <h4>Catat Poin Penting</h4>
-                                <p>Buat rangkuman atau poin penting dari materi PPT</p>
-                            </div>
-                            <span class="material-symbols-outlined check-icon">check_circle</span>
-                        </div>
-                    </label>
+                    <small class="file-saat-ini">File saat ini: ${cleanedPptFile || 'Belum ada'}</small>
                 </div>
             </div>
 
@@ -147,40 +168,30 @@ function generateEditModuleForm(modul) {
                 <h3>STEP 3 — Infografis Analisis</h3>
                 <div class="modal-form-group">
                     <label>Upload Infografis 1</label>
-
                     <label class="input-file-wrapper">
                         <span class="material-symbols-outlined upload-icon">upload</span>
                         <span class="file-label">Klik untuk memilih file</span>
-                        <span class="file-types">JPG, PNG, PDF</span>
-                        <span class="file-name"></span>
-
+                        <span class="file-name">${cleanedInfografis1}</span> <!-- Tampilkan nama file yang sudah dibersihkan -->
                         <input type="file" name="infografis1" hidden>
                     </label>
-                    <small class="file-saat-ini">File saat ini: ${step3Resources.find(r => r.type === "image")?.value || 'Belum ada'}</small>
+                    <small class="file-saat-ini">File saat ini: ${cleanedInfografis1 || 'Belum ada'}</small>
                 </div>
-
                 <div class="modal-form-group">
                     <label>Upload Infografis 2</label>
-
                     <label class="input-file-wrapper">
                         <span class="material-symbols-outlined upload-icon">upload</span>
                         <span class="file-label">Klik untuk memilih file</span>
-                        <span class="file-types">JPG, PNG, PDF</span>
-                        <span class="file-name"></span>
-
+                        <span class="file-name">${cleanedInfografis2}</span> <!-- Tampilkan nama file yang sudah dibersihkan -->
                         <input type="file" name="infografis2" hidden>
                     </label>
-                    <small class="file-saat-ini">File saat ini: ${step3Resources[1]?.value || 'Belum ada'}</small>
+                    <small class="file-saat-ini">File saat ini: ${cleanedInfografis2 || 'Belum ada'}</small>
                 </div>
             </div>
 
-            <button type="submit" class="modal-submit-btn">
-                Simpan Perubahan
-            </button>
+            <button type="submit" class="modal-submit-btn">Simpan Perubahan</button>
         </form>
     `;
 }
-
 // Fungsi untuk upload file
 async function handleFileUpload(inputElement, token) {
     const file = inputElement.files[0];
@@ -250,8 +261,8 @@ async function handleSubmitCreateModule(formElement, token) {
             },
             {
                 step_number: 2,
-                step_title: "Diskusi",
-                step_type: "discussion",
+                step_title: "Materi Utama",
+                step_type: "lesson",
                 discussion_enabled: !!formData.get("diskusi_rangkuman"),
                 resources: [
                     { type: "ppt", value: pptPath }
@@ -259,7 +270,7 @@ async function handleSubmitCreateModule(formElement, token) {
             },
             {
                 step_number: 3,
-                step_title: "Infografis",
+                step_title: "Analisis Infografis",
                 step_type: "infographic",
                 resources: [
                     { type: "image", value: infografis1Path },
