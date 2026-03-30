@@ -159,3 +159,37 @@ form button {
 .lupa-password:hover {
   color: var(--primary-color);
 }
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper .material-symbols-outlined {
+  font-size: 1.4rem;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 45px;
+  margin-bottom: 0;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  color: #7a8499;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.toggle-password:hover {
+  color: var(--primary-color);
+}
+
+.toggle-password:active {
+  transform: translateY(-50%) scale(0.9);
+}
