@@ -238,7 +238,7 @@ document.addEventListener("click", function (e) {
             <!-- ================= STEP 2 ================= -->
 
             <div class="step-modul">
-                <h3>STEP 2 — Diskusi</h3>
+                <h3>STEP 2 — Materi Utama</h3>
 
                 <div class="modal-form-group">
                     <label>Upload File PPT</label>
@@ -286,7 +286,7 @@ document.addEventListener("click", function (e) {
             <!-- ================= STEP 3 ================= -->
 
             <div class="step-modul">
-                <h3>STEP 3 — Infografis</h3>
+                <h3>STEP 3 — Infografis Analisis</h3>
 
                 <div class="modal-form-group">
                     <label>Upload Infografis 1</label>
