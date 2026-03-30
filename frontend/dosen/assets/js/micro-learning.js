@@ -92,8 +92,22 @@ function generateEditModuleForm(modul) {
                 </div>
                 <div class="modal-form-group">
                     <label>Dokumen Contoh Penelitian</label>
-                    <input type="file" name="dokumen_penelitian">
-                    <small>File saat ini: ${step1Resources.find(r => r.type === "document")?.value || 'Belum ada'}</small>
+                    
+                    <label class="input-file-wrapper">
+
+                        <span class="material-symbols-outlined upload-icon">
+                            upload
+                        </span>
+
+                        <span class="file-label">Klik untuk memilih file</span>
+                        <span class="file-types">PDF, DOC, DOCX, PPT DLL</span>
+
+                        <span class="file-name" id="fileNameDokumen"></span>
+
+                        <input type="file" name="dokumen_penelitian" hidden>
+
+                    </label>
+                    <small class="file-saat-ini">File saat ini: ${step1Resources.find(r => r.type === "document")?.value || 'Belum ada'}</small>
                 </div>
             </div>
 
@@ -102,11 +116,18 @@ function generateEditModuleForm(modul) {
                 <h3>STEP 2 — Diskusi</h3>
                 <div class="modal-form-group">
                     <label>Upload File PPT</label>
-                    <input type="file" name="file_ppt">
-                    <small>File saat ini: ${pptFile || 'Belum ada'}</small>
+
+                    <label class="input-file-wrapper">
+                        <span class="material-symbols-outlined upload-icon">upload</span>
+                        <span class="file-label">Klik untuk memilih file</span>
+                        <span class="file-types">PPT, PPTX, PDF</span>
+                        <span class="file-name"></span>
+
+                        <input type="file" name="file_ppt" hidden>
+                    </label>
+                    <small class="file-saat-ini">File saat ini: ${pptFile || 'Belum ada'}</small>
                 </div>
                 <div class="modal-form-group">
-                    <label>Aktivitas Diskusi</label>
                     <label class="diskusi-card">
                         <input type="checkbox" name="diskusi_rangkuman" ${step2.discussion_enabled ? 'checked' : ''}>
                         <div class="diskusi-card-content">
@@ -126,13 +147,30 @@ function generateEditModuleForm(modul) {
                 <h3>STEP 3 — Infografis</h3>
                 <div class="modal-form-group">
                     <label>Upload Infografis 1</label>
-                    <input type="file" name="infografis1">
-                    <small>File saat ini: ${step3Resources.find(r => r.type === "image")?.value || 'Belum ada'}</small>
+
+                    <label class="input-file-wrapper">
+                        <span class="material-symbols-outlined upload-icon">upload</span>
+                        <span class="file-label">Klik untuk memilih file</span>
+                        <span class="file-types">JPG, PNG, PDF</span>
+                        <span class="file-name"></span>
+
+                        <input type="file" name="infografis1" hidden>
+                    </label>
+                    <small class="file-saat-ini">File saat ini: ${step3Resources.find(r => r.type === "image")?.value || 'Belum ada'}</small>
                 </div>
+
                 <div class="modal-form-group">
                     <label>Upload Infografis 2</label>
-                    <input type="file" name="infografis2">
-                    <small>File saat ini: ${step3Resources[1]?.value || 'Belum ada'}</small>
+
+                    <label class="input-file-wrapper">
+                        <span class="material-symbols-outlined upload-icon">upload</span>
+                        <span class="file-label">Klik untuk memilih file</span>
+                        <span class="file-types">JPG, PNG, PDF</span>
+                        <span class="file-name"></span>
+
+                        <input type="file" name="infografis2" hidden>
+                    </label>
+                    <small class="file-saat-ini">File saat ini: ${step3Resources[1]?.value || 'Belum ada'}</small>
                 </div>
             </div>
 
