@@ -153,8 +153,17 @@
     justify-content:center;
 }
 
+.doc-info {
+    width: 100%;
+    min-width: 0;
+}
+
 .doc-info h4{
     font-size:0.85rem;
+
+    white-space: nowrap;       /* paksa 1 baris */
+    overflow: hidden;          /* sembunyikan teks berlebih */
+    text-overflow: ellipsis;
 }
 
 .doc-info p{

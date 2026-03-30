@@ -264,7 +264,7 @@ main {
 /* Konten SPA */
 .content {
   flex: 1;              /* ✅ jangan pakai height lagi */
-  padding: 2rem 2rem 0;
+  padding: 2rem 1rem 0;
   overflow-y: auto;
   min-height: 0;        /* 🔥 ini penting untuk flex scroll */
 }
