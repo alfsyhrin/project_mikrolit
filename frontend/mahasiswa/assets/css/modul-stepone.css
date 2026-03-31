@@ -171,6 +171,7 @@
     white-space: nowrap;       /* paksa 1 baris */
     overflow: hidden;          /* sembunyikan teks berlebih */
     text-overflow: ellipsis;
+    max-width: 300px;
 }
 
 .doc-info p{

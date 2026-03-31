@@ -7,7 +7,7 @@
 .container-modul-mahasiswa {
   border-radius: 10px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1rem;
   margin-bottom: 1rem;
 }
@@ -63,6 +63,7 @@
   color: #111;
   border: 1px solid transparent;
   transition: 0.3s ease all;
+  min-width: 0;
 }
 
 .card-modul-mahasiswa-menu:hover {
