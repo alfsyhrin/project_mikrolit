@@ -18,10 +18,10 @@
     <link rel="stylesheet" href="./assets/css/beranda.css">
 
     <!-- Link ke CSS daftar-modul.css -->
-    <link rel="stylesheet" href="./assets/css/daftar-modul.css?v=20260330-1">
+    <link rel="stylesheet" href="./assets/css/daftar-modul.css?v=20260331-1">
 
     <!-- Link ke CSS tugas-mahasiswa.css -->
-    <link rel="stylesheet" href="./assets/css/tugas-mahasiswa.css?v=20260330-1">
+    <link rel="stylesheet" href="./assets/css/tugas-mahasiswa.css?v=20260331-1">
 
     <!-- Link ke CSS diskusi.css -->
     <link rel="stylesheet" href="./assets/css/diskusi.css">
@@ -30,19 +30,19 @@
     <link rel="stylesheet" href="./assets/css/progress-evaluasi.css">
 
     <!-- Link ke CSS pengaturan.css -->
-    <link rel="stylesheet" href="./assets/css/pengaturan.css?v=20260330-1">
+    <link rel="stylesheet" href="./assets/css/pengaturan.css?v=20260331-1">
 
     <!-- Link ke CSS modul.css -->
-    <link rel="stylesheet" href="./assets/css/modul.css?v=20260330-1">
+    <link rel="stylesheet" href="./assets/css/modul.css?v=20260331-1">
 
     <!-- Link ke CSS modul-stepone.css -->
-    <link rel="stylesheet" href="./assets/css/modul-stepone.css?v=20260330-1">
+    <link rel="stylesheet" href="./assets/css/modul-stepone.css?v=20260331-1">
 
     <!-- Link ke CSS modul-steptwo.css -->
-    <link rel="stylesheet" href="./assets/css/modul-steptwo.css?v=20260330-1">
+    <link rel="stylesheet" href="./assets/css/modul-steptwo.css?v=20260331-1">
 
     <!-- Link ke CSS modul-stepthree.css -->
-    <link rel="stylesheet" href="./assets/css/modul-stepthree.css?v=20260330-1">
+    <link rel="stylesheet" href="./assets/css/modul-stepthree.css?v=20260331-1">
 
     <!-- Link ke CSS global -->
     <link rel="stylesheet" href="../assets/main.css">
@@ -69,7 +69,7 @@
                 <p class="logo"><span class="material-symbols-outlined">school</span></p>
                 <div class="nama-logo text">
                     <h1>MikroLit LMS</h1>
-                    <p>Panel Dosen</p>
+                    <p>Panel Mahasiswa</p>
                 </div>
             </div>
 
@@ -152,7 +152,7 @@
     </script>
 
     <script type="module">
-        import { initManajemenTugasMhs, fetchAndRenderDeadlineCards, fetchAndRenderTaskSummary, fetchAndRenderTaskStats } from "./assets/js/tugas-mahasiswa.js?v=20260330-1";
+        import { initManajemenTugasMhs, fetchAndRenderDeadlineCards, fetchAndRenderTaskSummary, fetchAndRenderTaskStats } from "./assets/js/tugas-mahasiswa.js?v=20260331-1";
 
         window.initManajemenTugasMhs = initManajemenTugasMhs;
         window.fetchAndRenderDeadlineCards = fetchAndRenderDeadlineCards;
@@ -172,13 +172,13 @@
 
         <!-- Link untuk pengaturan.js -->
     <script type="module">
-        import { initPengaturan } from "./assets/js/pengaturan.js?v=20260330-1";
+        import { initPengaturan } from "./assets/js/pengaturan.js?v=20260331-1";
 
         window.initPengaturan = initPengaturan;
     </script>
 
     <script type="module">
-        import { renderDaftarModul, renderModuleDetail, renderStepDetail } from "./assets/js/daftar-modul.js?v=20260330-1";
+        import { renderDaftarModul, renderModuleDetail, renderStepDetail } from "./assets/js/daftar-modul.js?v=20260331-1";
         window.renderDaftarModul = renderDaftarModul;
         window.renderModuleDetail = renderModuleDetail;
         window.renderStepDetail = renderStepDetail;
@@ -282,7 +282,7 @@
                 return;  // Return - jangan lanjut ke fetch HTML
             }
 
-            const APP_VERSION = "20260330-1";
+            const APP_VERSION = "20260331-1";
 
             fetch(`./pages/${page}.html?v=${APP_VERSION}`, {
                 cache: "no-store"

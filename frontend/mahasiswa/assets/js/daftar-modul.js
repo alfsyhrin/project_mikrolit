@@ -1,4 +1,4 @@
-import { getModuleLearningRequest, getModuleLearnDetailRequest, API_BASE } from "../../../assets/api.js?v=20260330-1";
+import { getModuleLearningRequest, getModuleLearnDetailRequest, API_BASE } from "../../../assets/api.js?v=20260331-1";
 
 const BACKEND_BASE = String(API_BASE).replace(/\/api\/?$/, "");
 import Toast from "../../../assets/toast.js";
@@ -218,7 +218,7 @@ async function handleStartModule(moduleId) {
             return;
         }
 
-        const { startModuleRequest } = await import("../../../assets/api.js?v=20260330-1")
+        const { startModuleRequest } = await import("../../../assets/api.js?v=20260331-1")
         
         console.log("[handleStartModule] POST ke /student/modules/" + moduleId + "/start");
         const response = await startModuleRequest(moduleId, token);
@@ -458,7 +458,7 @@ export async function renderStepDetail(moduleId, stepNumber) {
             return;
         }
 
-        const { getStepDetailRequest, startStepModuleRequest } = await import("../../../assets/api.js?v=20260330-1")
+        const { getStepDetailRequest, startStepModuleRequest } = await import("../../../assets/api.js?v=20260331-1")
         const resp = await getStepDetailRequest(moduleId, stepNumber, token);
 
         if (!resp || !resp.success || !resp.data) {
@@ -780,7 +780,7 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
             
             // ✅ BARU: Submit discussion + complete step together
             try {
-                const { submitDiscussionPointRequest, completeStepModuleRequest } = await import("../../../assets/api.js?v=20260330-1")
+                const { submitDiscussionPointRequest, completeStepModuleRequest } = await import("../../../assets/api.js?v=20260331-1")
                 
                 // 1. Submit discussion
                 const discRes = await submitDiscussionPointRequest(mId, sNo, discussionPoint, token);

@@ -1,8 +1,4 @@
-export const API_BASE =
-    window.APP_CONFIG?.API_BASE ||
-    (window.location.hostname === "localhost"
-        ? "http://localhost:4000/api"
-        : "https://darkgoldenrod-loris-389330.hostingersite.com/api");
+export const API_BASE = "http://localhost:4000/api"; // Ganti dengan URL backend yang sesuai
 
 export const BACKEND_BASE = API_BASE.replace(/\/api\/?$/, "");
 //AUTH===================================================================================
@@ -11,7 +7,7 @@ export async function loginRequest(emailOrNidn, password){
 
     if (emailOrNidn.includes("@")) { 
         body.email = emailOrNidn;
-    } else{
+    } else {
         body.nidn = emailOrNidn;
     }
 
