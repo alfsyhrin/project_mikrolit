@@ -355,6 +355,9 @@
     font-size: 1.1rem;
     font-color: #111;
     font-weight: 550;
+    white-space: nowrap;       /* paksa 1 baris */
+    overflow: hidden;          /* sembunyikan teks berlebih */
+    text-overflow: ellipsis;
 }
 
 .modal-box .modal-form-group.desc p {

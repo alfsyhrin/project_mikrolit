@@ -564,3 +564,11 @@
   display: none;                /* Chrome, Safari, Edge */
 }
 /* Akhir Sembunyikan Scrollbar */
+
+.wrapper-info-card-deadline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  border: 1px solid red;
+}
