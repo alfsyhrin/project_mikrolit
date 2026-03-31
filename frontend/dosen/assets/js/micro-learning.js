@@ -192,22 +192,63 @@ function generateEditModuleForm(modul) {
         </form>
     `;
 }
+
+//helper simpan metadata upload
+function inferResourceTypeFromValue(value = "") {
+    const lower = String(value).toLowerCase();
+
+    if (/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(lower)) return "image";
+    if (/\.(ppt|pptx)$/i.test(lower)) return "ppt";
+    if (/\.(pdf|doc|docx|xls|xlsx|txt)$/i.test(lower)) return "document";
+
+    return "file";
+}
+
+function getStoredUploadedResource(inputName) {
+    const raw = localStorage.getItem(`modul_resource_path_${inputName}`);
+    if (!raw) return null;
+
+    try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object" && parsed.path) {
+            return parsed;
+        }
+    } catch (_) {
+        // fallback untuk data lama yang masih string
+    }
+
+    return {
+        path: raw,
+        type: inferResourceTypeFromValue(raw),
+        originalName: cleanFileName(raw)
+    };
+}
+
+
 // Fungsi untuk upload file
 async function handleFileUpload(inputElement, token) {
     const file = inputElement.files[0];
     if (!file) return;
-    
+
     console.log(`Uploading file: ${file.name}, size: ${file.size} bytes`);
-    
+
     try {
         const response = await uploadFileResourceRequest(file, token);
         console.log(`Upload response for ${file.name}:`, response);
-        
+
         if (response.success) {
             const key = `modul_resource_path_${inputElement.name}`;
-            localStorage.setItem(key, response.path);
-            console.log(`Saved to localStorage[${key}]: ${response.path}`);
-            
+
+            const uploadedMeta = {
+                path: response.path,
+                type: response.type || inferResourceTypeFromValue(response.path),
+                originalName: response.original_name || file.name,
+                displayName: response.display_name || file.name
+            };
+
+            localStorage.setItem(key, JSON.stringify(uploadedMeta));
+            console.log(`Saved to localStorage[${key}]:`, uploadedMeta);
+
             const fileNameEl = inputElement.closest(".modal-form-group")?.querySelector(".file-name");
             if (fileNameEl) fileNameEl.textContent = file.name;
         } else {
@@ -230,23 +271,55 @@ document.addEventListener("change", function (e) {
 
 // Fungsi untuk submit form modul CREATE
 async function handleSubmitCreateModule(formElement, token) {
-    const submitButton = formElement.querySelector(".modal-submit-btn"); // Tombol submit
-    submitButton.disabled = true;  // Nonaktifkan tombol
-    submitButton.innerHTML = "Sedang Memproses...";  // Ubah teks tombol menjadi loading
+    const submitButton = formElement.querySelector(".modal-submit-btn");
+    submitButton.disabled = true;
+    submitButton.innerHTML = "Sedang Memproses...";
 
     const formData = new FormData(formElement);
 
-    const dokumenPath = localStorage.getItem("modul_resource_path_dokumen_penelitian");
-    const pptPath = localStorage.getItem("modul_resource_path_file_ppt");
-    const infografis1Path = localStorage.getItem("modul_resource_path_infografis1");
-    const infografis2Path = localStorage.getItem("modul_resource_path_infografis2");
+    const dokumenMeta = getStoredUploadedResource("dokumen_penelitian");
+    const materiMeta = getStoredUploadedResource("file_ppt");
+    const infografis1Meta = getStoredUploadedResource("infografis1");
+    const infografis2Meta = getStoredUploadedResource("infografis2");
 
-    if (!dokumenPath || !pptPath || !infografis1Path || !infografis2Path) {
+    if (!dokumenMeta || !materiMeta || !infografis1Meta || !infografis2Meta) {
         Toast.warning("Pastikan semua file sudah diupload sebelum submit!");
-        submitButton.disabled = false;  // Aktifkan kembali tombol
-        submitButton.innerHTML = "Simpan Perubahan";  // Kembalikan teks tombol ke semula
+        submitButton.disabled = false;
+        submitButton.innerHTML = "Simpan Perubahan";
         return;
     }
+
+    const videoLink = String(formData.get("video_microlearning") || "").trim();
+
+    const step1Resources = [];
+    if (videoLink) {
+        step1Resources.push({
+            type: "video_link",
+            value: videoLink
+        });
+    }
+    step1Resources.push({
+        type: dokumenMeta.type,
+        value: dokumenMeta.path
+    });
+
+    const step2Resources = [
+        {
+            type: materiMeta.type,
+            value: materiMeta.path
+        }
+    ];
+
+    const step3Resources = [
+        {
+            type: infografis1Meta.type,
+            value: infografis1Meta.path
+        },
+        {
+            type: infografis2Meta.type,
+            value: infografis2Meta.path
+        }
+    ];
 
     const body = {
         title: formData.get("judul_modul"),
@@ -260,28 +333,20 @@ async function handleSubmitCreateModule(formElement, token) {
                 step_number: 1,
                 step_title: "Microlearning",
                 step_type: "video",
-                resources: [
-                    { type: "video_link", value: formData.get("video_microlearning") },
-                    { type: "document", value: dokumenPath }
-                ]
+                resources: step1Resources
             },
             {
                 step_number: 2,
                 step_title: "Materi Utama",
                 step_type: "lesson",
                 discussion_enabled: !!formData.get("diskusi_rangkuman"),
-                resources: [
-                    { type: "ppt", value: pptPath }
-                ]
+                resources: step2Resources
             },
             {
                 step_number: 3,
                 step_title: "Analisis Infografis",
                 step_type: "infographic",
-                resources: [
-                    { type: "image", value: infografis1Path },
-                    { type: "image", value: infografis2Path }
-                ]
+                resources: step3Resources
             }
         ]
     };
@@ -293,13 +358,13 @@ async function handleSubmitCreateModule(formElement, token) {
 
         if (response.success) {
             Toast.success("Modul berhasil dibuat!");
+
             localStorage.removeItem("modul_resource_path_dokumen_penelitian");
             localStorage.removeItem("modul_resource_path_file_ppt");
             localStorage.removeItem("modul_resource_path_infografis1");
             localStorage.removeItem("modul_resource_path_infografis2");
 
             Modal.hide();
-            // Refresh list modul
             window.renderModuleList(localStorage.getItem("token"));
         } else {
             Toast.error(`Gagal membuat modul: ${response.message}`);
@@ -308,59 +373,195 @@ async function handleSubmitCreateModule(formElement, token) {
         console.error("Error saat membuat modul:", error);
         Toast.error("Terjadi kesalahan saat membuat modul.");
     } finally {
-        // Mengaktifkan kembali tombol submit setelah selesai
         submitButton.disabled = false;
-        submitButton.innerHTML = "Simpan Perubahan"; // Kembalikan teks tombol ke semula
+        submitButton.innerHTML = "Simpan Perubahan";
     }
 }
 
-async function handleSubmitEditModule(formElement, token, moduleId) {
-    const submitButton = formElement.querySelector(".modal-submit-btn"); // Tombol submit
-    submitButton.disabled = true;  // Nonaktifkan tombol
-    submitButton.innerHTML = "Sedang Memproses...";  // Ubah teks tombol menjadi loading
+function normalizeExistingResource(resource) {
+    if (!resource) return null;
 
-    const formData = new FormData(formElement);
+    const resourcePath = resource.path || resource.value || resource.resource_path || "";
+    if (!resourcePath) return null;
 
-    const body = {
-        title: formData.get("judul_modul"),
-        description: formData.get("deskripsi_modul"),
-        learning_outcomes: formData.get("judul_modul"),
-        discussion_enabled: !!formData.get("gunakan_forum"),
-        objectives: formData.getAll("tujuan[]").filter(obj => obj.trim()),
-        steps: [
-            {
-                step_number: 1,
-                step_title: "Microlearning",
-                step_type: "video",
-                resources: [
-                    { type: "video_link", value: formData.get("video_microlearning") }
-                ]
-            },
-            {
-                step_number: 2,
-                step_title: "Materi Utama",
-                step_type: "lesson",
-                discussion_enabled: !!formData.get("diskusi_rangkuman"),
-                resources: []
-            },
-            {
-                step_number: 3,
-                step_title: "Analisis Infografis",
-                step_type: "infographic",
-                resources: []
-            }
-        ]
+    return {
+        path: resourcePath,
+        type: resource.type || inferResourceTypeFromValue(resourcePath),
+        originalName: cleanFileName(resourcePath),
+        displayName: cleanFileName(resourcePath)
     };
+}
+
+function getFirstNonVideoResource(resources = []) {
+    return resources.find(r => r && r.type !== "video_link") || null;
+}
+
+async function handleSubmitEditModule(formElement, token, moduleId) {
+    const submitButton = formElement.querySelector(".modal-submit-btn");
+    submitButton.disabled = true;
+    submitButton.innerHTML = "Sedang Memproses...";
 
     try {
+        const formData = new FormData(formElement);
+
+        // Ambil data modul terbaru sebagai sumber resource lama
+        const currentModuleResponse = await getModuleById(moduleId, token);
+        if (!currentModuleResponse.success || !currentModuleResponse.data) {
+            Toast.error("Gagal mengambil data modul saat edit.");
+            return;
+        }
+
+        const currentModule = currentModuleResponse.data;
+        const steps = currentModule.steps || [];
+
+        const step1 = steps.find(s => s.step_number === 1) || {};
+        const step2 = steps.find(s => s.step_number === 2) || {};
+        const step3 = steps.find(s => s.step_number === 3) || {};
+
+        const step1Resources = step1.resources || [];
+        const step2Resources = step2.resources || [];
+        const step3Resources = step3.resources || [];
+
+        // ===== Resource lama =====
+        const existingVideoLink = step1Resources.find(r => r.type === "video_link")?.value || "";
+        const existingDokumen = normalizeExistingResource(getFirstNonVideoResource(step1Resources));
+        const existingMateri = normalizeExistingResource(getFirstNonVideoResource(step2Resources));
+
+        const step3NonVideoResources = step3Resources.filter(r => r && r.type !== "video_link");
+        const existingInfografis1 = normalizeExistingResource(step3NonVideoResources[0] || null);
+        const existingInfografis2 = normalizeExistingResource(step3NonVideoResources[1] || null);
+
+        // ===== Cek apakah user benar-benar pilih file baru =====
+        const dokumenInput = formElement.querySelector('input[name="dokumen_penelitian"]');
+        const materiInput = formElement.querySelector('input[name="file_ppt"]');
+        const infografis1Input = formElement.querySelector('input[name="infografis1"]');
+        const infografis2Input = formElement.querySelector('input[name="infografis2"]');
+
+        const hasNewDokumen = !!dokumenInput?.files?.length;
+        const hasNewMateri = !!materiInput?.files?.length;
+        const hasNewInfografis1 = !!infografis1Input?.files?.length;
+        const hasNewInfografis2 = !!infografis2Input?.files?.length;
+
+        // ===== Resource final: pakai upload baru kalau ada, kalau tidak pakai lama =====
+        const dokumenMeta = hasNewDokumen
+            ? getStoredUploadedResource("dokumen_penelitian")
+            : existingDokumen;
+
+        const materiMeta = hasNewMateri
+            ? getStoredUploadedResource("file_ppt")
+            : existingMateri;
+
+        const infografis1Meta = hasNewInfografis1
+            ? getStoredUploadedResource("infografis1")
+            : existingInfografis1;
+
+        const infografis2Meta = hasNewInfografis2
+            ? getStoredUploadedResource("infografis2")
+            : existingInfografis2;
+
+        // Validasi kalau upload baru dipilih tapi metadata belum ada
+        if (hasNewDokumen && !dokumenMeta) {
+            Toast.warning("Upload dokumen baru belum selesai.");
+            return;
+        }
+        if (hasNewMateri && !materiMeta) {
+            Toast.warning("Upload file materi baru belum selesai.");
+            return;
+        }
+        if (hasNewInfografis1 && !infografis1Meta) {
+            Toast.warning("Upload infografis 1 baru belum selesai.");
+            return;
+        }
+        if (hasNewInfografis2 && !infografis2Meta) {
+            Toast.warning("Upload infografis 2 baru belum selesai.");
+            return;
+        }
+
+        // ===== Susun resources final =====
+        const step1FinalResources = [];
+        const finalVideoLink = String(formData.get("video_microlearning") || "").trim();
+
+        if (finalVideoLink) {
+            step1FinalResources.push({
+                type: "video_link",
+                value: finalVideoLink
+            });
+        }
+
+        if (dokumenMeta?.path) {
+            step1FinalResources.push({
+                type: dokumenMeta.type,
+                value: dokumenMeta.path
+            });
+        }
+
+        const step2FinalResources = [];
+        if (materiMeta?.path) {
+            step2FinalResources.push({
+                type: materiMeta.type,
+                value: materiMeta.path
+            });
+        }
+
+        const step3FinalResources = [];
+        if (infografis1Meta?.path) {
+            step3FinalResources.push({
+                type: infografis1Meta.type,
+                value: infografis1Meta.path
+            });
+        }
+        if (infografis2Meta?.path) {
+            step3FinalResources.push({
+                type: infografis2Meta.type,
+                value: infografis2Meta.path
+            });
+        }
+
+        const body = {
+            title: formData.get("judul_modul"),
+            description: formData.get("deskripsi_modul"),
+            learning_outcomes: formData.get("judul_modul"),
+            discussion_enabled: !!formData.get("gunakan_forum"),
+            objectives: formData.getAll("tujuan[]").filter(obj => obj.trim()),
+            steps: [
+                {
+                    step_number: 1,
+                    step_title: step1.step_title || "Microlearning",
+                    step_type: step1.step_type || "video",
+                    discussion_enabled: !!step1.discussion_enabled,
+                    resources: step1FinalResources
+                },
+                {
+                    step_number: 2,
+                    step_title: step2.step_title || "Materi Utama",
+                    step_type: step2.step_type || "lesson",
+                    discussion_enabled: !!formData.get("diskusi_rangkuman"),
+                    resources: step2FinalResources
+                },
+                {
+                    step_number: 3,
+                    step_title: step3.step_title || "Analisis Infografis",
+                    step_type: step3.step_type || "infographic",
+                    discussion_enabled: !!step3.discussion_enabled,
+                    resources: step3FinalResources
+                }
+            ]
+        };
+
         console.log("Updating module with body:", body);
+
         const response = await updateModuleRequest(moduleId, body, token);
         console.log("Update module response:", response);
 
         if (response.success) {
             Toast.success("Modul berhasil diperbarui!");
+
+            localStorage.removeItem("modul_resource_path_dokumen_penelitian");
+            localStorage.removeItem("modul_resource_path_file_ppt");
+            localStorage.removeItem("modul_resource_path_infografis1");
+            localStorage.removeItem("modul_resource_path_infografis2");
+
             Modal.hide();
-            // Refresh list modul
             window.allModules = await renderModuleList(token) || [];
         } else {
             Toast.error(`Gagal update modul: ${response.message}`);
@@ -369,9 +570,8 @@ async function handleSubmitEditModule(formElement, token, moduleId) {
         console.error("Error saat update modul:", error);
         Toast.error("Terjadi kesalahan saat update modul.");
     } finally {
-        // Mengaktifkan kembali tombol submit setelah selesai
         submitButton.disabled = false;
-        submitButton.innerHTML = "Simpan Perubahan"; // Kembalikan teks tombol ke semula
+        submitButton.innerHTML = "Simpan Perubahan";
     }
 }
 

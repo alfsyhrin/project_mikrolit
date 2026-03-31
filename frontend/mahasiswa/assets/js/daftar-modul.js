@@ -104,7 +104,7 @@ function createModuleCard(module) {
                 <span class="precentage">${progress_percent}%</span>
             </div>
             ${progress_percent < 100 ? `
-                <a href="#" data-page="modul" class="lanjut-belajar-modul">
+                <a href="#" data-page="modul" data-module-id="${module.id}" class="lanjut-belajar-modul">
                     <span class="material-symbols-outlined">play_arrow</span>
                     ${lanjutBelajarText}
                 </a>

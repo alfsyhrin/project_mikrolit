@@ -11,13 +11,14 @@ function sanitizeBaseName(filename = "") {
   const ext = path.extname(filename);
   const base = path.basename(filename, ext);
 
-  return base
-    .normalize("NFKD")
-    .replace(/[^\w\s.-]/g, "")   // buang karakter aneh
-    .replace(/\s+/g, "_")        // spasi jadi underscore
-    .replace(/_+/g, "_")         // rapikan underscore ganda
-    .replace(/^_+|_+$/g, "")     // trim underscore depan/belakang
-    || "resource";
+  return (
+    base
+      .normalize("NFKD")
+      .replace(/[^\w\s.-]/g, "")
+      .replace(/\s+/g, "_")
+      .replace(/_+/g, "_")
+      .replace(/^_+|_+$/g, "") || "resource"
+  );
 }
 
 function getTargetSubfolder(ext = "") {
@@ -38,6 +39,24 @@ function getTargetSubfolder(ext = "") {
   return "others";
 }
 
+function getResourceTypeByExt(ext = "") {
+  const lowerExt = ext.toLowerCase();
+
+  if ([".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"].includes(lowerExt)) {
+    return "image";
+  }
+
+  if ([".ppt", ".pptx"].includes(lowerExt)) {
+    return "ppt";
+  }
+
+  if ([".pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt"].includes(lowerExt)) {
+    return "document";
+  }
+
+  return "file";
+}
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const base = path.join(__dirname, "..", "uploads", "module_resources");
@@ -47,6 +66,9 @@ const storage = multer.diskStorage({
     const uploadPath = path.join(base, sub);
     ensureDir(uploadPath);
 
+    file.targetSubfolder = sub;
+    file.resourceType = getResourceTypeByExt(ext);
+
     cb(null, uploadPath);
   },
 
@@ -55,7 +77,6 @@ const storage = multer.diskStorage({
     const cleanBase = sanitizeBaseName(file.originalname);
     const uniqueSuffix = crypto.randomUUID().slice(0, 8);
 
-    // dipakai controller nanti
     file.displayName = `${cleanBase}${ext}`;
     file.cleanBaseName = cleanBase;
 
