@@ -217,18 +217,40 @@ document.addEventListener("click", function (e) {
 
                 <div class="modal-form-group">
                     <label>Dokumen Contoh Penelitian</label>
-                    <input type="file" name="dokumen_penelitian">
+                    
+                    <label class="input-file-wrapper">
+
+                        <span class="material-symbols-outlined upload-icon">
+                            upload
+                        </span>
+
+                        <span class="file-label">Klik untuk memilih file</span>
+                        <span class="file-types">PDF, DOC, DOCX, PPT DLL</span>
+
+                        <span class="file-name" id="fileNameDokumen"></span>
+
+                        <input type="file" name="dokumen_penelitian" hidden>
+
+                    </label>
                 </div>
             </div>
 
             <!-- ================= STEP 2 ================= -->
 
             <div class="step-modul">
-                <h3>STEP 2 — Diskusi</h3>
+                <h3>STEP 2 — Materi Utama</h3>
 
                 <div class="modal-form-group">
                     <label>Upload File PPT</label>
-                    <input type="file" name="file_ppt">
+
+                    <label class="input-file-wrapper">
+                        <span class="material-symbols-outlined upload-icon">upload</span>
+                        <span class="file-label">Klik untuk memilih file</span>
+                        <span class="file-types">PPT, PPTX, PDF</span>
+                        <span class="file-name"></span>
+
+                        <input type="file" name="file_ppt" hidden>
+                    </label>
                 </div>
 
                 <div class="modal-form-group">
@@ -264,16 +286,32 @@ document.addEventListener("click", function (e) {
             <!-- ================= STEP 3 ================= -->
 
             <div class="step-modul">
-                <h3>STEP 3 — Infografis</h3>
+                <h3>STEP 3 — Infografis Analisis</h3>
 
                 <div class="modal-form-group">
                     <label>Upload Infografis 1</label>
-                    <input type="file" name="infografis1">
+
+                    <label class="input-file-wrapper">
+                        <span class="material-symbols-outlined upload-icon">upload</span>
+                        <span class="file-label">Klik untuk memilih file</span>
+                        <span class="file-types">JPG, PNG, PDF</span>
+                        <span class="file-name"></span>
+
+                        <input type="file" name="infografis1" hidden>
+                    </label>
                 </div>
 
                 <div class="modal-form-group">
                     <label>Upload Infografis 2</label>
-                    <input type="file" name="infografis2">
+
+                    <label class="input-file-wrapper">
+                        <span class="material-symbols-outlined upload-icon">upload</span>
+                        <span class="file-label">Klik untuk memilih file</span>
+                        <span class="file-types">JPG, PNG, PDF</span>
+                        <span class="file-name"></span>
+
+                        <input type="file" name="infografis2" hidden>
+                    </label>
                 </div>
 
             </div>

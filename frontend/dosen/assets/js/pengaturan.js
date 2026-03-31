@@ -1,5 +1,6 @@
 import Modal from "../../../assets/modal.js";
 import Toast from "../../../assets/toast.js";
+import TogglePassword from "../../../assets/togglePassword.js";
 import { getProfileRequest, updateProfileRequest, updatePasswordRequest, deletePhotoRequest } from "../../../assets/api.js";
 
 function initPengaturan() {
@@ -20,6 +21,7 @@ function initPengaturan() {
 
             setTimeout(() => {
                 document.getElementById(target).classList.remove("sembunyi");
+                TogglePassword.init();
             }, 50);
         });
     });
@@ -230,6 +232,8 @@ function initPengaturan() {
 
     // Inisialisasi pertama
     loadProfile();
+    TogglePassword.init();
 }
 
 export { initPengaturan };
+

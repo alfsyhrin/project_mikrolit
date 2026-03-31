@@ -185,23 +185,20 @@ function parseDbDatetimeToDate(dbString){
     return wibDate;
 }
 
-// helper: format deadline untuk tampilan (date, time, timeStatus)
-function formatDeadlinePartsForDosen(task){
-    if(!task || !task.deadline) return { date: "-", time: "-", timeStatus: "" };
-    const d = parseDbDatetimeToDate(String(task.deadline));
-    if(!d) return { date: "-", time: "-", timeStatus: "" };
+// Helper: Tampilkan waktu deadline langsung tanpa modifikasi
+function formatDeadlinePartsForDosen(task) {
+    if (!task || !task.deadline) return { date: "-", time: "-", timeStatus: "" };
+    
+    const deadline = task.deadline.split(' '); // Asumsikan waktu dalam format 'YYYY-MM-DD HH:mm:ss'
+    if (deadline.length < 2) return { date: "-", time: "-", timeStatus: "" };
 
-    const formattedDate = d.toLocaleDateString('id-ID', {
-        day: '2-digit', month: '2-digit', year: 'numeric'
-    });
-
-    const formattedTime = d.toLocaleTimeString('id-ID', {
-        hour: '2-digit', minute: '2-digit', hour12: false
-    });
+    const [date, time] = deadline;
+    const formattedDate = date; // Tampilkan tanggal sesuai format yang diberikan dari server
+    const formattedTime = time.slice(0, 5); // Ambil waktu (jam dan menit) dari waktu yang diberikan
 
     let timeStatus = "";
     const now = new Date();
-    const isPastDeadline = d < now;
+    const isPastDeadline = new Date(`${date}T${time}`) < now;
     if (task.status === "sudah dikumpulkan") {
         timeStatus = "(dikumpul tepat waktu)";
     } else if (task.status === "belum dikumpulkan" && isPastDeadline) {
@@ -446,7 +443,7 @@ async function handleViewSubmissions(taskId){
                     </div>
                     <div class="submission-date">
                         <div class="submission-date-day">${date || "-"}</div>
-                        <div class="submission-time">${time ? time.slice(0,5) : "-"}</div>
+                        <div class="submission-time">${time ? time.slice(0,5) : "-"} WIT</div>
                     </div>
                 </div>
                 <div class="submission-file">

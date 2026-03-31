@@ -1,9 +1,20 @@
 /* Awal header */
 header {
-  display: flex;
+  /* display: flex;
   justify-content: center;
   margin-bottom: 1rem;
+  gap: 1rem; */
+
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  margin-bottom: 1rem;
   gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    header {
+        grid-template-columns: 1fr;
+    }
 }
 
 .buat-modul {
@@ -559,3 +570,9 @@ header {
   cursor: pointer;
 }
 /* Akhir style untuk lihat submisi mahasiswa */
+
+.file-saat-ini {
+  white-space: nowrap;       /* paksa 1 baris */
+  overflow: hidden;          /* sembunyikan teks berlebih */
+  text-overflow: ellipsis;
+}
