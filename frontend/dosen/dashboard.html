@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="./assets/css/diskusi.css">
 
     <!-- Link ke CSS micro-learning.css -->
-    <link rel="stylesheet" href="./assets/css/micro-learning.css">
+    <link rel="stylesheet" href="./assets/css/micro-learning.cssv?=20260330-1">
 
     <!-- Link ke CSS monitoring.css -->
     <link rel="stylesheet" href="./assets/css/monitoring.css">
@@ -117,6 +117,12 @@
                 
             </div>
         </main>
+    <script>
+        window.APP_CONFIG = {
+            API_BASE: "https://darkgoldenrod-loris-389330.hostingersite.com/api"
+        };
+    </script>
+
     <script type="module">
         import { fetchAndRenderUsers, initManajemenPengguna } from "./assets/js/manajemen-pengguna.js";
         
@@ -281,7 +287,11 @@
         // ==============================
         function loadPage(page) {
             window.destroyAllCharts(); // Hancurkan semua chart sebelum load halaman baru
-            fetch(`./pages/${page}.html`)
+            const APP_VERSION = "20260330-1";
+
+            fetch(`./pages/${page}.html?v=${APP_VERSION}`, {
+                cache: "no-store"
+            })
                 .then(response => {
                     if (!response.ok) throw new Error("404");
                     return response.text();
