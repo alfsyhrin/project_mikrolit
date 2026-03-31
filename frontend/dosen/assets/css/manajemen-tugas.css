@@ -535,3 +535,9 @@ button.buat-tugas p {
     color: #64748b;
 }
 /* Akhir style untuk lihat submisi mahasiswa */
+
+.submission-answer p {
+    white-space: normal;       /* izinkan turun baris */
+    word-break: break-word;    /* pecah kata panjang */
+    overflow-wrap: break-word; /* handle kata super panjang */
+}
