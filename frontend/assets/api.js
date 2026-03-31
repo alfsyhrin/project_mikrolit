@@ -11,7 +11,7 @@ export async function loginRequest(emailOrNidn, password){
 
     if (emailOrNidn.includes("@")) { 
         body.email = emailOrNidn;
-    } else{
+    } else {
         body.nidn = emailOrNidn;
     }
 
