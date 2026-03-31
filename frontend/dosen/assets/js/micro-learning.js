@@ -230,6 +230,10 @@ document.addEventListener("change", function (e) {
 
 // Fungsi untuk submit form modul CREATE
 async function handleSubmitCreateModule(formElement, token) {
+    const submitButton = formElement.querySelector(".modal-submit-btn"); // Tombol submit
+    submitButton.disabled = true;  // Nonaktifkan tombol
+    submitButton.innerHTML = "Sedang Memproses...";  // Ubah teks tombol menjadi loading
+
     const formData = new FormData(formElement);
 
     const dokumenPath = localStorage.getItem("modul_resource_path_dokumen_penelitian");
@@ -239,6 +243,8 @@ async function handleSubmitCreateModule(formElement, token) {
 
     if (!dokumenPath || !pptPath || !infografis1Path || !infografis2Path) {
         Toast.warning("Pastikan semua file sudah diupload sebelum submit!");
+        submitButton.disabled = false;  // Aktifkan kembali tombol
+        submitButton.innerHTML = "Simpan Perubahan";  // Kembalikan teks tombol ke semula
         return;
     }
 
@@ -284,14 +290,14 @@ async function handleSubmitCreateModule(formElement, token) {
         console.log("Creating module with body:", body);
         const response = await createModuleRequest(body, token);
         console.log("Create module response:", response);
-        
+
         if (response.success) {
             Toast.success("Modul berhasil dibuat!");
             localStorage.removeItem("modul_resource_path_dokumen_penelitian");
             localStorage.removeItem("modul_resource_path_file_ppt");
             localStorage.removeItem("modul_resource_path_infografis1");
             localStorage.removeItem("modul_resource_path_infografis2");
-            
+
             Modal.hide();
             // Refresh list modul
             window.renderModuleList(localStorage.getItem("token"));
@@ -301,10 +307,18 @@ async function handleSubmitCreateModule(formElement, token) {
     } catch (error) {
         console.error("Error saat membuat modul:", error);
         Toast.error("Terjadi kesalahan saat membuat modul.");
+    } finally {
+        // Mengaktifkan kembali tombol submit setelah selesai
+        submitButton.disabled = false;
+        submitButton.innerHTML = "Simpan Perubahan"; // Kembalikan teks tombol ke semula
     }
 }
 
 async function handleSubmitEditModule(formElement, token, moduleId) {
+    const submitButton = formElement.querySelector(".modal-submit-btn"); // Tombol submit
+    submitButton.disabled = true;  // Nonaktifkan tombol
+    submitButton.innerHTML = "Sedang Memproses...";  // Ubah teks tombol menjadi loading
+
     const formData = new FormData(formElement);
 
     const body = {
@@ -324,14 +338,14 @@ async function handleSubmitEditModule(formElement, token, moduleId) {
             },
             {
                 step_number: 2,
-                step_title: "Diskusi",
-                step_type: "discussion",
+                step_title: "Materi Utama",
+                step_type: "lesson",
                 discussion_enabled: !!formData.get("diskusi_rangkuman"),
                 resources: []
             },
             {
                 step_number: 3,
-                step_title: "Infografis",
+                step_title: "Analisis Infografis",
                 step_type: "infographic",
                 resources: []
             }
@@ -340,10 +354,9 @@ async function handleSubmitEditModule(formElement, token, moduleId) {
 
     try {
         console.log("Updating module with body:", body);
-        // PERBAIKAN: urutan parameter harus moduleId, body, token
         const response = await updateModuleRequest(moduleId, body, token);
         console.log("Update module response:", response);
-        
+
         if (response.success) {
             Toast.success("Modul berhasil diperbarui!");
             Modal.hide();
@@ -355,29 +368,30 @@ async function handleSubmitEditModule(formElement, token, moduleId) {
     } catch (error) {
         console.error("Error saat update modul:", error);
         Toast.error("Terjadi kesalahan saat update modul.");
+    } finally {
+        // Mengaktifkan kembali tombol submit setelah selesai
+        submitButton.disabled = false;
+        submitButton.innerHTML = "Simpan Perubahan"; // Kembalikan teks tombol ke semula
     }
 }
 
-// Event listener untuk submit form CREATE
+// Event listener untuk submit form CREATE dan EDIT
 document.addEventListener("submit", function (e) {
-    if (e.target.id === "formBuatModul") {
-        e.preventDefault();
-        const token = localStorage.getItem("token");
-        handleSubmitCreateModule(e.target, token);
-    }
-});
+    e.preventDefault();  // Mencegah form untuk submit secara otomatis
 
-// Event listener untuk submit form EDIT
-document.addEventListener("submit", function (e) {
-    if (e.target.id === "formEditModul") {
-        e.preventDefault();
+    const form = e.target;
+
+    if (form.id === "formBuatModul") {
         const token = localStorage.getItem("token");
-        const moduleId = e.target.dataset.moduleId;
+        handleSubmitCreateModule(form, token);
+    } else if (form.id === "formEditModul") {
+        const token = localStorage.getItem("token");
+        const moduleId = form.dataset.moduleId;
         if (!moduleId) {
             Toast.warning("Module ID tidak ditemukan.");
             return;
         }
-        handleSubmitEditModule(e.target, token, moduleId);
+        handleSubmitEditModule(form, token, moduleId);
     }
 });
 

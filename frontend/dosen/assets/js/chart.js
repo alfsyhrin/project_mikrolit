@@ -142,9 +142,9 @@ export async function renderProgressMingguanChart(tasksData = []) {
   });
 
   // Jika data kosong, gunakan dummy
-  if (submissionData.length === 0) {
-    submissionData.push(2, 4, 5, 3, 6, 7, 5, 8);
-  }
+  // if (submissionData.length === 0) {
+  //   submissionData.push(2, 4, 5, 3, 6, 7, 5, 8);
+  // }
 
   // ✅ Generate categories: T1, T2, T3, dst
   const categories = Array.from({ length: submissionData.length }, (_, i) => `T${i + 1}`);

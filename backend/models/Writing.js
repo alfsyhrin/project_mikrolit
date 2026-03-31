@@ -65,17 +65,30 @@ const Writing = {
     `, callback);
   },
 
-  getTasksForMahasiswa: (studentId, callback) => {
-      db.query(`
-        SELECT wt.*, 
-          CASE WHEN ws.id IS NOT NULL THEN 'sudah dikumpulkan' ELSE 'belum dikumpulkan' END AS status,
-          ws.submitted_at
-        FROM writing_tasks wt
-        LEFT JOIN writing_submissions ws
-          ON ws.task_id = wt.id AND ws.student_id = ?
-        ORDER BY wt.id DESC
-      `, [studentId], callback);
-  },
+getTasksForMahasiswa: (studentId, callback) => {
+  db.query(`
+    SELECT 
+      wt.id,
+      wt.unit_id,
+      wt.module_id,
+      m.title AS module_title,
+      wt.task_title,
+      wt.instructions,
+      wt.attachment_url,
+      wt.deadline,
+      CASE 
+        WHEN ws.id IS NOT NULL THEN 'sudah dikumpulkan'
+        ELSE 'belum dikumpulkan'
+      END AS status,
+      ws.submitted_at
+    FROM writing_tasks wt
+    LEFT JOIN modules m
+      ON wt.module_id = m.id
+    LEFT JOIN writing_submissions ws
+      ON ws.task_id = wt.id AND ws.student_id = ?
+    ORDER BY wt.id DESC
+  `, [studentId], callback);
+},
 
   submitWriting: (data, callback) => {
     const sql = `

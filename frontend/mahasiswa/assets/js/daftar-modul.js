@@ -521,7 +521,7 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                     <div id="step-resources-root"></div>
                     ${isDiscussionStep && step.status === "current" ? `
                         <div class="discussion-section">
-                            <h3 class="section-title"><span class="material-symbols-outlined">chat</span> Diskusi Penting</h3>
+                            <h3 class="section-title"><span class="material-symbols-outlined">chat</span> Poin Penting</h3>
                             <div class="discussion-box">
                                 <textarea id="discussion-textarea" placeholder="Tulis poin penting dan rangkuman yang Anda dapatkan dari materi..."></textarea>
                             </div>

@@ -311,7 +311,7 @@ function renderTugasMahasiswa(tasks) {
                     <h3 class="judul-tugas-mhs">${escapeHtml(task.task_title)}</h3>
                     <p class="deskripsi-tugas-mhs">${escapeHtml(task.instructions)}</p>
                     <div class="meta-tugas-mhs">
-                        <p class="jenis-tugas-mhs">${task.module_id ? 'Module ' + task.module_id : 'Tanpa Modul'}</p>
+                        <p class="jenis-tugas-mhs">${task.module_title ? task.module_title : 'Tanpa Modul'}</p>
 
                         <p class="waktu-pengumpulan-tugas-mhs">
                             <span class="material-symbols-outlined">calendar_today</span>

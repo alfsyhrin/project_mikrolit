@@ -58,13 +58,13 @@ function authenticateUser(user, password, res) {
 
     if (user.status === "pending") {
         return res.status(403).json({
-            message: "Pengguna belum diverifikasi"
+            message: "Akun Anda belum diverifikasi"
         });
     }
 
     if (user.status === "ditolak") {
         return res.status(403).json({
-            message: "Pengguna ditolak"
+            message: "Akun Anda ditolak, silahkan hubungi Dosen"
         });
     }
 
