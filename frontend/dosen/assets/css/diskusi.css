@@ -390,3 +390,9 @@
 #btnFullscreenDiskusi .material-symbols-outlined {
     font-size: 1.2rem;
 }
+
+#roomTitle {
+    white-space: nowrap;       /* paksa 1 baris */
+    overflow: hidden;          /* sembunyikan teks berlebih */
+    text-overflow: ellipsis;
+}

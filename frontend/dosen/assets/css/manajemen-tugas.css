@@ -152,6 +152,10 @@ button.buat-tugas p {
     background-color: #37b7c327;
     color: var(--third-color);
     font-size: 0.8rem;
+    max-width: 150px;
+    white-space: nowrap;       /* paksa 1 baris */
+    overflow: hidden;          /* sembunyikan teks berlebih */
+    text-overflow: ellipsis;
 }
 
 .meta-tugas-dosen .waktu-pengumpulan-tugas-dosen {

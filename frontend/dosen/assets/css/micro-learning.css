@@ -1,10 +1,5 @@
 /* Awal header */
 header {
-  /* display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-  gap: 1rem; */
-
   display: grid;
   grid-template-columns: 3fr 1fr;
   margin-bottom: 1rem;
