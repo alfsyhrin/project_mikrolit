@@ -381,7 +381,8 @@ export async function getTaskForMahasiswaRequest(token){
         method: "GET",
         headers: { 
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true"
         }
     });
 
