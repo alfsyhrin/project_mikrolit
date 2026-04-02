@@ -37,6 +37,30 @@ function normalizeDatetimeInput(value) {
   return formatDateToSQL(d);
 }
 
+function getCurrentWITDateTime() {
+  const now = new Date();
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jayapura",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  }).formatToParts(now);
+
+  const map = {};
+  for (const part of parts) {
+    if (part.type !== "literal") {
+      map[part.type] = part.value;
+    }
+  }
+
+  return `${map.year}-${map.month}-${map.day} ${map.hour}:${map.minute}:${map.second}`;
+}
+
 const Writing = {
 
   createTask: (data, callback) => {
@@ -135,14 +159,18 @@ const Writing = {
 
   submitWriting: (data, callback) => {
     const sql = `
-      INSERT INTO writing_submissions (task_id, student_id, file_url, answer_text)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO writing_submissions (task_id, student_id, file_url, answer_text, submitted_at)
+      VALUES (?, ?, ?, ?, ?)
     `;
+
+    const submittedAt = getCurrentWITDateTime();
+
     db.query(sql, [
       data.task_id,
       data.student_id,
       data.file_url,
-      data.answer_text
+      data.answer_text,
+      submittedAt
     ], callback);
   },
 
