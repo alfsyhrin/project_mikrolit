@@ -28,14 +28,48 @@ function escapeHtml(s) {
         .replace(/'/g,"&#039;");
 }
 
+//HELPER FORMAT WAKTU BARU
+function pad(num) {
+    return String(num).padStart(2, "0");
+}
+
+function parseFlexibleDateTime(value) {
+    if (!value) return null;
+
+    if (value instanceof Date) return value;
+
+    const str = String(value).trim();
+
+    // SQL local format: YYYY-MM-DD HH:mm:ss
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(str)) {
+        const [datePart, timePart = "00:00:00"] = str.split(" ");
+        const [y, m, d] = datePart.split("-").map(Number);
+        const [hh, mm, ss = 0] = timePart.split(":").map(Number);
+        return new Date(y, m - 1, d, hh, mm, ss);
+    }
+
+    // fallback ISO/UTC
+    const parsed = new Date(str);
+    if (!isNaN(parsed.getTime())) return parsed;
+
+    return null;
+}
+
+function formatDateDisplay(value) {
+    const d = parseFlexibleDateTime(value);
+    if (!d) return "-";
+    return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+}
+
+function formatTimeDisplay(value) {
+    const d = parseFlexibleDateTime(value);
+    if (!d) return "-";
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 // Helper deadline
 function formatDeadlineDisplay(deadline) {
-    if (!deadline) return "-";
-    const d = new Date(deadline);
-    const dd = String(d.getDate()).padStart(2,"0");
-    const mm = String(d.getMonth()+1).padStart(2,"0");
-    const yyyy = d.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
+    return formatDateDisplay(deadline);
 }
 
 //helper untuk attachment, upload, dan download
@@ -55,14 +89,18 @@ function shouldDisableUpload(task) {
     }
 
     if (task.status === "belum dikumpulkan" && task.deadline) {
-        const deadlineDate = new Date(task.deadline);
-        return deadlineDate < new Date();
+        const deadlineDate = parseFlexibleDateTime(task.deadline);
+        if (deadlineDate) {
+            return deadlineDate < new Date();
+        }
     }
 
     if (task.submitted_at && task.deadline) {
-        const submittedDate = new Date(task.submitted_at);
-        const deadlineDate = new Date(task.deadline);
-        return submittedDate > deadlineDate;
+        const submittedDate = parseFlexibleDateTime(task.submitted_at);
+        const deadlineDate = parseFlexibleDateTime(task.deadline);
+        if (submittedDate && deadlineDate) {
+            return submittedDate > deadlineDate;
+        }
     }
 
     return false;
@@ -243,45 +281,35 @@ function triggerBrowserDownload(blob, filename) {
     window.URL.revokeObjectURL(url);
 }
 
-function formatDeadlineParts(task) { // ✅ Parameter task, bukan hanya deadline
+function formatDeadlineParts(task) {
     if (!task || !task.deadline) return { date: '-', time: '-', isPast: false };
-    
-    const deadline = new Date(task.deadline);
+
+    const deadline = parseFlexibleDateTime(task.deadline);
+    if (!deadline) return { date: '-', time: '-', isPast: false };
+
     const now = new Date();
-    
-    // Cek apakah deadline sudah lewat > 1 hari (24 jam)
+
     const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
     const isPastOneDay = deadline < oneDayAgo;
-    
-    // Format date: DD/MM/YYYY
-    const formattedDate = deadline.toLocaleDateString('id-ID', {
-        day: '2-digit',
-        month: '2-digit', 
-        year: 'numeric'
-    });
-    
-    // Status untuk time element
+
+    const formattedDate = formatDateDisplay(task.deadline);
+    const formattedTime = formatTimeDisplay(task.deadline);
+
     let timeStatus = "";
     const isPastDeadline = deadline < now;
+
     if (task.status === "sudah dikumpulkan") {
-        timeStatus = "(dikumpul tepat waktu)"; // ✅ Kondisi yang diinginkan
+        timeStatus = "(dikumpul tepat waktu)";
     } else if (task.status === "belum dikumpulkan" && isPastDeadline) {
         timeStatus = "(sudah berakhir)";
     }
-    
-    // Format time: HH:MM
-    const formattedTime = deadline.toLocaleTimeString('id-ID', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-    
+
     return {
         date: formattedDate,
         time: formattedTime,
-        timeStatus: timeStatus, // ✅ Status untuk ditampilkan di time
-        isPast: deadline < now,
-        isPastOneDay: isPastOneDay,
+        timeStatus,
+        isPast: isPastDeadline,
+        isPastOneDay,
         deadlineMerged: `${formattedDate} ${timeStatus}`.trim()
     };
 }
@@ -629,9 +657,11 @@ function setupEventDelegation() {
 function timeUntil(deadline) {
     if (!deadline) return null;
     const now = new Date();
-    const d = new Date(deadline);
+    const d = parseFlexibleDateTime(deadline);
+    if (!d) return null;
+
     const diffMs = d - now;
-    if (diffMs <= 0) return null; // sudah lewat
+    if (diffMs <= 0) return null;
 
     const diffHours = diffMs / (1000 * 60 * 60);
     const diffDays = diffHours / 24;
@@ -664,7 +694,8 @@ async function fetchAndRenderDeadlineCards(token, targetSelector = ".wrapper-car
         // Filter: punya deadline, deadline masih di masa depan, dan belum dikumpulkan
         const upcoming = tasks
             .filter(t => t.deadline)
-            .map(t => ({ ...t, _deadlineDate: new Date(t.deadline) }))
+            .map(t => ({ ...t, _deadlineDate: parseFlexibleDateTime(t.deadline) }))
+            .filter(t => t._deadlineDate)
             .filter(t => t._deadlineDate > now && t.status !== "sudah dikumpulkan")
             .sort((a, b) => a._deadlineDate - b._deadlineDate);
 
