@@ -236,7 +236,15 @@ main {
   );
   border-radius: 50%;
   color: #fff;
-  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.info-user {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
 }
 
 #navProfileImg {
@@ -317,6 +325,10 @@ main {
   .sidebar.active {
     left: 0;
   }
+  .navbar-kiri h2 {
+    display: none;
+  }
+  
 }
 
 body.sidebar-open {
