@@ -128,7 +128,7 @@ const Writing = {
       SELECT wt.id, wt.unit_id, wt.module_id, wt.task_title, wt.instructions, wt.attachment_url, DATE_FORMAT(wt.deadline, '%Y-%m-%d %H:%i:%s') AS deadline, m.title AS module_title
       FROM writing_tasks wt
       LEFT JOIN modules m ON wt.module_id = m.id
-      ORDER BY wt.id DESC
+      ORDER BY wt.id ASC
     `, callback);
   },
 

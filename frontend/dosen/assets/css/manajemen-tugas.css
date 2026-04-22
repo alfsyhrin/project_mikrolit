@@ -63,6 +63,9 @@ button.buat-tugas p {
     justify-content: flex-start;
     align-items: center;
     gap: 0.3rem;
+    white-space: nowrap;       /* paksa 1 baris */
+    overflow: hidden;          /* sembunyikan teks berlebih */
+    text-overflow: ellipsis;
 }
 
 .card-tugas-dosen {

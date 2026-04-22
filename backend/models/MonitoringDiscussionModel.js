@@ -1,8 +1,8 @@
 const db = require("../config/db");
 
 const MonitoringDiscussionModel = {
-    // Single user
-    async getDiscussionByUser(userId) {
+    // Ambil diskusi berdasarkan userId dan moduleId
+    async getDiscussionByUser(userId, moduleId) {
         return new Promise((resolve, reject) => {
             db.query(`
             SELECT
@@ -16,9 +16,9 @@ const MonitoringDiscussionModel = {
                 ssd.created_at
             FROM student_step_discussions ssd
             LEFT JOIN module_steps ms ON ms.id = ssd.step_id
-            WHERE ssd.user_id = ?
+            WHERE ssd.user_id = ? AND ssd.module_id = ?
             ORDER BY ssd.created_at DESC`,
-            [userId],
+            [userId, moduleId], // Filter berdasarkan moduleId dan userId
             (err, rows) => {
                 if (err) return reject(err);
                 resolve(rows || []);
@@ -26,7 +26,7 @@ const MonitoringDiscussionModel = {
         });
     },
 
-    // Batch fetch untuk semua users
+    // Ambil semua diskusi untuk semua user
     async getAllDiscussions() {
         return new Promise((resolve, reject) => {
             db.query(`
