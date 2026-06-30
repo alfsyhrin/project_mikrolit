@@ -1,4 +1,6 @@
-import { getModuleLearningRequest, getModuleLearnDetailRequest, BACKEND_BASE } from "../../../assets/api.js";
+import { getModuleLearningRequest, getModuleLearnDetailRequest, API_BASE } from "../../../assets/api.js?v=20260331-1";
+
+const BACKEND_BASE = String(API_BASE).replace(/\/api\/?$/, "");
 import Toast from "../../../assets/toast.js";
 
 /**
@@ -102,7 +104,7 @@ function createModuleCard(module) {
                 <span class="precentage">${progress_percent}%</span>
             </div>
             ${progress_percent < 100 ? `
-                <a href="#" data-page="modul" class="lanjut-belajar-modul">
+                <a href="#" data-page="modul" data-module-id="${module.id}" class="lanjut-belajar-modul">
                     <span class="material-symbols-outlined">play_arrow</span>
                     ${lanjutBelajarText}
                 </a>
@@ -216,7 +218,7 @@ async function handleStartModule(moduleId) {
             return;
         }
 
-        const { startModuleRequest } = await import("../../../assets/api.js");
+        const { startModuleRequest } = await import("../../../assets/api.js?v=20260331-1")
         
         console.log("[handleStartModule] POST ke /student/modules/" + moduleId + "/start");
         const response = await startModuleRequest(moduleId, token);
@@ -456,7 +458,7 @@ export async function renderStepDetail(moduleId, stepNumber) {
             return;
         }
 
-        const { getStepDetailRequest, startStepModuleRequest } = await import("../../../assets/api.js");
+        const { getStepDetailRequest, startStepModuleRequest } = await import("../../../assets/api.js?v=20260331-1")
         const resp = await getStepDetailRequest(moduleId, stepNumber, token);
 
         if (!resp || !resp.success || !resp.data) {
@@ -519,7 +521,7 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
                     <div id="step-resources-root"></div>
                     ${isDiscussionStep && step.status === "current" ? `
                         <div class="discussion-section">
-                            <h3 class="section-title"><span class="material-symbols-outlined">chat</span> Diskusi Penting</h3>
+                            <h3 class="section-title"><span class="material-symbols-outlined">chat</span> Poin Penting</h3>
                             <div class="discussion-box">
                                 <textarea id="discussion-textarea" placeholder="Tulis poin penting dan rangkuman yang Anda dapatkan dari materi..."></textarea>
                             </div>
@@ -778,7 +780,7 @@ function renderStepDetailUI(step, resources, moduleId, stepNumber, token, isDisc
             
             // ✅ BARU: Submit discussion + complete step together
             try {
-                const { submitDiscussionPointRequest, completeStepModuleRequest } = await import("../../../assets/api.js");
+                const { submitDiscussionPointRequest, completeStepModuleRequest } = await import("../../../assets/api.js?v=20260331-1")
                 
                 // 1. Submit discussion
                 const discRes = await submitDiscussionPointRequest(mId, sNo, discussionPoint, token);

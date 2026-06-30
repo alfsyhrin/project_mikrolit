@@ -18,6 +18,7 @@ const studentLearningRoute = require("./routes/studentLearningRoute");
 const discussionRoute = require("./routes/discussionRoute");
 const socketHandler = require("./socket/socketHandler");
 const monitoringRoute = require("./routes/moduleMonitoringRoute");
+const forgotPasswordRoute = require("./routes/forgotPasswordRoute");
 
 const app = express();
 const server = http.createServer(app);
@@ -73,7 +74,7 @@ app.use("/api/notifications", notificationRoute);
 app.use("/api/student", studentLearningRoute);
 app.use("/api/discussion", discussionRoute);
 app.use("/api/monitoring", monitoringRoute);
-
+app.use("/api/forgot-password", forgotPasswordRoute);
 app.use((err, req, res, next) => {
     console.error("❌ ERROR TERJADI:");
     console.error(err.stack);

@@ -498,6 +498,7 @@ document.addEventListener("click", function(e){
 // Akhir Modal Konfirmasi hapus modul
 
 // Awal lihat penyelesaian step 2
+// Awal lihat penyelesaian step 2
 document.addEventListener("click", async function (e) {
     const btnSubmisi = e.target.closest("#btnLihatHasilStep");
 
@@ -505,27 +506,41 @@ document.addEventListener("click", async function (e) {
 
     try {
         const token = localStorage.getItem("token");
-        
+
         // Ambil userId dan moduleId dari data attribute button
         const userId = parseInt(btnSubmisi.closest("tr")?.dataset.userId);
         const moduleId = parseInt(btnSubmisi.closest("tr")?.dataset.moduleId);
-        
+
+        // Pastikan userId dan moduleId ada
         if (!userId || !moduleId) {
             console.error("[btnLihatHasilStep] Missing userId or moduleId");
+            alert("Data tidak lengkap untuk membuka hasil step");
             return;
         }
 
-        // Import fungsi dari monitoring.js
+        // Import fungsi untuk mengambil data step dua dari monitoring.js
         const { getStepTwoData } = await import("./monitoring.js");
-        
-        // Fetch data monitoring
+
+        // Mengambil data monitoring dari API
         const api = await import("../../../assets/api.js");
         const response = await api.monitoringRequest(token);
-        
+
         if (response.success && Array.isArray(response.data)) {
-            const stepData = getStepTwoData(response.data, userId, moduleId);
+            // ✅ PERBAIKAN: Filter dengan KEDUA kriteria (userId AND moduleId)
+            const studentData = response.data.find(item => 
+                item.user_id === userId && item.module_id === moduleId
+            );
+
+            if (!studentData) {
+                console.warn("[btnLihatHasilStep] No student data found", { userId, moduleId });
+                alert("Data mahasiswa untuk modul ini tidak ditemukan");
+                return;
+            }
+
+            // ✅ Langsung ambil data step dari entry yang sudah sesuai
+            const finalStepData = getStepTwoData(response.data, userId, moduleId);
             
-            if (stepData) {
+            if (finalStepData) {
                 Modal.show({
                     title: "Penyelesaian Step Dua Mahasiswa",
                     size: "medium",
@@ -534,23 +549,31 @@ document.addEventListener("click", async function (e) {
                             <div class="submission-step-two-card">
                                 <div class="submission-step-two-header">
                                     <p class="hasil-step-two">
-                                        ${stepData.discussionPoint}
+                                        ${finalStepData.discussionPoint}
                                     </p>
                                 </div>
                                 <div class="submission-step-two-footer">
                                 </div>
                                 <div class="submission-step-two-date">
-                                    <div class="submission-step-two-date-day">${stepData.date}</div>
-                                    <div class="submission-step-two-time">${stepData.time}</div>
+                                    <div class="submission-step-two-date-day">${finalStepData.date}</div>
+                                    <div class="submission-step-two-time">${finalStepData.time}</div>
                                 </div>
                             </div>
                         </div>
                     `
                 });
+            } else {
+                console.warn("[btnLihatHasilStep] No discussion point found", { userId, moduleId });
+                alert("Belum ada poin diskusi untuk step ini");
             }
+        } else {
+            console.error("[btnLihatHasilStep] Invalid API response");
+            alert("Gagal mengambil data dari server");
         }
     } catch (error) {
         console.error("[btnLihatHasilStep] Error:", error);
+        alert("Terjadi kesalahan: " + error.message);
     }
 });
+// Akhir lihat penyelesaian step 2
 // Akhir lihat penyelesaian step 2

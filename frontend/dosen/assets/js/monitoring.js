@@ -77,17 +77,12 @@ async function renderMonitoringTable(token) {
             // 🔥 Set user_id
             row.dataset.userId = data.user_id;
 
-            // 🔥 Ambil module_id dari discussion_points (yang paling baru)
+            // ✅ PERBAIKAN: Ambil module_id dari response data langsung
             if (Array.isArray(data.discussion_points) && data.discussion_points.length > 0) {
-                // Ambil discussion point yang paling baru berdasarkan created_at
-                const latestDiscussionPoint = data.discussion_points.reduce((latest, current) => {
-                    return new Date(current.created_at) > new Date(latest.created_at) 
-                        ? current 
-                        : latest;
-                });
-                row.dataset.moduleId = latestDiscussionPoint.module_id;
+            row.dataset.moduleId = data.discussion_points[0].module_id;
+            // Karena sudah di-filter di backend, ambil [0] aja
             } else {
-                row.dataset.moduleId = null;
+            row.dataset.moduleId = null;
             }
 
             row.innerHTML = `
@@ -150,10 +145,17 @@ function formatDateTimeFromISO(isoDateString) {
  * @returns {object|null} - Discussion point object atau null jika tidak ditemukan
  */
 function getDiscussionPoint(monitoringData, userId, moduleId) {
-    const user = monitoringData.find(item => item.user_id === userId);
-    if (!user || !Array.isArray(user.discussion_points)) return null;
+    // ✅ PERBAIKAN: Filter dengan KEDUA kriteria (userId AND moduleId)
+    const userEntry = monitoringData.find(item => 
+        item.user_id === userId && item.module_id === moduleId
+    );
     
-    return user.discussion_points.find(dp => dp.module_id === moduleId) || null;
+    if (!userEntry || !Array.isArray(userEntry.discussion_points) || userEntry.discussion_points.length === 0) {
+        return null;
+    }
+    
+    // Ambil discussion point pertama (karena sudah di-filter di backend menjadi 1 entry per module)
+    return userEntry.discussion_points[0];
 }
 
 /**

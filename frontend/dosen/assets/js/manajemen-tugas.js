@@ -163,42 +163,91 @@ function getSubmissionFileDisplayName(submission) {
 }
 
 // helper deadline
-function formatDeadlineDisplay(deadline){
-    if(!deadline) return "-";
-    const d = parseDbDatetimeToDate(String(deadline));
-    if(!d) return "-";
-    const dd = String(d.getDate()).padStart(2,"0");
-    const mm = String(d.getMonth()+1).padStart(2,"0");
-    const yyyy = d.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
+// function formatDeadlineDisplay(deadline){
+//     if(!deadline) return "-";
+//     const d = parseDbDatetimeToDate(String(deadline));
+//     if(!d) return "-";
+//     const dd = String(d.getDate()).padStart(2,"0");
+//     const mm = String(d.getMonth()+1).padStart(2,"0");
+//     const yyyy = d.getFullYear();
+//     return `${dd}/${mm}/${yyyy}`;
+// }
+
+// // helper: parse DB datetime (WIB) -> Date
+// function parseDbDatetimeToDate(dbString){
+//     if(!dbString) return null;
+//     const parts = dbString.split(' ');
+//     if(parts.length < 2) return null;
+//     const [y, m, d] = parts[0].split('-').map(Number);
+//     const [hh, mm, ss] = parts[1].split(':').map(Number);
+//     const wibDate = new Date(y, m-1, d, hh, mm, ss || 0);
+//     wibDate.setHours(wibDate.getHours() + 2);
+//     return wibDate;
+// }
+
+//HELPER BARU UNTUK FORMAT WAKTU
+function pad(num) {
+    return String(num).padStart(2, "0");
 }
 
-// helper: parse DB datetime (WIB) -> Date
-function parseDbDatetimeToDate(dbString){
-    if(!dbString) return null;
-    const parts = dbString.split(' ');
-    if(parts.length < 2) return null;
-    const [y, m, d] = parts[0].split('-').map(Number);
-    const [hh, mm, ss] = parts[1].split(':').map(Number);
-    const wibDate = new Date(y, m-1, d, hh, mm, ss || 0);
-    wibDate.setHours(wibDate.getHours() + 2);
-    return wibDate;
+function parseFlexibleDateTime(value) {
+    if (!value) return null;
+
+    if (value instanceof Date) return value;
+
+    const str = String(value).trim();
+
+    // format SQL: YYYY-MM-DD HH:mm:ss
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(str)) {
+        const [datePart, timePart = "00:00:00"] = str.split(" ");
+        const [y, m, d] = datePart.split("-").map(Number);
+        const [hh, mm, ss = 0] = timePart.split(":").map(Number);
+        return new Date(y, m - 1, d, hh, mm, ss);
+    }
+
+    // ISO / UTC fallback
+    const parsed = new Date(str);
+    if (!isNaN(parsed.getTime())) return parsed;
+
+    return null;
 }
 
-// Helper: Tampilkan waktu deadline langsung tanpa modifikasi
+function formatDateDisplayID(value) {
+    const d = parseFlexibleDateTime(value);
+    if (!d) return "-";
+    return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+}
+
+function formatDateDisplayISO(value) {
+    const d = parseFlexibleDateTime(value);
+    if (!d) return "-";
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function formatTimeDisplay(value) {
+    const d = parseFlexibleDateTime(value);
+    if (!d) return "-";
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// Helper: Tampilkan waktu deadline dengan format deadline baru
 function formatDeadlinePartsForDosen(task) {
-    if (!task || !task.deadline) return { date: "-", time: "-", timeStatus: "" };
-    
-    const deadline = task.deadline.split(' '); // Asumsikan waktu dalam format 'YYYY-MM-DD HH:mm:ss'
-    if (deadline.length < 2) return { date: "-", time: "-", timeStatus: "" };
+    if (!task || !task.deadline) {
+        return { date: "-", time: "-", timeStatus: "" };
+    }
 
-    const [date, time] = deadline;
-    const formattedDate = date; // Tampilkan tanggal sesuai format yang diberikan dari server
-    const formattedTime = time.slice(0, 5); // Ambil waktu (jam dan menit) dari waktu yang diberikan
+    const deadlineDate = parseFlexibleDateTime(task.deadline);
+    if (!deadlineDate) {
+        return { date: "-", time: "-", timeStatus: "" };
+    }
+
+    const formattedDate = formatDateDisplayISO(task.deadline);
+    const formattedTime = formatTimeDisplay(task.deadline);
 
     let timeStatus = "";
     const now = new Date();
-    const isPastDeadline = new Date(`${date}T${time}`) < now;
+    const isPastDeadline = deadlineDate < now;
+
     if (task.status === "sudah dikumpulkan") {
         timeStatus = "(dikumpul tepat waktu)";
     } else if (task.status === "belum dikumpulkan" && isPastDeadline) {
@@ -209,16 +258,16 @@ function formatDeadlinePartsForDosen(task) {
 }
 
 // helper submitted_at WIB -> WIT
-function formatSubmittedAtToWIT_fromDb(dbString){
-    const dt = parseDbDatetimeToDate(dbString);
-    if(!dt) return {date: "-", time: "-"};
-    const dd = String(dt.getDate()).padStart(2,"0");
-    const mm = String(dt.getMonth()+1).padStart(2,"0");
-    const yyyy = dt.getFullYear();
-    const hh = String(dt.getHours()).padStart(2,"0");
-    const min = String(dt.getMinutes()).padStart(2,"0");
-    return { date: `${dd}/${mm}/${yyyy}`, time: `${hh}:${min} WIT` };
-}
+// function formatSubmittedAtToWIT_fromDb(dbString){
+//     const dt = parseDbDatetimeToDate(dbString);
+//     if(!dt) return {date: "-", time: "-"};
+//     const dd = String(dt.getDate()).padStart(2,"0");
+//     const mm = String(dt.getMonth()+1).padStart(2,"0");
+//     const yyyy = dt.getFullYear();
+//     const hh = String(dt.getHours()).padStart(2,"0");
+//     const min = String(dt.getMinutes()).padStart(2,"0");
+//     return { date: `${dd}/${mm}/${yyyy}`, time: `${hh}:${min} WIT` };
+// }
 
 // helper: render module select options
 function buildModuleSelectMarkup(selectedId = null){
@@ -300,11 +349,11 @@ function openEditModalWithData(task){
     let dateValue = "";
     let timeValue = "";
     if (task.deadline) {
-        const parts = String(task.deadline).split(' ');
-                if (parts.length === 2) {
-                    dateValue = parts[0]; // "YYYY-MM-DD"
-                    timeValue = parts[1].slice(0,5); // "HH:mm"
-                }
+        const d = parseFlexibleDateTime(task.deadline);
+        if (d) {
+            dateValue = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+            timeValue = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
     }
 
     const content = `
@@ -432,8 +481,8 @@ async function handleViewSubmissions(taskId){
     try {
         const submissions = await getSubmissionsByTaskRequest(taskId, token);
         const content = submissions && submissions.length ? submissions.map(sub => {
-            const submittedAt = sub.submitted_at || "-";
-            const [date, time] = submittedAt.split(" ");
+        const submittedDate = formatDateDisplayID(sub.submitted_at);
+        const submittedTime = formatTimeDisplay(sub.submitted_at);
             return `
             <div class="submission-card">
                 <div class="submission-header">
@@ -442,8 +491,8 @@ async function handleViewSubmissions(taskId){
                         <div class="submission-npm">NPM : ${escapeHtml(String(sub.student_npm))}</div>
                     </div>
                     <div class="submission-date">
-                        <div class="submission-date-day">${date || "-"}</div>
-                        <div class="submission-time">${time ? time.slice(0,5) : "-"} WIT</div>
+                        <div class="submission-date-day">${submittedDate}</div>
+                        <div class="submission-time">${submittedTime} WIT</div>
                     </div>
                 </div>
                 <div class="submission-file">

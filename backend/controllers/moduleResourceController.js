@@ -9,7 +9,6 @@ exports.uploadResource = (req, res) => {
             });
         }
 
-        // simpan relative path yang konsisten
         const relativePath = req.file.path
             .split(path.sep)
             .slice(-3)
@@ -17,10 +16,11 @@ exports.uploadResource = (req, res) => {
 
         return res.json({
             success: true,
-            file_name: req.file.filename,                 // nama fisik file di server
-            original_name: req.file.originalname,        // nama asli saat upload
-            display_name: req.file.displayName || req.file.originalname, // nama bersih untuk UI
-            path: relativePath                           // contoh: module_resources/ppt/File-a1b2c3d4.pptx
+            file_name: req.file.filename,
+            original_name: req.file.originalname,
+            display_name: req.file.displayName || req.file.originalname,
+            path: relativePath,
+            type: req.file.resourceType || "file"
         });
 
     } catch (err) {

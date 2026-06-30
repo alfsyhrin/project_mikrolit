@@ -23,8 +23,11 @@ async function getStudentMonitoring() {
   }
 
   // Attach discussions ke students
+  // Attach discussions ke students DENGAN filter module_id
   for (const student of students) {
-    student.discussion_points = discussionMap[student.user_id] || [];
+    // ✅ FILTER: hanya ambil discussions yang sesuai module_id student
+    student.discussion_points = (discussionMap[student.user_id] || [])
+      .filter(disc => disc.module_id === student.module_id);
   }
 
   return students;

@@ -6,6 +6,7 @@ const ModuleMonitoring = {
       SELECT 
         u.id AS user_id,
         u.name,
+        m.id AS module_id,
         m.title AS last_module,
         MAX(COALESCE(ssp.completed_at, ssp.started_at)) AS last_access,
         COUNT(DISTINCT CASE WHEN ssp.status = 'completed' THEN ssp.step_id END) AS steps_completed,

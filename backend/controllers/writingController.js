@@ -4,6 +4,39 @@ const archiver = require("archiver");
 const Writing = require("../models/Writing");
 const eventBus = require("../events/eventBus");
 
+function pad(num) {
+  return String(num).padStart(2, "0");
+}
+
+function formatDateToSQL(date) {
+  if (!date) return null;
+
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return null;
+
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function normalizeDatetimeInput(value) {
+  if (!value) return null;
+
+  const str = String(value).trim();
+
+  if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/.test(str)) {
+    return str.length === 16 ? `${str}:00` : str;
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(str)) {
+    const normalized = str.replace("T", " ");
+    return normalized.length === 16 ? `${normalized}:00` : normalized;
+  }
+
+  const d = new Date(str);
+  if (isNaN(d.getTime())) return null;
+
+  return formatDateToSQL(d);
+}
+
 exports.createTask = async (req, res) => {
     const data = {
         module_id: req.body.module_id || null,
@@ -11,7 +44,7 @@ exports.createTask = async (req, res) => {
         task_title: req.body.task_title,
         instructions: req.body.instructions,
         attachment_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
-        deadline: req.body.deadline
+        deadline: normalizeDatetimeInput(req.body.deadline)
     };
 
     Writing.createTask(data, (err, result) => { 
@@ -44,7 +77,7 @@ exports.updateTask = (req, res) => {
         task_title: req.body.task_title,
         instructions: req.body.instructions,
         attachment_url: req.file ? "/uploads/tasks/" + req.file.filename : null,
-        deadline: req.body.deadline
+        deadline: normalizeDatetimeInput(req.body.deadline)
     };
 
     Writing.updateTask(id, data, (err) => {
