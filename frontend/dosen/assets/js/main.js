@@ -576,4 +576,53 @@ document.addEventListener("click", async function (e) {
     }
 });
 // Akhir lihat penyelesaian step 2
-// Akhir lihat penyelesaian step 2
+
+function showInputNilaiModal(mahasiswa) {
+    // mahasiswa = { nama, nim, tugas }
+
+    const formEl = document.createElement('div');
+    formEl.innerHTML = `
+        <div class="student-info-card">
+            <div class="student-name">Gufran</div>
+            <div class="student-meta">NIM: 07352211097</div>
+            <div class="student-meta">Tugas: Tugas 1</div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Nilai (0 - 100)</label>
+            <input type="number" id="inputNilai" class="form-input" placeholder="Masukkan nilai" min="0" max="100">
+        </div>
+    `;
+
+    Modal.show({
+        title: "Input Nilai Mahasiswa",
+        content: formEl,
+        confirmText: "Simpan Nilai",
+        onConfirm: () => {
+            const nilai = formEl.querySelector('#inputNilai').value;
+
+            if (nilai === "" || nilai < 0 || nilai > 100) {
+                Modal.alert("Nilai harus diisi antara 0-100");
+                return;
+            }
+
+            // TODO: nanti disambungkan ke backend di sini
+            console.log("Nilai yang diinput:", nilai);
+        }
+    });
+}
+
+// Awal modal input nilai mahasiswa
+document.addEventListener("click", function (e) {
+    const btnInputNilai = e.target.closest("#btnInputNilai");
+
+    if (!btnInputNilai) return;
+
+    // Ambil data mahasiswa, misalnya dari data-attribute tombol/row
+    const nama = btnInputNilai.closest("tr")?.dataset.nama;
+    const nim = btnInputNilai.closest("tr")?.dataset.nim;
+    const tugas = btnInputNilai.closest("tr")?.dataset.tugas;
+
+    showInputNilaiModal({ nama, nim, tugas });
+});
+// Akhir modal input nilai mahasiswa
