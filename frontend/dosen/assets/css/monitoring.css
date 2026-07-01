@@ -194,6 +194,7 @@ p.alert-card {
   padding: 1rem;
   margin-bottom: 1rem;
   transition: 0.3s ease all;
+  /* border: 1px solid red; */
 }
 
 .card-tabel-mahasiswa:hover {
@@ -439,3 +440,75 @@ tbody tr:last-child td {
   display: none;                /* Chrome, Safari, Edge */
 }
 /* Akhir Sembunyikan Scrollbar */
+
+/* Awal Container Tabel */
+.card-monitor-penilaian h4 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 1rem;
+}
+
+.card-monitor-penilaian {
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: 0.3s ease all;
+}
+
+.card-monitor-penilaian:hover {
+  border: 1px solid var(--third-color);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.wrapper-tabel {
+  height: 310px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+thead th {
+  text-align: left;
+  padding: 15px 10px;
+  color: var(--primary-color);
+  font-weight: 500;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+tbody td {
+  padding: 18px 10px;
+  border-bottom: 1px solid #ddd;
+  color: var(--text-color);
+  font-size: 0.85rem;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nama {
+  font-weight: 550;
+  color: var(--primary-color);
+}
+
+.muted {
+  color: #6b7a90;
+}
+
+.middle-td {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nilai-tugas {
+    font-weight: 600;
+    color: var(--third-color);
+}
+/* Akhir Container Tabel */

@@ -1,3 +1,9 @@
+.container-penilaian {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid red;
+}
+
 /* Awal header buat tugas */
 .header-manajemen-tugas {
     display: flex;
