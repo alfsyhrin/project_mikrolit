@@ -14,7 +14,8 @@ const {
     updateTask,
     deleteTask,
     downloadSubmissionsZip,
-    downloadTaskFile
+    downloadTaskFile,
+    getAllSubmissionScores
 } = require("../controllers/writingController");
 
 router.get("/tasks", auth, getAllTasks);
@@ -24,6 +25,7 @@ router.get("/module/:moduleId", auth, getTasksByModule); // FIXED
 router.post("/submit", auth, upload.tasks.single("file"), submitWriting);
 router.post("/grade/:submissionId", auth, gradeSubmission);
 router.get("/mahasiswa/tasks", auth, getTasksForMahasiswa);
+router.get("/submissions/all", auth, getAllSubmissionScores);
 router.get("/submissions/:taskId", auth, getSubmissionsByTask);
 router.put("/task/:id", auth, upload.tasks.single("attachment"), updateTask);
 router.delete("/task/:id", auth, deleteTask);

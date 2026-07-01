@@ -1,4 +1,4 @@
-import { monitoringRequest } from "../../../assets/api.js";
+import { monitoringRequest, getAllSubmissionScoresRequest } from "../../../assets/api.js";
 
 /**
  * Helper: Hitung jarak waktu dari last_access ke sekarang
@@ -20,6 +20,124 @@ function formatTimeAgo(lastAccess) {
     if (diffHours < 24) return `${diffHours} jam lalu`;
     if (diffDays < 7) return `${diffDays} hari lalu`;
     return past.toLocaleDateString("id-ID");
+}
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function normalizeScoreValue(score) {
+    if (score === null || score === undefined || score === "") return "-";
+    return escapeHtml(score);
+}
+
+function getUniqueTasks(submissions) {
+    const taskMap = new Map();
+
+    submissions
+        .slice()
+        .sort((a, b) => (Number(a.task_id) || 0) - (Number(b.task_id) || 0))
+        .forEach(item => {
+            const taskId = Number(item.task_id) || 0;
+            if (!taskMap.has(taskId)) {
+                taskMap.set(taskId, {
+                    task_id: taskId,
+                    task_title: item.task_title || `Tugas ${taskId}`
+                });
+            }
+        });
+
+    return Array.from(taskMap.values());
+}
+
+function groupScoresByStudent(submissions) {
+    const students = {};
+
+    submissions.forEach(item => {
+        const studentId = Number(item.student_id) || 0;
+        if (!students[studentId]) {
+            students[studentId] = {
+                student_id: studentId,
+                student_name: item.student_name || "-",
+                student_npm: item.student_npm || "-",
+                scores: {}
+            };
+        }
+
+        const taskId = Number(item.task_id) || 0;
+        students[studentId].scores[taskId] = item.score;
+    });
+
+    return Object.values(students).sort((a, b) => a.student_id - b.student_id);
+}
+
+async function renderPenilaianMahasiswaTable(token) {
+    try {
+        const response = await getAllSubmissionScoresRequest(token);
+
+        if (!response || !response.success || !Array.isArray(response.data)) {
+            console.error("[renderPenilaianMahasiswaTable] Invalid response:", response);
+            return;
+        }
+
+        const card = document.querySelector(".card-monitor-penilaian");
+        if (!card) {
+            console.warn("[renderPenilaianMahasiswaTable] .card-monitor-penilaian tidak ditemukan");
+            return;
+        }
+
+        const theadRow = card.querySelector("table thead tr");
+        const tbody = card.querySelector("table tbody");
+        if (!theadRow || !tbody) {
+            console.warn("[renderPenilaianMahasiswaTable] element tabel tidak ditemukan");
+            return;
+        }
+
+        const tasks = getUniqueTasks(response.data);
+        const students = groupScoresByStudent(response.data);
+
+        // Header: gunakan urutan tugas (Tugas 1, Tugas 2, ...) tetapi simpan judul asli sebagai tooltip
+        theadRow.innerHTML = `
+            <th>No</th>
+            <th>Nama Mahasiswa</th>
+            <th>NPM</th>
+            ${tasks.map((task, idx) => `<th title="${escapeHtml(task.task_title)}">Tugas ${idx + 1}</th>`).join("")}
+        `;
+
+        if (students.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td class="nama" colspan="${3 + tasks.length}" style="text-align:center; color:#777;">
+                        Belum ada data penilaian mahasiswa
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = students.map((student, index) => {
+            const scoreCells = tasks.map(task => {
+                return `<td class="muted nilai-tugas">${normalizeScoreValue(student.scores[task.task_id])}</td>`;
+            }).join("");
+
+            return `
+                <tr>
+                    <td class="nama">${index + 1}</td>
+                    <td class="muted">${escapeHtml(student.student_name)}</td>
+                    <td class="muted">${escapeHtml(student.student_npm)}</td>
+                    ${scoreCells}
+                </tr>
+            `;
+        }).join("");
+    } catch (error) {
+        console.error("[renderPenilaianMahasiswaTable] Error:", error);
+    }
 }
 
 /**
@@ -252,4 +370,4 @@ function calculateAverageProgress(monitoringData) {
     return average;
 }
 
-export { renderMonitoringTable, getStepTwoData, getDiscussionPoint, calculateAverageDuration, calculateAverageProgress, calculateProgressDelta };
+export { renderMonitoringTable, renderPenilaianMahasiswaTable, getStepTwoData, getDiscussionPoint, calculateAverageDuration, calculateAverageProgress, calculateProgressDelta };

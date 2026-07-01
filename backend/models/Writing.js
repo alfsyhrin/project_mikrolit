@@ -194,10 +194,30 @@ const Writing = {
   gradeSubmission: (data, callback) => {
     db.query(`
       UPDATE writing_submissions
-      SET score = ?, feedback = ?
+      SET score = ?
       WHERE id = ?
-    `, [data.score, data.feedback, data.id], callback);
+    `, [data.score, data.id], callback);
   },
+
+getAllSubmissionScores: (callback) => {
+  const sql = `
+    SELECT
+      ws.id AS submission_id,
+      ws.task_id,
+      wt.task_title,
+      ws.student_id,
+      u.name AS student_name,
+      u.nidn AS student_npm,
+      ws.score,
+      ws.feedback,
+      DATE_FORMAT(ws.submitted_at, '%Y-%m-%d %H:%i:%s') AS submitted_at
+    FROM writing_submissions ws
+    LEFT JOIN users u ON u.id = ws.student_id
+    LEFT JOIN writing_tasks wt ON wt.id = ws.task_id
+    ORDER BY ws.id ASC
+  `;
+  db.query(sql, callback);
+},
 
   getTaskById: (taskId, callback) => {
     db.query(`

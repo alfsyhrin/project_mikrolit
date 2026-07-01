@@ -371,6 +371,31 @@ export async function getNotificationForTeacher(token){
     return response.json();
 }
 
+export async function getAllSubmissionScoresRequest(token){
+    const response = await fetch(API_BASE + "/writing/submissions/all", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.json();
+}
+
+export async function gradeSubmissionRequest(submissionId, score, token){
+    const response = await fetch(API_BASE + `/writing/grade/${submissionId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ score })
+    });
+    return response.json();
+}
+
 //MODULES & TASK (MAHASISWA)=========================================================
 export async function getTaskForMahasiswaRequest(token){
     const response = await fetch(API_BASE + "/writing/mahasiswa/tasks", {

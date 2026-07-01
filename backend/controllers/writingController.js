@@ -37,6 +37,17 @@ function normalizeDatetimeInput(value) {
   return formatDateToSQL(d);
 }
 
+exports.getAllSubmissionScores = (req, res) => {
+  Writing.getAllSubmissionScores((err, rows) => {
+    if (err) {
+      console.error("getAllSubmissionScores error", err);
+      return res.status(500).json({ error: err });
+    }
+    console.log("getAllSubmissionScores rows:", rows.length);
+    res.json({ success: true, data: rows });
+  });
+};
+
 exports.createTask = async (req, res) => {
     const data = {
         module_id: req.body.module_id || null,
@@ -144,7 +155,6 @@ exports.gradeSubmission = (req, res) => {
     const data = {
         id: req.params.submissionId,
         score: req.body.score,
-        feedback: req.body.feedback
     };
 
     Writing.gradeSubmission(data, (err) => {
